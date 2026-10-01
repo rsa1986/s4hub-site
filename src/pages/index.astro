@@ -13,8 +13,9 @@ import Contato from '../components/Contato.astro';
 import Footer from '../components/Footer.astro';
 ---
 <Base>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
   <Header />
-  <main>
+  <main id="conteudo" tabindex="-1">
     <Hero />
     <Marquee tone="navy" items={['Diagnóstico', 'Estruturação comercial', 'Vendas terceirizadas', 'Tráfego pago', 'Redes sociais']} />
     <Manifesto />

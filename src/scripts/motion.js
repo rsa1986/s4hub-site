@@ -42,6 +42,8 @@ $$('a[href^="#"]').forEach((a) => {
     if (y !== null) lenis ? lenis.scrollTo(y) : window.scrollTo({ top: y });
     else if (lenis) lenis.scrollTo(target, { offset: id === '#topo' ? 0 : -72 });
     else target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+    // "Pular para o conteúdo" também leva o foco do teclado
+    if (a.classList.contains('skip')) target.focus({ preventScroll: true });
   });
 });
 
@@ -81,42 +83,81 @@ const menu = $('[data-mobile-menu]');
 function closeMenu() {
   if (!burger) return;
   burger.setAttribute('aria-expanded', 'false');
+  burger.setAttribute('aria-label', 'Abrir menu');
   menu.hidden = true;
   header.classList.remove('menu-open', 'is-solid-force');
 }
 burger?.addEventListener('click', () => {
   const open = burger.getAttribute('aria-expanded') !== 'true';
-  burger.setAttribute('aria-expanded', String(open));
-  menu.hidden = !open;
-  header.classList.toggle('menu-open', open);
-  header.classList.add('is-solid');
+  if (!open) { closeMenu(); return; }
+  burger.setAttribute('aria-expanded', 'true');
+  burger.setAttribute('aria-label', 'Fechar menu');
+  menu.hidden = false;
+  header.classList.add('menu-open', 'is-solid');
+  $('a', menu)?.focus();
+});
+// Esc fecha o menu e devolve o foco ao botão
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && burger?.getAttribute('aria-expanded') === 'true') {
+    closeMenu();
+    burger.focus();
+  }
 });
 
 /* ---------- Acordeão (FAQ) ---------- */
 $$('[data-acc]').forEach((item) => {
   const btn = $('[data-acc-btn]', item);
   const panel = $('[data-acc-panel]', item);
+  // painel fechado fica `hidden`, para o leitor de tela não ler respostas fechadas
   btn.addEventListener('click', () => {
     const open = btn.getAttribute('aria-expanded') === 'true';
     btn.setAttribute('aria-expanded', String(!open));
-    if (reduced) { panel.style.height = open ? '0' : 'auto'; return; }
-    gsap.to(panel, { height: open ? 0 : 'auto', duration: 0.6, ease: 'expo.out', onComplete: () => ScrollTrigger.refresh() });
+    if (!open) panel.hidden = false;
+    if (reduced) { panel.style.height = open ? '0' : 'auto'; panel.hidden = open; return; }
+    gsap.to(panel, {
+      height: open ? 0 : 'auto', duration: 0.6, ease: 'expo.out',
+      onComplete: () => { if (open) panel.hidden = true; ScrollTrigger.refresh(); },
+    });
   });
 });
 
 /* ---------- Formulário ---------- */
 const form = $('[data-form]');
+// Mensagem de erro de cada campo obrigatório (vazia = campo ok)
+const erroDe = (f) => {
+  const v = f.value.trim();
+  if (f.name === 'nome' && !v) return 'Informe seu nome.';
+  if (f.name === 'email' && !v) return 'Informe seu e-mail.';
+  if (f.name === 'email' && !/^\S+@\S+\.\S+$/.test(v)) return 'Confira o e-mail. Ele precisa ter o formato nome@empresa.com.br.';
+  return '';
+};
+const marcarCampo = (f) => {
+  const msg = erroDe(f);
+  const err = $('[data-err]', f.closest('.field'));
+  f.closest('.field').classList.toggle('is-error', !!msg);
+  f.setAttribute('aria-invalid', String(!!msg));
+  if (msg) f.setAttribute('aria-describedby', err.id); else f.removeAttribute('aria-describedby');
+  err.textContent = msg;
+  return !msg;
+};
+// depois de um erro, o campo volta a ficar ok assim que a pessoa corrige
+$$('[required]', form || document).forEach((f) => f.addEventListener('input', () => {
+  if (f.getAttribute('aria-invalid') === 'true') marcarCampo(f);
+}));
 form?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const status = $('[data-form-status]', form);
-  let ok = true;
-  $$('[required]', form).forEach((f) => {
-    const bad = !f.value.trim() || (f.type === 'email' && !/^\S+@\S+\.\S+$/.test(f.value));
-    f.closest('.field').classList.toggle('is-error', bad);
-    if (bad) ok = false;
-  });
-  if (!ok) { status.textContent = 'Preencha nome e um e-mail válido.'; return; }
-  status.textContent = 'Enviando...';
+  const btn = $('button[type="submit"]', form);
+  const invalidos = $$('[required]', form).filter((f) => !marcarCampo(f));
+  if (invalidos.length) {
+    status.textContent = 'Corrija os campos indicados para enviar.';
+    invalidos[0].focus();
+    return;
+  }
+  const textoBtn = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+  status.textContent = '';
   try {
     const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
     const data = await res.json().catch(() => ({}));
@@ -125,6 +166,9 @@ form?.addEventListener('submit', async (e) => {
     status.textContent = 'Recebemos sua mensagem. Retornaremos em breve.';
   } catch {
     status.textContent = 'Não foi possível enviar agora. Tente novamente em instantes.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = textoBtn;
   }
 });
 
@@ -195,6 +239,11 @@ function initMotion() {
     const tween = gsap.fromTo(track,
       { xPercent: dir === -1 ? 0 : -dist },
       { xPercent: dir === -1 ? -dist : 0, duration: 28 / speed, ease: 'none', repeat: -1 });
+    // pausa com o mouse em cima ou com foco dentro (conteúdo em movimento precisa poder parar)
+    m.addEventListener('pointerenter', () => tween.pause());
+    m.addEventListener('pointerleave', () => tween.resume());
+    m.addEventListener('focusin', () => tween.pause());
+    m.addEventListener('focusout', () => tween.resume());
     ScrollTrigger.create({
       trigger: m, start: 'top bottom', end: 'bottom top',
       onUpdate: (st) => {

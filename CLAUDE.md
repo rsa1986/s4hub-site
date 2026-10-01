@@ -50,6 +50,16 @@ Regras da revisão de design (v2):
 - Escala contida: títulos, hub e espaçamentos moderados (token `--section` para o respiro vertical das seções). Evitar voltar a fontes e blocos gigantes
 - Clientes aparece conforme `temClientes` em `site.js` (hoje `true`, com os nomes no lugar dos logos que faltam). O e-mail some enquanto for placeholder (`emailDefinido`)
 
+## Usabilidade e acessibilidade
+
+Revisado com a skill ui-ux-pro-max. Manter:
+
+- Contraste: texto ≥ 4,5:1; contornos, bordas e linhas de campo ≥ 3:1. Foco do teclado é navy nas seções claras e verde nas escuras (`.dark`, header)
+- Alvos de toque ≥ 44px no celular; textos ≥ 14px (descrições 15px+)
+- Formulário: obrigatórios marcados no rótulo, erro escrito abaixo de cada campo (`aria-invalid`), foco no primeiro campo errado, botão travado com "Enviando..." durante o envio
+- Menu mobile fecha com Esc e troca o rótulo para "Fechar menu"; painéis fechados do FAQ ficam `hidden`
+- Marquees pausam com o mouse em cima ou com foco; link "Pular para o conteúdo" é o primeiro Tab
+
 ## Motion
 
 Só três momentos animados por rolagem; o resto aparece pronto.
@@ -67,6 +77,17 @@ Só três momentos animados por rolagem; o resto aparece pronto.
 - [ ] Ajuste fino de textos
 - [ ] Imagem de compartilhamento (og:image) 1200x630; hoje usa o logo quadrado
 - [ ] Testar o formulário no HostGator (o PHP só roda no servidor, não no `npm run dev`)
+
+## Checklist antes de fechar o site
+
+Fazer depois que o design estiver aprovado, antes do deploy:
+
+- [ ] **Segurança do formulário** (`/security-review`): revisar `public/contato.php` contra injeção de cabeçalho no `mail()`, spam e falta de limite de envios
+- [ ] **og:image** 1200x630 a partir do hub, nas cores do site (substitui `og-square.png` em `Base.astro`)
+- [ ] **Desempenho e SEO** (Lighthouse no Edge): tempo de carregamento no celular, peso das fontes e do GSAP, metatags
+- [ ] **Revisão de código** (`/code-review`): `motion.js` e componentes
+- [ ] **Prévia pública na Vercel** (opcional): link temporário para aprovação antes de mexer no HostGator (o formulário não funciona lá, só o visual)
+- [ ] Remover a cópia de comparação da v1: `git worktree remove ../s4hub-v1`
 
 ## Deploy (HostGator)
 

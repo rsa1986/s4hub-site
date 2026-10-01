@@ -99,6 +99,8 @@ const nodes = produtos.map((p, i) => ({ ...p, ...hubPos[i], curto: p.nome.replac
   .hub__caption span { font-size: 14px; color: var(--muted-on-dark); }
 
   @media (hover: none) { .hub__caption { display: none; } }
+  /* o hub encolhe inteiro no celular: rótulos maiores no SVG para continuarem legíveis (≥ 14px reais) */
+  @media (max-width: 980px) { .node__label { font-size: 28px; } }
   @media (max-width: 980px) {
     .hero__grid { grid-template-columns: 1fr; }
     .hero__hub { max-width: 320px; justify-self: center; margin-top: 16px; }
