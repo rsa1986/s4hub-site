@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-h-dark.png';
 import { temClientes } from '../data/site.js';
 const links = [
   { href: '#solucoes', label: 'Soluções' },
@@ -10,7 +12,8 @@ const links = [
 <header class="hdr" data-header>
   <div class="wrap hdr__in">
     <a href="#topo" class="hdr__logo" aria-label="S4 Hub, voltar ao início">
-      <img src="/img/logo-h-dark.png" alt="S4 Hub" width="600" height="215" />
+      <!-- logo otimizado no build: WebP no tamanho exibido (1x e 2x para telas de alta densidade) -->
+      <Image src={logo} alt="S4 Hub" height={30} densities={[1, 2]} format="webp" loading="eager" />
     </a>
     <nav class="hdr__nav" aria-label="Principal">
       {links.map((l) => <a href={l.href} class="hdr__link"><span>{l.label}</span></a>)}

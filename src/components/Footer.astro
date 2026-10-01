@@ -1,10 +1,12 @@
 ---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-h-dark.png';
 import { temClientes } from '../data/site.js';
 const ano = new Date().getFullYear();
 ---
 <footer class="ft dark">
   <div class="wrap ft__top">
-    <img src="/img/logo-h-dark.png" alt="S4 Hub" width="600" height="215" class="ft__logo" />
+    <Image src={logo} alt="S4 Hub" height={36} densities={[1, 2]} format="webp" class="ft__logo" />
     <nav class="ft__nav" aria-label="Rodapé">
       <a href="#solucoes">Soluções</a>
       <a href="#metodo">Método</a>

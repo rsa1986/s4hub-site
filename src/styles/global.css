@@ -1,5 +1,5 @@
-/* standard.css traz os eixos de peso, largura (wdth) e tamanho óptico (opsz) */
-@import '@fontsource-variable/bricolage-grotesque/standard.css';
+/* wdth.css traz os eixos de peso e largura (usada no condensado dos títulos): 78KB em vez dos 129KB do standard.css */
+@import '@fontsource-variable/bricolage-grotesque/wdth.css';
 @import '@fontsource-variable/manrope';
 
 /* ---------- Tokens (cores tiradas do logo) ---------- */
@@ -45,7 +45,7 @@ body {
 img, svg { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; }
-h1, h2, h3, h4 { font-family: var(--f-display); font-weight: 700; letter-spacing: -0.035em; line-height: 1; margin: 0; font-optical-sizing: auto; }
+h1, h2, h3, h4 { font-family: var(--f-display); font-weight: 700; letter-spacing: -0.035em; line-height: 1; margin: 0; }
 p { margin: 0; }
 ::selection { background: var(--green); color: var(--navy); }
 /* Foco do teclado: navy nas seções claras, verde nas escuras (os dois com contraste ≥ 3:1) */

@@ -5,7 +5,8 @@ Site de página única da S4 Hub (consultoria de Vendas e Marketing). Substitui 
 ## Stack
 
 - **Astro 7** (site estático) + **GSAP / ScrollTrigger** (animações) + **Lenis** (rolagem suave)
-- Fontes self-hosted via Fontsource: Bricolage Grotesque (títulos) e Manrope (texto)
+- Fontes self-hosted via Fontsource: Bricolage Grotesque (títulos, arquivo `wdth.css`: eixos de peso e largura) e Manrope (texto)
+- CSS embutido no HTML no build (`inlineStylesheets: always`), para não bloquear a primeira pintura
 - Formulário: `public/contato.php`, que envia o e-mail com `mail()` do HostGator
 
 ## Comandos
@@ -25,6 +26,7 @@ npm run preview  # serve o dist/
 - `src/scripts/motion.js`: todas as animações, organizadas por seção
 - `src/styles/global.css`: tokens (cores, fontes), botões e utilitários
 - `public/img/`: logos (variações para fundo escuro e claro, com fundo transparente)
+- `src/assets/logo-h-dark.png`: cópia do logo usada no header e no rodapé via `<Image>` do Astro, que gera WebP no tamanho exibido (troque aqui se o logo mudar)
 
 ## Identidade
 
@@ -84,7 +86,7 @@ Fazer depois que o design estiver aprovado, antes do deploy:
 
 - [ ] **Segurança do formulário** (`/security-review`): revisar `public/contato.php` contra injeção de cabeçalho no `mail()`, spam e falta de limite de envios
 - [ ] **og:image** 1200x630 a partir do hub, nas cores do site (substitui `og-square.png` em `Base.astro`)
-- [ ] **Desempenho e SEO** (Lighthouse no Edge): tempo de carregamento no celular, peso das fontes e do GSAP, metatags
+- [x] **Desempenho e SEO** (Lighthouse no Edge, 01/10/2026): celular 98 / 96 / 100 / 100, desktop 100 / 96 / 100 / 100. Os 96 de acessibilidade vêm das palavras apagadas do Manifesto antes de acenderem (trade-off aceito). Repetir no domínio real depois do deploy
 - [ ] **Revisão de código** (`/code-review`): `motion.js` e componentes
 - [ ] **Prévia pública na Vercel** (opcional): link temporário para aprovação antes de mexer no HostGator (o formulário não funciona lá, só o visual)
 - [ ] Remover a cópia de comparação da v1: `git worktree remove ../s4hub-v1`
