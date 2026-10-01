@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import Manifesto from '../components/Manifesto.astro';
+import Solucoes from '../components/Solucoes.astro';
+import Metodo from '../components/Metodo.astro';
+import Clientes from '../components/Clientes.astro';
+import Parceiros from '../components/Parceiros.astro';
+import Faq from '../components/Faq.astro';
+import Contato from '../components/Contato.astro';
+import Footer from '../components/Footer.astro';
+---
+<Base>
+  <Header />
+  <main>
+    <Hero />
+    <Marquee items={['Diagnóstico', 'Estruturação comercial', 'Vendas terceirizadas', 'Tráfego pago', 'Redes sociais']} />
+    <Manifesto />
+    <Solucoes />
+    <Metodo />
+    <Clientes />
+    <Parceiros />
+    <Faq />
+    <Contato />
+  </main>
+  <Footer />
+</Base>

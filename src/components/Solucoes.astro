@@ -1,0 +1,143 @@
+---
+import { produtos } from '../data/site.js';
+const total = String(produtos.length).padStart(2, '0');
+---
+<section id="solucoes" class="sol dark" data-hscroll>
+  <div class="sol__pin">
+    <div class="sol__head wrap">
+      <p class="kicker">Soluções</p>
+      <div class="sol__progress" aria-hidden="true"><span data-hscroll-bar></span></div>
+    </div>
+
+    <div class="sol__track" data-hscroll-track>
+      <div class="sol__intro">
+        <h2 class="h-lg">Cinco módulos.<br /><span>Um só hub.</span></h2>
+        <p>Comece pelo que sua empresa mais precisa agora. Os módulos se conectam conforme o negócio cresce.</p>
+      </div>
+
+      {produtos.map((p, i) => (
+        <article class={`card card--${p.id}`}>
+          <div class="card__top">
+            <span class="card__idx">{String(i + 1).padStart(2, '0')} / {total}</span>
+            {p.destaque && <span class="card__badge">{p.destaque}</span>}
+          </div>
+          <div class="card__vis" aria-hidden="true">
+            {p.visual === 'radar' && (
+              <svg viewBox="0 0 200 200" class="v-radar">
+                <circle cx="100" cy="100" r="90" /><circle cx="100" cy="100" r="60" /><circle cx="100" cy="100" r="30" />
+                <line x1="10" y1="100" x2="190" y2="100" /><line x1="100" y1="10" x2="100" y2="190" />
+                <g class="sweep"><path d="M100 100 L100 10 A90 90 0 0 1 177.9 55 Z" /></g>
+                <circle cx="140" cy="62" r="5" class="blip" /><circle cx="62" cy="128" r="4" class="blip b2" /><circle cx="128" cy="150" r="3.5" class="blip b3" />
+              </svg>
+            )}
+            {p.visual === 'pipeline' && (
+              <div class="v-pipe">
+                {['ICP', 'Pitch', 'Scripts', 'CRM', 'Automação'].map((s, k) => (
+                  <div class="v-pipe__row" style={`--d:${k * 0.18}s;--w:${38 + k * 15}%`}><span>{s}</span><i></i></div>
+                ))}
+              </div>
+            )}
+            {p.visual === 'funil' && (
+              <div class="v-funil">
+                {['Prospecção', 'Qualificação', 'Proposta', 'Fechamento'].map((s, k) => (
+                  <div style={`--k:${k}`}><span>{s}</span></div>
+                ))}
+              </div>
+            )}
+            {p.visual === 'curva' && (
+              <svg viewBox="0 0 240 160" class="v-curva">
+                <path d="M0 150 H240 M0 110 H240 M0 70 H240 M0 30 H240" class="grid" />
+                <path d="M4 140 C40 132 60 120 84 104 S128 92 150 70 S200 30 236 18" class="ln" pathLength="1" />
+                <circle cx="236" cy="18" r="5" class="end" />
+              </svg>
+            )}
+            {p.visual === 'grade' && (
+              <div class="v-grade">{Array.from({ length: 9 }, (_, k) => <i style={`--k:${k}`}></i>)}</div>
+            )}
+          </div>
+          <div class="card__body">
+            <h3 class="card__name">{p.nome}</h3>
+            <p class="card__tag">{p.tag}</p>
+            <p class="card__text">{p.texto}</p>
+          </div>
+        </article>
+      ))}
+
+      <div class="sol__end">
+        <p>Não sabe por onde começar?</p>
+        <a href="#contato" class="btn" data-magnetic>Fazer o diagnóstico</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sol { position: relative; }
+  .sol__pin { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 110px 0 60px; overflow: hidden; }
+  .sol__head { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 44px; }
+  .sol__progress { width: min(320px, 40vw); height: 2px; background: var(--navy-line); position: relative; overflow: hidden; }
+  .sol__progress span { position: absolute; inset: 0; background: var(--green); transform-origin: left; transform: scaleX(0); }
+  .sol__track { display: flex; gap: 24px; padding-inline: var(--gutter) calc(var(--gutter) * 2); width: max-content; will-change: transform; }
+  .sol__intro { width: min(560px, 82vw); display: flex; flex-direction: column; justify-content: flex-end; gap: 28px; padding-right: 40px; }
+  .sol__intro h2 span { color: var(--green); }
+  .sol__intro p { font-size: 18px; color: var(--muted-on-dark); max-width: 420px; }
+  .card {
+    width: min(460px, 82vw); min-height: 560px; display: flex; flex-direction: column; gap: 24px;
+    padding: 32px; border-radius: var(--radius); background: var(--navy-700); border: 1px solid var(--navy-line);
+    transition: border-color .4s, transform .6s var(--ease);
+  }
+  .card:hover { border-color: rgba(0, 228, 81, 0.5); transform: translateY(-6px); }
+  .card--go { background: var(--green); color: var(--navy); border-color: transparent; }
+  .card__top { display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 700; }
+  .card__idx { opacity: 0.7; }
+  .card__badge { padding: 6px 12px; border-radius: 999px; background: var(--navy); color: var(--green); font-size: 13px; }
+  .card__vis { flex: 1; min-height: 220px; display: flex; align-items: center; justify-content: center; }
+  .card__name { font-size: clamp(40px, 4vw, 58px); letter-spacing: -0.045em; }
+  .card__tag { margin-top: 10px; font-weight: 700; color: var(--green); }
+  .card--go .card__tag { color: var(--navy); }
+  .card__text { margin-top: 14px; color: var(--muted-on-dark); font-size: 16px; }
+  .card--go .card__text { color: rgba(0, 33, 78, 0.8); }
+  .sol__end { width: min(420px, 82vw); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 24px; padding-left: 40px; }
+  .sol__end p { font-family: var(--f-display); font-size: clamp(30px, 3vw, 44px); font-weight: 700; letter-spacing: -0.035em; line-height: 1.05; }
+
+  /* visuais */
+  .v-radar { width: 210px; }
+  .v-radar circle, .v-radar line { fill: none; stroke: rgba(0, 33, 78, 0.35); stroke-width: 1; }
+  .v-radar .sweep { transform-origin: 100px 100px; animation: spin 4s linear infinite; }
+  .v-radar .sweep path { fill: rgba(0, 33, 78, 0.18); stroke: none; }
+  .v-radar .blip { fill: var(--navy); stroke: none; animation: blip 4s ease-in-out infinite; }
+  .v-radar .b2 { animation-delay: 1.3s; } .v-radar .b3 { animation-delay: 2.6s; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes blip { 0%, 100% { opacity: .25; } 15% { opacity: 1; } }
+
+  .v-pipe { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+  .v-pipe__row { display: grid; grid-template-columns: 86px 1fr; align-items: center; gap: 12px; font-size: 13px; font-weight: 600; color: var(--muted-on-dark); }
+  .v-pipe__row i { height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--teal), var(--green)); width: var(--w); transform-origin: left; animation: grow 3.2s var(--ease) var(--d) infinite; }
+  @keyframes grow { 0% { transform: scaleX(0); } 40%, 85% { transform: scaleX(1); } 100% { transform: scaleX(0); opacity: 0; } }
+
+  .v-funil { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .v-funil div { width: calc(100% - var(--k) * 18%); height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--navy); background: color-mix(in srgb, var(--green) calc(100% - var(--k) * 18%), var(--teal)); animation: pulseW 3s ease-in-out calc(var(--k) * .25s) infinite; }
+  @keyframes pulseW { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.15); } }
+
+  .v-curva { width: 100%; }
+  .v-curva .grid { stroke: var(--navy-line); stroke-width: 1; }
+  .v-curva .ln { fill: none; stroke: var(--green); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 3.6s var(--ease) infinite; }
+  .v-curva .end { fill: var(--green); animation: blip 3.6s ease-in-out infinite; }
+  @keyframes draw { 0% { stroke-dashoffset: 1; } 55%, 90% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+
+  .v-grade { display: grid; grid-template-columns: repeat(3, 64px); gap: 10px; }
+  .v-grade i { height: 64px; border-radius: 12px; background: var(--navy); border: 1px solid var(--navy-line); animation: pop 3s var(--ease) calc(var(--k) * .12s) infinite; }
+  .v-grade i:nth-child(3n+1) { background: var(--teal); }
+  .v-grade i:nth-child(4) { background: var(--green); }
+  @keyframes pop { 0%, 100% { transform: scale(.85); opacity: .5; } 30%, 70% { transform: scale(1); opacity: 1; } }
+
+  /* mobile/tablet: sem scroll horizontal fixo */
+  @media (max-width: 900px) {
+    .sol__pin { padding: 96px 0 72px; }
+    .sol__track { flex-direction: column; width: 100%; }
+    .sol__intro, .card, .sol__end { width: 100%; }
+    .sol__intro { padding: 0 0 16px; }
+    .card { min-height: 0; }
+    .sol__end { padding: 32px 0 0; }
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+import { parceiros } from '../data/site.js';
+---
+<section class="pc">
+  <div class="wrap pc__grid">
+    <div class="pc__side">
+      <p class="kicker" data-reveal>Hub de parceiros</p>
+      <h2 class="h-md" data-reveal>Muito além de vendas e marketing.</h2>
+      <p class="pc__lead" data-reveal>Atuamos como um <strong>hub estratégico</strong>: entendemos o momento da sua empresa e conectamos você às ferramentas e parceiros certos para outros desafios do negócio.</p>
+    </div>
+    <div class="pc__list">
+      {parceiros.map((p) => (
+        <article class="pc__item" data-reveal>
+          <h3>{p.titulo}</h3>
+          <p class="pc__q">{p.pergunta}</p>
+          <p class="pc__a">{p.texto}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .pc { padding: clamp(96px, 13vw, 170px) 0; }
+  .pc__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(40px, 7vw, 120px); align-items: start; }
+  .pc__side { position: sticky; top: 120px; display: flex; flex-direction: column; gap: 24px; }
+  .pc__lead { color: var(--muted); max-width: 420px; }
+  .pc__lead strong { color: var(--ink); }
+  .pc__list { display: flex; flex-direction: column; gap: 20px; }
+  .pc__item { padding: 40px; border-radius: var(--radius); background: var(--white); border: 1px solid rgba(11, 26, 46, 0.08); display: flex; flex-direction: column; gap: 14px; transition: transform .6s var(--ease), box-shadow .6s var(--ease); }
+  .pc__item:hover { transform: translateY(-4px); box-shadow: 0 24px 60px -24px rgba(0, 33, 78, 0.28); }
+  .pc__item h3 { font-size: clamp(26px, 2.4vw, 34px); }
+  .pc__q { font-weight: 700; color: var(--teal-ink); }
+  .pc__a { color: var(--muted); }
+  @media (max-width: 900px) {
+    .pc__grid { grid-template-columns: 1fr; }
+    .pc__side { position: static; }
+    .pc__item { padding: 28px; }
+  }
+</style>

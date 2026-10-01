@@ -1,0 +1,43 @@
+---
+import { faq } from '../data/site.js';
+---
+<section id="duvidas" class="fq">
+  <div class="wrap fq__grid">
+    <div class="fq__side">
+      <p class="kicker" data-reveal>Dúvidas</p>
+      <h2 class="h-md" data-reveal>Perguntas que sempre aparecem.</h2>
+    </div>
+    <div class="fq__list">
+      {faq.map((f, i) => (
+        <div class="fq__item" data-acc>
+          <h3>
+            <button class="fq__q" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`fq-${i}`} id={`fq-b-${i}`} data-acc-btn>
+              <span>{f.p}</span>
+              <span class="fq__icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="fq__a" id={`fq-${i}`} role="region" aria-labelledby={`fq-b-${i}`} data-acc-panel style={i === 0 ? '' : 'height:0'}>
+            <p>{f.r}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .fq { padding: 0 0 clamp(96px, 13vw, 170px); }
+  .fq__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(40px, 7vw, 120px); padding-top: clamp(72px, 9vw, 120px); border-top: 1px solid rgba(11, 26, 46, 0.12); }
+  .fq__side { display: flex; flex-direction: column; gap: 24px; }
+  .fq__item { border-bottom: 1px solid rgba(11, 26, 46, 0.14); }
+  .fq__item h3 { font-size: inherit; letter-spacing: normal; }
+  .fq__q { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 24px; min-height: 88px; padding: 18px 0; border: 0; background: none; cursor: pointer; text-align: left; font-family: var(--f-display); font-weight: 600; font-size: clamp(20px, 1.8vw, 26px); letter-spacing: -0.02em; line-height: 1.2; }
+  .fq__icon { position: relative; flex: 0 0 auto; width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid rgba(11, 26, 46, 0.2); transition: background .4s, border-color .4s, transform .5s var(--ease); }
+  .fq__icon::before, .fq__icon::after { content: ''; position: absolute; left: 50%; top: 50%; width: 14px; height: 2px; background: currentColor; transform: translate(-50%, -50%); }
+  .fq__icon::after { transform: translate(-50%, -50%) rotate(90deg); transition: transform .5s var(--ease); }
+  .fq__q[aria-expanded='true'] .fq__icon { background: var(--green); border-color: var(--green); color: var(--navy); }
+  .fq__q[aria-expanded='true'] .fq__icon::after { transform: translate(-50%, -50%) rotate(0deg); }
+  .fq__a { overflow: hidden; }
+  .fq__a p { padding: 0 64px 30px 0; color: var(--muted); }
+  @media (max-width: 900px) { .fq__grid { grid-template-columns: 1fr; } .fq__a p { padding-right: 0; } }
+</style>

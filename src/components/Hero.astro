@@ -1,0 +1,111 @@
+---
+import { produtos } from '../data/site.js';
+// posições dos módulos ao redor do hub (viewBox 600x600)
+const pos = [
+  { x: 300, y: 70 },
+  { x: 520, y: 225 },
+  { x: 440, y: 500 },
+  { x: 160, y: 500 },
+  { x: 80, y: 225 },
+];
+const nodes = produtos.map((p, i) => ({ ...p, ...pos[i], curto: p.nome.replace('S4 ', '') }));
+---
+<section id="topo" class="hero dark">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="wrap hero__grid">
+    <div class="hero__text">
+      <p class="hero__eyebrow" data-hero-fade>Hub de soluções em Vendas e Marketing</p>
+      <h1 class="h-xl hero__title" data-split-hero>
+        <span class="line"><span>Vendas e</span></span>
+        <span class="line"><span>marketing</span></span>
+        <span class="line"><span>no <em>mesmo</em></span></span>
+        <span class="line"><span><em>time.</em></span></span>
+      </h1>
+      <p class="hero__lead" data-hero-fade>Diagnóstico inteligente, ferramentas certas e execução que gera resultado. Sem enrolação, com estratégia.</p>
+      <div class="hero__ctas" data-hero-fade>
+        <a href="#contato" class="btn" data-magnetic>
+          Quero meu diagnóstico
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </a>
+        <a href="#solucoes" class="btn btn--ghost">Ver as soluções</a>
+      </div>
+    </div>
+
+    <div class="hero__hub" data-hub aria-hidden="true">
+      <svg viewBox="0 0 600 600" class="hub">
+        <defs>
+          <radialGradient id="core" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#00e451" stop-opacity="0.55" />
+            <stop offset="100%" stop-color="#00e451" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <g class="hub__orbits">
+          <circle cx="300" cy="300" r="150" class="orbit" />
+          <circle cx="300" cy="300" r="232" class="orbit orbit--b" />
+          <circle cx="300" cy="300" r="290" class="orbit orbit--c" />
+        </g>
+        {nodes.map((n) => (
+          <g class="hub__link">
+            <line x1="300" y1="300" x2={n.x} y2={n.y} class="link" />
+            <line x1="300" y1="300" x2={n.x} y2={n.y} class="pulse" />
+          </g>
+        ))}
+        <circle cx="300" cy="300" r="120" fill="url(#core)" class="hub__aura" />
+        <circle cx="300" cy="300" r="56" class="hub__ring" />
+        <circle cx="300" cy="300" r="56" class="hub__ring hub__ring--2" />
+        <circle cx="300" cy="300" r="44" class="hub__core" />
+        <text x="300" y="312" text-anchor="middle" class="hub__label">S4</text>
+        {nodes.map((n) => (
+          <g class="hub__node" data-node>
+            <circle cx={n.x} cy={n.y} r="34" class="node__bg" />
+            <circle cx={n.x} cy={n.y} r="6" class="node__dot" />
+            <text x={n.x} y={n.y + 58} text-anchor="middle" class="node__label">{n.curto}</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  </div>
+
+  <div class="wrap hero__foot" data-hero-fade>
+    <span>Role para explorar</span>
+    <span class="hero__scroll" aria-hidden="true"><span></span></span>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding-top: 120px; overflow: hidden; }
+  .hero__glow {
+    position: absolute; width: 900px; height: 900px; right: -260px; top: -180px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(52, 175, 128, 0.22), transparent 70%);
+    pointer-events: none;
+  }
+  .hero__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; gap: 32px; }
+  .hero__eyebrow { font-weight: 600; color: var(--green); margin-bottom: 28px; font-size: 15px; letter-spacing: 0.01em; }
+  .hero__title { font-weight: 800; letter-spacing: -0.05em; line-height: 0.92; }
+  .hero__title em { font-style: normal; color: var(--green); }
+  .hero__lead { margin-top: 32px; max-width: 470px; font-size: 19px; color: var(--muted-on-dark); }
+  .hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
+  .hero__hub { position: relative; width: 100%; max-width: 600px; justify-self: end; }
+  .hub { width: 100%; height: auto; overflow: visible; }
+  .orbit { fill: none; stroke: rgba(255, 255, 255, 0.09); stroke-width: 1; stroke-dasharray: 2 8; transform-origin: 300px 300px; }
+  .orbit--b { stroke: rgba(52, 175, 128, 0.22); stroke-dasharray: 1 14; }
+  .orbit--c { stroke: rgba(255, 255, 255, 0.06); stroke-dasharray: none; }
+  .link { stroke: rgba(255, 255, 255, 0.16); stroke-width: 1.2; }
+  .pulse { stroke: var(--green); stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 14 400; stroke-dashoffset: 14; }
+  .hub__ring { fill: none; stroke: var(--green); stroke-width: 1.5; transform-origin: 300px 300px; opacity: 0; }
+  .hub__core { fill: var(--green); }
+  .hub__label { font-family: var(--f-display); font-weight: 800; font-size: 34px; fill: var(--navy); letter-spacing: -0.04em; }
+  .node__bg { fill: var(--navy-700); stroke: rgba(255, 255, 255, 0.14); }
+  .node__dot { fill: var(--teal); }
+  .node__label { font-family: var(--f-display); font-weight: 600; font-size: 19px; fill: #fff; letter-spacing: -0.01em; }
+  .hub__node { transform-box: fill-box; transform-origin: center; }
+  .hero__foot { display: flex; align-items: center; gap: 14px; margin-top: 56px; padding-bottom: 36px; font-size: 13px; font-weight: 600; color: var(--muted-on-dark); letter-spacing: 0.04em; text-transform: uppercase; }
+  .hero__scroll { width: 1.5px; height: 40px; background: var(--navy-line); position: relative; overflow: hidden; }
+  .hero__scroll span { position: absolute; left: 0; top: 0; width: 100%; height: 40%; background: var(--green); animation: drip 2.2s var(--ease) infinite; }
+  @keyframes drip { from { transform: translateY(-100%); } to { transform: translateY(260%); } }
+
+  @media (max-width: 980px) {
+    .hero__grid { grid-template-columns: 1fr; }
+    .hero__hub { max-width: 440px; justify-self: center; margin-top: 24px; }
+  }
+</style>

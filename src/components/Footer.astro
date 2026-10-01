@@ -1,0 +1,29 @@
+---
+const ano = new Date().getFullYear();
+---
+<footer class="ft dark">
+  <div class="wrap ft__top">
+    <img src="/img/logo-h-dark.png" alt="S4 Hub" width="600" height="215" class="ft__logo" />
+    <nav class="ft__nav" aria-label="Rodapé">
+      <a href="#solucoes">Soluções</a>
+      <a href="#metodo">Método</a>
+      <a href="#clientes">Clientes</a>
+      <a href="#duvidas">Dúvidas</a>
+      <a href="#contato">Contato</a>
+    </nav>
+  </div>
+  <div class="wrap ft__bottom">
+    <span>Seu hub de soluções em Vendas e Marketing.</span>
+    <span>© {ano} S4 Hub · Paciullo Gestão Comercial Ltda · CNPJ 52.437.625/0001-19</span>
+  </div>
+</footer>
+
+<style>
+  .ft { padding: 64px 0 40px; border-top: 1px solid var(--navy-line); }
+  .ft__top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 32px; }
+  .ft__logo { height: 56px; width: auto; }
+  .ft__nav { display: flex; flex-wrap: wrap; gap: 8px 28px; font-weight: 600; color: var(--muted-on-dark); }
+  .ft__nav a { padding: 8px 0; transition: color .3s; }
+  .ft__nav a:hover { color: var(--green); }
+  .ft__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--navy-line); font-size: 14px; color: var(--muted-on-dark); }
+</style>
