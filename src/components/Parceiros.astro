@@ -22,23 +22,25 @@ import { parceiros } from '../data/site.js';
 </section>
 
 <style>
-  .pc { padding: 0 0 clamp(96px, 13vw, 170px); }
-  .pc__grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(40px, 7vw, 120px); align-items: start; padding-top: clamp(72px, 9vw, 120px); }
-  .pc__side { position: sticky; top: 120px; display: flex; flex-direction: column; gap: 24px; }
-  .pc__lead { color: var(--muted); max-width: 420px; }
+  .pc { padding: 0 0 var(--section); }
+  .pc__grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(32px, 6vw, 96px); align-items: start; padding-top: var(--section); }
+  /* depois de uma seção escura (Clientes) a troca de fundo já separa: sem linha */
+  :global(.dark) + .pc .pc__grid { background-image: none; }
+  .pc__side { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 16px; }
+  .pc__lead { color: var(--muted); font-size: 15px; max-width: 380px; }
   .pc__lead strong { color: var(--ink); }
   .pc__list { list-style: none; margin: 0; padding: 0; }
   /* A pergunta é o gancho: vem grande. A área do parceiro e a resposta ficam ao lado. */
-  .pc__item { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 32px; padding: 40px 0; border-bottom: 1px solid var(--paper-line); }
+  .pc__item { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 28px; padding: 26px 0; border-bottom: 1px solid var(--paper-line); }
   .pc__item:first-child { padding-top: 0; }
-  .pc__q { font-size: clamp(24px, 2.3vw, 32px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.15; }
-  .pc__a { display: flex; flex-direction: column; gap: 8px; color: var(--muted); }
+  .pc__q { font-size: clamp(18px, 1.6vw, 22px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; }
+  .pc__a { display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: 15px; }
   .pc__area { font-weight: 700; color: var(--teal-ink); }
   @media (max-width: 900px) {
     .pc__grid { grid-template-columns: 1fr; }
     .pc__side { position: static; }
   }
   @media (max-width: 640px) {
-    .pc__item { grid-template-columns: 1fr; gap: 14px; padding: 32px 0; }
+    .pc__item { grid-template-columns: 1fr; gap: 10px; padding: 24px 0; }
   }
 </style>

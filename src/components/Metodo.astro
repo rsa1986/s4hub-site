@@ -21,22 +21,22 @@ import { etapas } from '../data/site.js';
 </section>
 
 <style>
-  .mt { padding: clamp(96px, 13vw, 170px) 0; }
-  .mt__steps { position: relative; margin-top: clamp(64px, 8vw, 110px); padding-top: 48px; }
-  .mt__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
-  .mt__rail { position: absolute; left: 0; right: 0; top: 9px; height: 2px; background: rgba(11, 26, 46, 0.1); }
+  .mt { padding: var(--section) 0; }
+  .mt__steps { position: relative; margin-top: clamp(40px, 5vw, 64px); padding-top: 40px; }
+  .mt__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+  .mt__rail { position: absolute; left: 0; right: 0; top: 7px; height: 2px; background: rgba(11, 26, 46, 0.1); }
   .mt__rail span { position: absolute; inset: 0; background: var(--teal); transform-origin: left; transform: scaleX(0); }
-  .mt__step { position: relative; display: flex; flex-direction: column; gap: 14px; }
-  .mt__dot { position: absolute; top: -48px; left: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--paper); border: 2px solid rgba(11, 26, 46, 0.2); transition: background .4s, border-color .4s, transform .5s var(--ease); }
+  .mt__step { position: relative; display: flex; flex-direction: column; gap: 8px; }
+  .mt__dot { position: absolute; top: -40px; left: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--paper); border: 2px solid rgba(11, 26, 46, 0.2); transition: background .4s, border-color .4s, transform .5s var(--ease); }
   .mt__step.is-on .mt__dot { background: var(--green); border-color: var(--green); transform: scale(1.25); }
-  .mt__n { font-size: 15px; font-weight: 700; color: var(--teal-ink); }
-  .mt__step h3 { font-size: clamp(30px, 3vw, 44px); }
-  .mt__step p { color: var(--muted); max-width: 340px; }
+  .mt__n { font-size: 13px; font-weight: 700; color: var(--teal-ink); }
+  .mt__step h3 { font-size: clamp(22px, 2vw, 28px); letter-spacing: -0.025em; }
+  .mt__step p { color: var(--muted); font-size: 15px; max-width: 320px; }
   @media (max-width: 860px) {
-    .mt__steps { padding: 0 0 0 40px; }
-    .mt__list { grid-template-columns: 1fr; gap: 48px; }
-    .mt__rail { left: 9px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; }
+    .mt__steps { padding: 0 0 0 36px; }
+    .mt__list { grid-template-columns: 1fr; gap: 36px; }
+    .mt__rail { left: 7px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; }
     .mt__rail span { transform-origin: top; transform: scaleY(0); }
-    .mt__dot { top: 4px; left: -40px; }
+    .mt__dot { top: 2px; left: -36px; }
   }
 </style>

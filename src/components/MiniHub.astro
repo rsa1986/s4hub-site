@@ -10,15 +10,15 @@ const { ativo = 0, tom = 'dark' } = Astro.props;
   ))}
   <circle cx={c.x} cy={c.y} r="44" class="mh__core" />
   {hubPos.map((p, i) => (
-    <circle cx={p.x} cy={p.y} r={i === ativo ? 46 : 26} class={i === ativo ? 'mh__node is-on' : 'mh__node'} />
+    <circle cx={p.x} cy={p.y} r={i === ativo ? 54 : 30} class={i === ativo ? 'mh__node is-on' : 'mh__node'} />
   ))}
 </svg>
 
 <style>
   .mh { width: 100%; height: auto; overflow: visible; }
-  .mh__link { stroke-width: 3; }
-  .mh__link.is-on { stroke-width: 6; }
-  .mh__node { stroke-width: 3; }
+  .mh__link { stroke-width: 5; }
+  .mh__link.is-on { stroke-width: 10; }
+  .mh__node { stroke-width: 5; }
 
   .mh--dark .mh__link { stroke: rgba(255, 255, 255, 0.16); }
   .mh--dark .mh__link.is-on { stroke: var(--green); }

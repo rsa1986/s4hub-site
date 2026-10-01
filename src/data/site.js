@@ -77,8 +77,9 @@ export const etapas = [
 
 // Clientes: troque `nome` e adicione `logo: '/img/clientes/arquivo.svg'` quando tiver os arquivos.
 export const clientes = Array.from({ length: 10 }, (_, i) => ({ nome: `Cliente ${i + 1}`, logo: null }));
-// A seção Clientes (e o link dela no menu) só aparece quando houver ao menos um logo.
-export const temClientes = clientes.some((c) => c.logo);
+// A seção Clientes (e o link dela no menu) aparece sempre que isto for true.
+// Clientes sem `logo` aparecem com o nome escrito no lugar.
+export const temClientes = true;
 
 export const parceiros = [
   {

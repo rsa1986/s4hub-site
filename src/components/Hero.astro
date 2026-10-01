@@ -66,11 +66,11 @@ const nodes = produtos.map((p, i) => ({ ...p, ...hubPos[i], curto: p.nome.replac
 </section>
 
 <style>
-  .hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 120px 0 64px; overflow: hidden; }
-  .hero__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; gap: 32px; }
-  .hero__lead { margin-top: 36px; max-width: 470px; font-size: 19px; color: var(--muted-on-dark); }
-  .hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
-  .hero__hub { position: relative; width: 100%; max-width: 600px; justify-self: end; }
+  .hero { position: relative; min-height: min(100svh, 780px); display: flex; flex-direction: column; justify-content: center; padding: 100px 0 56px; overflow: hidden; }
+  .hero__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; gap: 48px; }
+  .hero__lead { margin-top: 24px; max-width: 440px; font-size: 17px; color: var(--muted-on-dark); }
+  .hero__ctas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+  .hero__hub { position: relative; width: 100%; max-width: 420px; justify-self: center; }
   .hub { width: 100%; height: auto; overflow: visible; }
   .orbit { fill: none; stroke: rgba(255, 255, 255, 0.09); stroke-width: 1; stroke-dasharray: 2 8; transform-origin: 300px 300px; }
   .orbit--b { stroke: rgba(52, 175, 128, 0.22); stroke-dasharray: 1 14; }
@@ -91,16 +91,16 @@ const nodes = produtos.map((p, i) => ({ ...p, ...hubPos[i], curto: p.nome.replac
   .node:hover .node__dot, .node:focus-visible .node__dot { fill: var(--navy); }
   .node:focus-visible .node__bg { stroke: var(--white); stroke-width: 3; }
   .hub__caption {
-    min-height: 56px; margin-top: 28px; display: flex; flex-direction: column; align-items: center; gap: 2px;
+    min-height: 44px; margin-top: 12px; display: flex; flex-direction: column; align-items: center; gap: 2px;
     text-align: center; pointer-events: none; opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .45s var(--ease);
   }
   .hub__caption.is-on { opacity: 1; transform: none; }
-  .hub__caption strong { font-family: var(--f-display); font-size: 20px; letter-spacing: -0.02em; color: var(--green); }
-  .hub__caption span { font-size: 15px; color: var(--muted-on-dark); }
+  .hub__caption strong { font-family: var(--f-display); font-size: 17px; letter-spacing: -0.02em; color: var(--green); }
+  .hub__caption span { font-size: 14px; color: var(--muted-on-dark); }
 
   @media (hover: none) { .hub__caption { display: none; } }
   @media (max-width: 980px) {
     .hero__grid { grid-template-columns: 1fr; }
-    .hero__hub { max-width: 440px; justify-self: center; margin-top: 24px; }
+    .hero__hub { max-width: 320px; justify-self: center; margin-top: 16px; }
   }
 </style>

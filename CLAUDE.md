@@ -47,7 +47,8 @@ Regras da revisão de design (v2):
 - Numeração só onde há sequência real (etapas do Método)
 - Fundos: só navy e paper. Linhas divisórias em blocos `.wrap` usam a classe `.rule-top`
 - Seta e botão magnético só no CTA principal do Hero
-- Seções sem conteúdo real não aparecem: Clientes some enquanto não houver logos (`temClientes`) e o e-mail some enquanto for placeholder (`emailDefinido`)
+- Escala contida: títulos, hub e espaçamentos moderados (token `--section` para o respiro vertical das seções). Evitar voltar a fontes e blocos gigantes
+- Clientes aparece conforme `temClientes` em `site.js` (hoje `true`, com os nomes no lugar dos logos que faltam). O e-mail some enquanto for placeholder (`emailDefinido`)
 
 ## Motion
 
@@ -61,7 +62,7 @@ Só três momentos animados por rolagem; o resto aparece pronto.
 
 ## Pendências
 
-- [ ] Logos dos clientes: colocar em `public/img/clientes/` e preencher `clientes` em `src/data/site.js` (`{ nome, logo }`). A seção e o link no menu aparecem sozinhos quando houver logo
+- [ ] Logos dos clientes: colocar em `public/img/clientes/` e preencher `clientes` em `src/data/site.js` (`{ nome, logo }`). Cliente sem logo aparece com o nome escrito
 - [ ] E-mail de contato: `contato.email` em `site.js` e `DESTINO` em `public/contato.php`. O e-mail só aparece na seção Contato depois de definido
 - [ ] Ajuste fino de textos
 - [ ] Imagem de compartilhamento (og:image) 1200x630; hoje usa o logo quadrado

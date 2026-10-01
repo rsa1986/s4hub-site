@@ -1,7 +1,6 @@
 ---
-// Só é renderizada quando houver logos em `clientes` (ver `temClientes` em site.js).
+// Aparece quando `temClientes` (site.js) for true. Cliente sem logo aparece com o nome escrito.
 import { clientes, temClientes } from '../data/site.js';
-const logos = clientes.filter((c) => c.logo);
 ---
 {temClientes && (
   <section id="clientes" class="cl dark">
@@ -11,11 +10,15 @@ const logos = clientes.filter((c) => c.logo);
     </div>
 
     <div class="cl__mq" data-marquee data-speed="0.6" data-copies="3">
-      <div class="mq__track">
-        {[...logos, ...logos, ...logos].map((c, k) => (
-          <img src={c.logo} alt={k < logos.length ? c.nome : ''} loading="lazy" class="cl__logo" />
+      <ul class="mq__track">
+        {[...clientes, ...clientes, ...clientes].map((c, k) => (
+          <li class="cl__item" aria-hidden={k >= clientes.length ? 'true' : undefined}>
+            {c.logo
+              ? <img src={c.logo} alt={k < clientes.length ? c.nome : ''} loading="lazy" class="cl__logo" />
+              : <span class="cl__nome">{c.nome}</span>}
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
 
     <div class="wrap cl__foot">
@@ -25,11 +28,13 @@ const logos = clientes.filter((c) => c.logo);
 )}
 
 <style>
-  .cl { padding: clamp(96px, 13vw, 170px) 0; overflow: hidden; }
-  .cl__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 32px 64px; }
+  .cl { padding: var(--section) 0; overflow: hidden; }
+  .cl__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px 64px; }
   .cl__lead { max-width: 380px; color: var(--muted-on-dark); }
-  .cl__mq { overflow: hidden; white-space: nowrap; margin-top: clamp(56px, 7vw, 96px); }
-  .cl__mq .mq__track { display: inline-flex; align-items: center; gap: clamp(48px, 6vw, 96px); padding-right: clamp(48px, 6vw, 96px); will-change: transform; }
-  .cl__logo { flex: 0 0 auto; height: 48px; width: auto; max-width: 180px; object-fit: contain; filter: grayscale(1) brightness(2.2); opacity: .75; }
-  .cl__foot { margin-top: 56px; }
+  .cl__mq { overflow: hidden; white-space: nowrap; margin-top: clamp(40px, 5vw, 64px); padding-block: 24px; border-block: 1px solid var(--navy-line); }
+  .cl__mq .mq__track { display: inline-flex; align-items: center; gap: clamp(40px, 5vw, 72px); margin: 0; padding: 0 clamp(40px, 5vw, 72px) 0 0; list-style: none; will-change: transform; }
+  .cl__item { flex: 0 0 auto; display: flex; align-items: center; height: 40px; }
+  .cl__logo { height: 36px; width: auto; max-width: 150px; object-fit: contain; filter: grayscale(1) brightness(2.2); opacity: .75; }
+  .cl__nome { font-family: var(--f-display); font-weight: 600; font-size: 20px; letter-spacing: -0.02em; color: var(--muted-on-dark); }
+  .cl__foot { margin-top: 40px; }
 </style>
