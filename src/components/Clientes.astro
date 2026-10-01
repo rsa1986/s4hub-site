@@ -1,55 +1,35 @@
 ---
-import { clientes } from '../data/site.js';
-const meio = Math.ceil(clientes.length / 2);
-const linhas = [clientes.slice(0, meio), clientes.slice(meio)];
+// Só é renderizada quando houver logos em `clientes` (ver `temClientes` em site.js).
+import { clientes, temClientes } from '../data/site.js';
+const logos = clientes.filter((c) => c.logo);
 ---
-<section id="clientes" class="cl dark">
-  <div class="wrap cl__head">
-    <div>
-      <p class="kicker" data-reveal>Clientes</p>
-      <h2 class="h-lg" data-split>
-        <span class="line"><span>Quem já cresce</span></span>
-        <span class="line"><span>com a <em>S4 Hub.</em></span></span>
-      </h2>
+{temClientes && (
+  <section id="clientes" class="cl dark">
+    <div class="wrap cl__head">
+      <h2 class="h-lg">Quem já cresce<br />com a S4 Hub.</h2>
+      <p class="cl__lead">Negócios de diferentes portes e segmentos que confiaram em nós para estruturar e acelerar suas vendas e seu marketing.</p>
     </div>
-    <p class="cl__lead" data-reveal>Negócios de diferentes portes e segmentos que confiaram em nós para estruturar e acelerar suas vendas e seu marketing.</p>
-  </div>
 
-  <div class="cl__rows">
-    {linhas.map((row, r) => (
-      <div class="cl__mq" data-marquee data-reverse={r === 1 ? 'true' : 'false'} data-speed="0.6" data-copies="3">
-        <div class="mq__track">
-          {[...row, ...row, ...row].map((c) => (
-            <div class="cl__logo">
-              {c.logo ? <img src={c.logo} alt={c.nome} loading="lazy" /> : <span>{c.nome}</span>}
-            </div>
-          ))}
-        </div>
+    <div class="cl__mq" data-marquee data-speed="0.6" data-copies="3">
+      <div class="mq__track">
+        {[...logos, ...logos, ...logos].map((c, k) => (
+          <img src={c.logo} alt={k < logos.length ? c.nome : ''} loading="lazy" class="cl__logo" />
+        ))}
       </div>
-    ))}
-  </div>
+    </div>
 
-  <div class="wrap cl__foot" data-reveal>
-    <a href="#contato" class="btn btn--ghost">Quero ser o próximo case</a>
-  </div>
-</section>
+    <div class="wrap cl__foot">
+      <a href="#contato" class="btn btn--ghost">Quero ser o próximo case</a>
+    </div>
+  </section>
+)}
 
 <style>
   .cl { padding: clamp(96px, 13vw, 170px) 0; overflow: hidden; }
   .cl__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 32px 64px; }
-  .cl__head > div { display: flex; flex-direction: column; gap: 28px; }
-  .cl__head em { font-style: normal; color: var(--green); }
   .cl__lead { max-width: 380px; color: var(--muted-on-dark); }
-  .cl__rows { display: flex; flex-direction: column; gap: 16px; margin-top: clamp(56px, 7vw, 96px); }
-  .cl__mq { overflow: hidden; white-space: nowrap; }
-  .cl__mq .mq__track { display: inline-flex; gap: 16px; padding-right: 16px; will-change: transform; }
-  .cl__logo {
-    flex: 0 0 auto; width: 240px; height: 120px; border-radius: 18px; border: 1px solid var(--navy-line); background: rgba(255, 255, 255, 0.03);
-    display: flex; align-items: center; justify-content: center; color: var(--muted-on-dark); font-weight: 600; font-size: 15px;
-    transition: background .4s, border-color .4s;
-  }
-  .cl__logo:hover { background: rgba(255, 255, 255, 0.07); border-color: rgba(0, 228, 81, 0.4); }
-  .cl__logo img { max-width: 70%; max-height: 56%; object-fit: contain; filter: grayscale(1) brightness(2.2); opacity: .8; transition: filter .4s, opacity .4s; }
-  .cl__logo:hover img { filter: none; opacity: 1; }
+  .cl__mq { overflow: hidden; white-space: nowrap; margin-top: clamp(56px, 7vw, 96px); }
+  .cl__mq .mq__track { display: inline-flex; align-items: center; gap: clamp(48px, 6vw, 96px); padding-right: clamp(48px, 6vw, 96px); will-change: transform; }
+  .cl__logo { flex: 0 0 auto; height: 48px; width: auto; max-width: 180px; object-fit: contain; filter: grayscale(1) brightness(2.2); opacity: .75; }
   .cl__foot { margin-top: 56px; }
 </style>

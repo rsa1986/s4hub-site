@@ -2,39 +2,43 @@
 import { parceiros } from '../data/site.js';
 ---
 <section class="pc">
-  <div class="wrap pc__grid">
+  <div class="wrap rule-top pc__grid">
     <div class="pc__side">
-      <p class="kicker" data-reveal>Hub de parceiros</p>
-      <h2 class="h-md" data-reveal>Muito além de vendas e marketing.</h2>
-      <p class="pc__lead" data-reveal>Atuamos como um <strong>hub estratégico</strong>: entendemos o momento da sua empresa e conectamos você às ferramentas e parceiros certos para outros desafios do negócio.</p>
+      <h2 class="h-md">Muito além de vendas e marketing.</h2>
+      <p class="pc__lead">Atuamos como um <strong>hub estratégico</strong>: entendemos o momento da sua empresa e conectamos você às ferramentas e parceiros certos para outros desafios do negócio.</p>
     </div>
-    <div class="pc__list">
+    <ul class="pc__list">
       {parceiros.map((p) => (
-        <article class="pc__item" data-reveal>
-          <h3>{p.titulo}</h3>
-          <p class="pc__q">{p.pergunta}</p>
-          <p class="pc__a">{p.texto}</p>
-        </article>
+        <li class="pc__item">
+          <h3 class="pc__q">{p.pergunta}</h3>
+          <div class="pc__a">
+            <p class="pc__area">{p.titulo}</p>
+            <p>{p.texto}</p>
+          </div>
+        </li>
       ))}
-    </div>
+    </ul>
   </div>
 </section>
 
 <style>
-  .pc { padding: clamp(96px, 13vw, 170px) 0; }
-  .pc__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(40px, 7vw, 120px); align-items: start; }
+  .pc { padding: 0 0 clamp(96px, 13vw, 170px); }
+  .pc__grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(40px, 7vw, 120px); align-items: start; padding-top: clamp(72px, 9vw, 120px); }
   .pc__side { position: sticky; top: 120px; display: flex; flex-direction: column; gap: 24px; }
   .pc__lead { color: var(--muted); max-width: 420px; }
   .pc__lead strong { color: var(--ink); }
-  .pc__list { display: flex; flex-direction: column; gap: 20px; }
-  .pc__item { padding: 40px; border-radius: var(--radius); background: var(--white); border: 1px solid rgba(11, 26, 46, 0.08); display: flex; flex-direction: column; gap: 14px; transition: transform .6s var(--ease), box-shadow .6s var(--ease); }
-  .pc__item:hover { transform: translateY(-4px); box-shadow: 0 24px 60px -24px rgba(0, 33, 78, 0.28); }
-  .pc__item h3 { font-size: clamp(26px, 2.4vw, 34px); }
-  .pc__q { font-weight: 700; color: var(--teal-ink); }
-  .pc__a { color: var(--muted); }
+  .pc__list { list-style: none; margin: 0; padding: 0; }
+  /* A pergunta é o gancho: vem grande. A área do parceiro e a resposta ficam ao lado. */
+  .pc__item { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 32px; padding: 40px 0; border-bottom: 1px solid var(--paper-line); }
+  .pc__item:first-child { padding-top: 0; }
+  .pc__q { font-size: clamp(24px, 2.3vw, 32px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.15; }
+  .pc__a { display: flex; flex-direction: column; gap: 8px; color: var(--muted); }
+  .pc__area { font-weight: 700; color: var(--teal-ink); }
   @media (max-width: 900px) {
     .pc__grid { grid-template-columns: 1fr; }
     .pc__side { position: static; }
-    .pc__item { padding: 28px; }
+  }
+  @media (max-width: 640px) {
+    .pc__item { grid-template-columns: 1fr; gap: 14px; padding: 32px 0; }
   }
 </style>

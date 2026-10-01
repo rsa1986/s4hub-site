@@ -1,11 +1,11 @@
 ---
-const { items = [], tone = 'green', reverse = false } = Astro.props;
+const { items = [], tone = 'navy', reverse = false } = Astro.props;
 const loop = [...items, ...items];
 ---
 <div class={`mq mq--${tone}`} data-marquee data-reverse={reverse ? 'true' : 'false'} aria-hidden="true">
   <div class="mq__track">
     {loop.map((t) => (
-      <span class="mq__item">{t}<svg viewBox="0 0 24 24" class="mq__star"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" /></svg></span>
+      <span class="mq__item">{t}<i class="mq__dot"></i></span>
     ))}
   </div>
 </div>
@@ -15,7 +15,8 @@ const loop = [...items, ...items];
   .mq--green { background: var(--green); color: var(--navy); }
   .mq--navy { background: var(--navy-900); color: var(--white); border-block: 1px solid var(--navy-line); }
   .mq__track { display: inline-flex; will-change: transform; }
-  .mq__item { display: inline-flex; align-items: center; gap: 36px; padding-right: 36px; font-family: var(--f-display); font-weight: 700; font-size: clamp(28px, 4vw, 56px); letter-spacing: -0.03em; line-height: 1; }
-  .mq__star { width: 0.6em; height: 0.6em; fill: currentColor; opacity: 0.85; }
-  .mq--navy .mq__star { fill: var(--green); }
+  .mq__item { display: inline-flex; align-items: center; gap: 0.6em; padding-right: 0.6em; font-family: var(--f-display); font-stretch: var(--condensed); font-weight: 700; font-size: clamp(30px, 4.4vw, 62px); letter-spacing: -0.02em; line-height: 1; }
+  /* o mesmo ponto dos módulos do hub */
+  .mq__dot { width: 0.22em; height: 0.22em; border-radius: 50%; background: currentColor; }
+  .mq--navy .mq__dot { background: var(--green); }
 </style>

@@ -1,8 +1,9 @@
 ---
+import { temClientes } from '../data/site.js';
 const links = [
   { href: '#solucoes', label: 'Soluções' },
   { href: '#metodo', label: 'Método' },
-  { href: '#clientes', label: 'Clientes' },
+  ...(temClientes ? [{ href: '#clientes', label: 'Clientes' }] : []),
   { href: '#duvidas', label: 'Dúvidas' },
 ];
 ---
@@ -14,7 +15,7 @@ const links = [
     <nav class="hdr__nav" aria-label="Principal">
       {links.map((l) => <a href={l.href} class="hdr__link"><span>{l.label}</span></a>)}
     </nav>
-    <a href="#contato" class="btn hdr__cta" data-magnetic>Diagnóstico gratuito</a>
+    <a href="#contato" class="btn hdr__cta">Diagnóstico gratuito</a>
     <button class="hdr__burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-mobile" data-burger>
       <span></span><span></span>
     </button>

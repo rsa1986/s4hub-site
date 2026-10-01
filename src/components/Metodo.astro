@@ -3,41 +3,38 @@ import { etapas } from '../data/site.js';
 ---
 <section id="metodo" class="mt">
   <div class="wrap">
-    <div class="mt__head">
-      <p class="kicker" data-reveal>Método</p>
-      <h2 class="h-lg" data-split>
-        <span class="line"><span>Do diagnóstico</span></span>
-        <span class="line"><span>ao resultado.</span></span>
-      </h2>
-    </div>
+    <h2 class="h-lg">Do diagnóstico<br />ao resultado.</h2>
     <div class="mt__steps" data-timeline>
       <div class="mt__rail" aria-hidden="true"><span data-timeline-fill></span></div>
+      <ol class="mt__list">
       {etapas.map((e, i) => (
-        <div class="mt__step" data-step>
+        <li class="mt__step" data-step>
           <span class="mt__dot" aria-hidden="true"></span>
           <span class="mt__n">Etapa {i + 1}</span>
           <h3>{e.titulo}</h3>
           <p>{e.texto}</p>
-        </div>
+        </li>
       ))}
+      </ol>
     </div>
   </div>
 </section>
 
 <style>
-  .mt { padding: clamp(96px, 13vw, 170px) 0; background: var(--white); }
-  .mt__head { display: flex; flex-direction: column; gap: 28px; }
-  .mt__steps { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; margin-top: clamp(64px, 8vw, 110px); padding-top: 48px; }
+  .mt { padding: clamp(96px, 13vw, 170px) 0; }
+  .mt__steps { position: relative; margin-top: clamp(64px, 8vw, 110px); padding-top: 48px; }
+  .mt__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
   .mt__rail { position: absolute; left: 0; right: 0; top: 9px; height: 2px; background: rgba(11, 26, 46, 0.1); }
   .mt__rail span { position: absolute; inset: 0; background: var(--teal); transform-origin: left; transform: scaleX(0); }
   .mt__step { position: relative; display: flex; flex-direction: column; gap: 14px; }
-  .mt__dot { position: absolute; top: -48px; left: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--white); border: 2px solid rgba(11, 26, 46, 0.2); transition: background .4s, border-color .4s, transform .5s var(--ease); }
+  .mt__dot { position: absolute; top: -48px; left: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--paper); border: 2px solid rgba(11, 26, 46, 0.2); transition: background .4s, border-color .4s, transform .5s var(--ease); }
   .mt__step.is-on .mt__dot { background: var(--green); border-color: var(--green); transform: scale(1.25); }
-  .mt__n { font-size: 14px; font-weight: 700; color: var(--teal-ink); }
+  .mt__n { font-size: 15px; font-weight: 700; color: var(--teal-ink); }
   .mt__step h3 { font-size: clamp(30px, 3vw, 44px); }
   .mt__step p { color: var(--muted); max-width: 340px; }
   @media (max-width: 860px) {
-    .mt__steps { grid-template-columns: 1fr; padding-top: 0; padding-left: 40px; gap: 48px; }
+    .mt__steps { padding: 0 0 0 40px; }
+    .mt__list { grid-template-columns: 1fr; gap: 48px; }
     .mt__rail { left: 9px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; }
     .mt__rail span { transform-origin: top; transform: scaleY(0); }
     .mt__dot { top: 4px; left: -40px; }

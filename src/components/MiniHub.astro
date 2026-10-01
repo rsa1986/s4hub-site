@@ -1,0 +1,34 @@
+---
+// Versão reduzida do hub do Hero: mostra onde um módulo fica dentro do todo.
+// `ativo` é o índice do módulo aceso; `tom` = 'dark' (sobre navy) ou 'light' (sobre verde).
+import { hubPos, hubCentro as c } from '../data/hub.js';
+const { ativo = 0, tom = 'dark' } = Astro.props;
+---
+<svg viewBox="0 0 600 600" class={`mh mh--${tom}`} aria-hidden="true">
+  {hubPos.map((p, i) => (
+    <line x1={c.x} y1={c.y} x2={p.x} y2={p.y} class={i === ativo ? 'mh__link is-on' : 'mh__link'} />
+  ))}
+  <circle cx={c.x} cy={c.y} r="44" class="mh__core" />
+  {hubPos.map((p, i) => (
+    <circle cx={p.x} cy={p.y} r={i === ativo ? 46 : 26} class={i === ativo ? 'mh__node is-on' : 'mh__node'} />
+  ))}
+</svg>
+
+<style>
+  .mh { width: 100%; height: auto; overflow: visible; }
+  .mh__link { stroke-width: 3; }
+  .mh__link.is-on { stroke-width: 6; }
+  .mh__node { stroke-width: 3; }
+
+  .mh--dark .mh__link { stroke: rgba(255, 255, 255, 0.16); }
+  .mh--dark .mh__link.is-on { stroke: var(--green); }
+  .mh--dark .mh__core { fill: rgba(255, 255, 255, 0.22); }
+  .mh--dark .mh__node { fill: var(--navy); stroke: rgba(255, 255, 255, 0.22); }
+  .mh--dark .mh__node.is-on { fill: var(--green); stroke: var(--green); }
+
+  .mh--light .mh__link { stroke: rgba(0, 33, 78, 0.22); }
+  .mh--light .mh__link.is-on { stroke: var(--navy); }
+  .mh--light .mh__core { fill: rgba(0, 33, 78, 0.28); }
+  .mh--light .mh__node { fill: var(--green); stroke: rgba(0, 33, 78, 0.3); }
+  .mh--light .mh__node.is-on { fill: var(--navy); stroke: var(--navy); }
+</style>

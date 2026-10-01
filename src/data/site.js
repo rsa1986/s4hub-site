@@ -3,22 +3,29 @@
 export const contato = {
   email: '[SEU E-MAIL DE CONTATO]', // TODO: definir e-mail que recebe os contatos
 };
+// Enquanto o e-mail for o placeholder, ele não aparece na seção de contato.
+export const emailDefinido = !contato.email.startsWith('[');
 
+// `modulo`: id do produto (em `produtos`) para onde a linha do Manifesto leva.
 export const frentes = [
   {
     titulo: 'Estruturamos seu comercial do zero',
+    modulo: 'impulso',
     texto: 'Mapeamos seu modelo de negócio, definimos ICP, construímos o pitch, criamos os scripts e implementamos seu processo com CRM, cadências e automações.',
   },
   {
     titulo: 'Terceirize seu comercial com segurança',
+    modulo: 'vendas',
     texto: 'Atuamos como seu time de vendas: prospectamos, qualificamos e fechamos negócios com base no processo criado.',
   },
   {
     titulo: 'Marketing com propósito e performance',
+    modulo: 'trafego',
     texto: 'Campanhas inteligentes para atrair clientes qualificados, gerar leads e transformar sua presença digital em resultado.',
   },
   {
     titulo: 'Presença e planejamento estratégico',
+    modulo: 'social',
     texto: 'Redes sociais com consistência, conteúdo alinhado ao posicionamento da marca e um plano de marketing realista e acionável.',
   },
 ];
@@ -70,6 +77,8 @@ export const etapas = [
 
 // Clientes: troque `nome` e adicione `logo: '/img/clientes/arquivo.svg'` quando tiver os arquivos.
 export const clientes = Array.from({ length: 10 }, (_, i) => ({ nome: `Cliente ${i + 1}`, logo: null }));
+// A seção Clientes (e o link dela no menu) só aparece quando houver ao menos um logo.
+export const temClientes = clientes.some((c) => c.logo);
 
 export const parceiros = [
   {

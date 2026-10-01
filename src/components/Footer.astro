@@ -1,4 +1,5 @@
 ---
+import { temClientes } from '../data/site.js';
 const ano = new Date().getFullYear();
 ---
 <footer class="ft dark">
@@ -7,14 +8,18 @@ const ano = new Date().getFullYear();
     <nav class="ft__nav" aria-label="Rodapé">
       <a href="#solucoes">Soluções</a>
       <a href="#metodo">Método</a>
-      <a href="#clientes">Clientes</a>
+      {temClientes && <a href="#clientes">Clientes</a>}
       <a href="#duvidas">Dúvidas</a>
       <a href="#contato">Contato</a>
     </nav>
   </div>
-  <div class="wrap ft__bottom">
-    <span>Seu hub de soluções em Vendas e Marketing.</span>
-    <span>© {ano} S4 Hub · Paciullo Gestão Comercial Ltda · CNPJ 52.437.625/0001-19</span>
+  <div class="wrap rule-top ft__bottom">
+    <p>Seu hub de soluções em Vendas e Marketing.</p>
+    <p class="ft__legal">
+      <span>© {ano} S4 Hub</span>
+      <span>Paciullo Gestão Comercial Ltda</span>
+      <span>CNPJ 52.437.625/0001-19</span>
+    </p>
   </div>
 </footer>
 
@@ -25,5 +30,7 @@ const ano = new Date().getFullYear();
   .ft__nav { display: flex; flex-wrap: wrap; gap: 8px 28px; font-weight: 600; color: var(--muted-on-dark); }
   .ft__nav a { padding: 8px 0; transition: color .3s; }
   .ft__nav a:hover { color: var(--green); }
-  .ft__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--navy-line); font-size: 14px; color: var(--muted-on-dark); }
+  .ft__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 48px; padding-top: 28px; font-size: 14px; color: var(--muted-on-dark); align-items: flex-end; }
+  .ft__legal { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
+  @media (max-width: 640px) { .ft__legal { align-items: flex-start; text-align: left; } }
 </style>

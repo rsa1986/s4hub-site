@@ -14,11 +14,22 @@ if (reduced) document.documentElement.classList.add('reduced');
 
 /* ---------- Rolagem suave + âncoras ---------- */
 let lenis = null;
+let hscroll = null; // preenchido quando a rolagem horizontal de Soluções está ativa (desktop)
 if (!reduced) {
   lenis = new Lenis({ duration: 1.15, smoothWheel: true });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((t) => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
+}
+// Um módulo dentro da faixa horizontal não tem posição vertical própria:
+// calcula o ponto da rolagem em que a faixa o traz para a tela.
+function hscrollY(target) {
+  if (!hscroll || !hscroll.track.contains(target)) return null;
+  const { st, track, dist } = hscroll;
+  const left = target.getBoundingClientRect().left - track.getBoundingClientRect().left;
+  const d = dist();
+  const p = d ? Math.min(1, Math.max(0, (left - window.innerWidth * 0.06) / d)) : 0;
+  return st.start + p * (st.end - st.start);
 }
 $$('a[href^="#"]').forEach((a) => {
   a.addEventListener('click', (e) => {
@@ -27,9 +38,30 @@ $$('a[href^="#"]').forEach((a) => {
     if (!target) return;
     e.preventDefault();
     closeMenu();
-    if (lenis) lenis.scrollTo(target, { offset: id === '#topo' ? 0 : -72 });
+    const y = hscrollY(target);
+    if (y !== null) lenis ? lenis.scrollTo(y) : window.scrollTo({ top: y });
+    else if (lenis) lenis.scrollTo(target, { offset: id === '#topo' ? 0 : -72 });
     else target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
   });
+});
+
+/* ---------- Hub do Hero: cada módulo acende a ligação e mostra o que é ---------- */
+const caption = $('[data-hub-caption]');
+$$('[data-node-link]').forEach((n) => {
+  const link = $(`[data-link="${n.dataset.nodeLink}"]`);
+  const on = () => {
+    link?.classList.add('is-on');
+    if (caption) {
+      $('strong', caption).textContent = n.dataset.nome;
+      $('span', caption).textContent = n.dataset.tag;
+      caption.classList.add('is-on');
+    }
+  };
+  const off = () => { link?.classList.remove('is-on'); caption?.classList.remove('is-on'); };
+  n.addEventListener('pointerenter', on);
+  n.addEventListener('pointerleave', off);
+  n.addEventListener('focus', on);
+  n.addEventListener('blur', off);
 });
 
 /* ---------- Header ---------- */
@@ -141,20 +173,6 @@ function initMotion() {
   // hub afasta levemente ao rolar
   gsap.to('.hero__hub .hub', { yPercent: 12, scale: 0.94, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 
-  /* ---------- Títulos que sobem por linha ---------- */
-  $$('[data-split]').forEach((el) => {
-    gsap.from($$('.line > span', el), {
-      yPercent: 110, duration: 1.3, ease: 'expo.out', stagger: 0.1,
-      scrollTrigger: { trigger: el, start: 'top 85%' },
-    });
-  });
-
-  /* ---------- Reveal genérico ---------- */
-  ScrollTrigger.batch('[data-reveal]', {
-    start: 'top 88%',
-    onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.08, overwrite: true }),
-  });
-
   /* ---------- Texto que acende palavra por palavra ---------- */
   $$('[data-scrub-text]').forEach((el) => {
     const words = $$('.w', el);
@@ -202,12 +220,8 @@ function initMotion() {
         onUpdate: (st) => gsap.set(bar, { scaleX: st.progress }),
       },
     });
-    return () => t.kill();
-  });
-  mm.add('(max-width: 900px)', () => {
-    $$('.sol .card, .sol__intro, .sol__end').forEach((c) => {
-      gsap.from(c, { opacity: 0, y: 40, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: c, start: 'top 88%' } });
-    });
+    hscroll = { st: t.scrollTrigger, track, dist };
+    return () => { hscroll = null; t.kill(); };
   });
 
   /* ---------- Método: linha que se desenha ---------- */

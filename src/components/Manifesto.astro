@@ -1,58 +1,49 @@
 ---
-import { frentes } from '../data/site.js';
+import { frentes, produtos } from '../data/site.js';
 const frase = 'Na S4 Hub, unimos estratégia e execução para acelerar seus resultados nos dois pilares essenciais de qualquer negócio: vendas e marketing.';
 const palavras = frase.split(' ');
-const destaque = new Set(['estratégia', 'execução', 'vendas', 'marketing.']);
+const nomeDo = Object.fromEntries(produtos.map((p) => [p.id, p.nome]));
 ---
 <section class="mf" id="sobre">
   <div class="wrap">
-    <p class="kicker" data-reveal>O que fazemos</p>
+    <h2 class="sr-only">O que fazemos</h2>
     <p class="mf__text" data-scrub-text>
-      {palavras.map((w) => <span class={destaque.has(w) ? 'w hl' : 'w'}>{w} </span>)}
+      {palavras.map((w) => <span class="w">{w} </span>)}
     </p>
 
-    <ol class="mf__list">
-      {frentes.map((f, i) => (
-        <li class="mf__row" data-reveal>
-          <span class="mf__idx">{String(i + 1).padStart(2, '0')}</span>
-          <h3 class="mf__title">{f.titulo}</h3>
-          <p class="mf__desc">{f.texto}</p>
-          <span class="mf__arrow" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8" /></svg>
-          </span>
+    <ul class="mf__list">
+      {frentes.map((f) => (
+        <li>
+          <a class="mf__row" href={`#mod-${f.modulo}`}>
+            <h3 class="mf__title">{f.titulo}</h3>
+            <p class="mf__desc">{f.texto}</p>
+            <span class="mf__mod">
+              {nomeDo[f.modulo]}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" /></svg>
+            </span>
+          </a>
         </li>
       ))}
-    </ol>
+    </ul>
   </div>
 </section>
 
 <style>
   .mf { padding: clamp(96px, 14vw, 180px) 0 clamp(80px, 10vw, 140px); }
-  .mf__text { margin-top: 36px; max-width: 1100px; font-family: var(--f-display); font-weight: 600; font-size: clamp(30px, 4.4vw, 64px); line-height: 1.08; letter-spacing: -0.035em; }
+  .mf__text { max-width: 1100px; font-family: var(--f-display); font-weight: 600; font-size: clamp(30px, 4.4vw, 64px); line-height: 1.08; letter-spacing: -0.035em; }
   .mf__text .w { color: rgba(11, 26, 46, 0.14); transition: color .2s; }
   .mf__text .w.on { color: var(--ink); }
-  .mf__text .w.hl.on { color: var(--teal-ink); }
-  .mf__list { list-style: none; margin: clamp(72px, 10vw, 130px) 0 0; padding: 0; border-top: 1px solid rgba(11, 26, 46, 0.14); }
-  .mf__row {
-    position: relative; display: grid; grid-template-columns: 70px minmax(0, 1.1fr) minmax(0, 1fr) 48px; gap: 28px; align-items: baseline;
-    padding: 34px 0; border-bottom: 1px solid rgba(11, 26, 46, 0.14);
-  }
-  .mf__row::before { content: ''; position: absolute; inset: 0 calc(var(--gutter) * -1); background: var(--navy); transform: scaleY(0); transform-origin: bottom; transition: transform .55s var(--ease); z-index: 0; }
-  .mf__row > * { position: relative; z-index: 1; transition: color .35s; }
-  .mf__idx { font-weight: 700; font-size: 14px; color: var(--teal-ink); }
-  .mf__title { font-size: clamp(24px, 2.4vw, 34px); letter-spacing: -0.03em; line-height: 1.1; }
+  .mf__list { list-style: none; margin: clamp(72px, 10vw, 130px) 0 0; padding: 0; border-top: 1px solid var(--paper-line); }
+  .mf__list li { border-bottom: 1px solid var(--paper-line); }
+  .mf__row { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) 150px; gap: 32px; align-items: baseline; padding: 34px 0; }
+  .mf__title { font-size: clamp(24px, 2.4vw, 34px); letter-spacing: -0.03em; line-height: 1.1; transition: color .35s; }
   .mf__desc { color: var(--muted); font-size: 16px; }
-  .mf__arrow { width: 40px; height: 40px; align-self: center; justify-self: end; transition: transform .5s var(--ease), color .35s; }
-  @media (hover: hover) {
-    .mf__row:hover::before { transform: scaleY(1); transform-origin: top; }
-    .mf__row:hover .mf__title { color: var(--white); }
-    .mf__row:hover .mf__desc { color: var(--muted-on-dark); }
-    .mf__row:hover .mf__idx, .mf__row:hover .mf__arrow { color: var(--green); }
-    .mf__row:hover .mf__arrow { transform: rotate(45deg); }
-  }
+  .mf__mod { display: inline-flex; align-items: center; justify-content: flex-end; gap: 8px; font-weight: 700; font-size: 15px; color: var(--teal-ink); white-space: nowrap; }
+  .mf__mod svg { width: 20px; height: 20px; transition: transform .45s var(--ease); }
+  .mf__row:hover .mf__title, .mf__row:focus-visible .mf__title { color: var(--teal-ink); }
+  .mf__row:hover .mf__mod svg { transform: translate(3px, -3px); }
   @media (max-width: 860px) {
-    .mf__row { grid-template-columns: 44px minmax(0, 1fr); gap: 10px 14px; }
-    .mf__desc { grid-column: 2; }
-    .mf__arrow { display: none; }
+    .mf__row { grid-template-columns: 1fr; gap: 10px; padding: 28px 0; }
+    .mf__mod { justify-content: flex-start; margin-top: 6px; }
   }
 </style>
