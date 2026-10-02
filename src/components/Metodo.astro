@@ -27,7 +27,7 @@ import { etapas } from '../data/site.js';
   .mt__rail { position: absolute; left: 0; right: 0; top: 7px; height: 2px; background: rgba(11, 26, 46, 0.1); }
   .mt__rail span { position: absolute; inset: 0; background: var(--teal); transform-origin: left; transform: scaleX(0); }
   .mt__step { position: relative; display: flex; flex-direction: column; gap: 8px; }
-  .mt__dot { position: absolute; top: -40px; left: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--paper); border: 2px solid rgba(11, 26, 46, 0.5); transition: background .4s, border-color .4s, transform .5s var(--ease); }
+  .mt__dot { position: absolute; top: -40px; left: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--paper); border: 2px solid rgba(11, 26, 46, 0.5); transition: background .25s ease, border-color .25s ease, transform .25s var(--ease); }
   .mt__step.is-on .mt__dot { background: var(--green); border-color: var(--green); transform: scale(1.25); }
   .mt__n { font-size: 14px; font-weight: 700; color: var(--teal-ink); }
   .mt__step h3 { font-size: clamp(22px, 2vw, 28px); letter-spacing: -0.025em; }

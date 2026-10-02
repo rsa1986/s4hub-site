@@ -3,3 +3,6 @@ dist/
 .astro/
 .DS_Store
 .claude/settings.local.json
+
+# Impeccable: relatórios de crítica e arquivos de trabalho locais (consultar em .impeccable/critique/)
+.impeccable/

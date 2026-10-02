@@ -27,12 +27,14 @@ const links = [
     {links.map((l) => <a href={l.href}>{l.label}</a>)}
     <a href="#contato" class="btn">Diagnóstico gratuito</a>
   </div>
+  <!-- fundo escurecido atrás do menu mobile; tocar nele fecha o menu -->
+  <div class="hdr__scrim" data-scrim hidden></div>
 </header>
 
 <style>
   .hdr {
     position: fixed; inset: 0 0 auto; z-index: 50; color: var(--white);
-    transition: background-color .4s var(--ease), transform .5s var(--ease), box-shadow .4s;
+    transition: background-color .3s ease, transform .25s var(--ease), box-shadow .3s ease;
   }
   .hdr.is-solid { background: rgba(0, 33, 78, 0.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--navy-line); }
   .hdr.is-hidden { transform: translateY(-100%); }
@@ -40,13 +42,15 @@ const links = [
   .hdr__logo { display: flex; align-items: center; min-height: 44px; }
   .hdr__logo img { height: 30px; width: auto; }
   .hdr__nav { display: flex; gap: 6px; margin-left: auto; }
-  .hdr__link { position: relative; padding: 8px 12px; font-size: 14px; font-weight: 600; color: var(--muted-on-dark); transition: color .3s; }
-  .hdr__link::after { content: ''; position: absolute; left: 12px; right: 12px; bottom: 2px; height: 2px; background: var(--green); transform: scaleX(0); transform-origin: right; transition: transform .45s var(--ease); }
-  .hdr__link:hover { color: var(--white); }
-  .hdr__link:hover::after { transform: scaleX(1); transform-origin: left; }
+  .hdr__link { position: relative; padding: 8px 12px; font-size: 14px; font-weight: 600; color: var(--muted-on-dark); transition: color .2s ease; }
+  .hdr__link::after { content: ''; position: absolute; left: 12px; right: 12px; bottom: 2px; height: 2px; background: var(--green); transform: scaleX(0); transform-origin: right; transition: transform .25s var(--ease); }
+  @media (hover: hover) and (pointer: fine) {
+    .hdr__link:hover { color: var(--white); }
+    .hdr__link:hover::after { transform: scaleX(1); transform-origin: left; }
+  }
   .hdr__cta { min-height: 38px; padding: 0 18px; font-size: 14px; }
   .hdr__burger { display: none; width: 46px; height: 46px; margin-left: auto; border: 0; background: transparent; cursor: pointer; position: relative; }
-  .hdr__burger span { position: absolute; left: 11px; right: 11px; height: 2px; background: var(--white); transition: transform .4s var(--ease); }
+  .hdr__burger span { position: absolute; left: 11px; right: 11px; height: 2px; background: var(--white); transition: transform .2s var(--ease); }
   .hdr__burger span:first-child { top: 18px; }
   .hdr__burger span:last-child { top: 26px; }
   .hdr__burger[aria-expanded='true'] span:first-child { transform: translateY(4px) rotate(45deg); }
@@ -55,10 +59,15 @@ const links = [
   .hdr__mobile[hidden] { display: none; }
   .hdr__mobile a:not(.btn) { padding: 14px 0; font-family: var(--f-display); font-size: 22px; font-weight: 600; border-bottom: 1px solid var(--navy-line); }
   .hdr__mobile .btn { margin-top: 20px; justify-content: center; }
+  .hdr__scrim { position: fixed; inset: 60px 0 0; z-index: -1; background: rgba(0, 21, 53, 0.7); }
+  .hdr__scrim[hidden] { display: none; }
   @media (max-width: 900px) {
-    .hdr__nav, .hdr__cta { display: none; }
-    .hdr__burger { display: block; }
-    .hdr__in { height: 60px; }
+    .hdr__nav { display: none; }
+    /* no celular o botão de diagnóstico continua no header, compacto, ao lado do menu */
+    .hdr__cta { margin-left: auto; min-height: 44px; padding: 0 16px; font-size: 13px; }
+    .hdr__burger { display: block; margin-left: 0; }
+    .hdr.menu-open .hdr__cta { visibility: hidden; } /* o menu aberto já tem o botão */
+    .hdr__in { height: 60px; gap: 10px; }
     .hdr__logo img { height: 28px; }
   }
 </style>

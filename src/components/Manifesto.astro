@@ -36,12 +36,15 @@ const nomeDo = Object.fromEntries(produtos.map((p) => [p.id, p.nome]));
   .mf__list { list-style: none; margin: clamp(48px, 6vw, 80px) 0 0; padding: 0; border-top: 1px solid var(--paper-line); }
   .mf__list li { border-bottom: 1px solid var(--paper-line); }
   .mf__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) 130px; gap: 32px; align-items: baseline; padding: 22px 0; }
-  .mf__title { font-size: clamp(18px, 1.6vw, 22px); letter-spacing: -0.02em; line-height: 1.2; transition: color .35s; }
+  .mf__title { font-size: clamp(18px, 1.6vw, 22px); letter-spacing: -0.02em; line-height: 1.2; transition: color .2s ease; }
   .mf__desc { color: var(--muted); font-size: 15px; }
   .mf__mod { display: inline-flex; align-items: center; justify-content: flex-end; gap: 8px; font-weight: 700; font-size: 14px; color: var(--teal-ink); white-space: nowrap; }
-  .mf__mod svg { width: 16px; height: 16px; transition: transform .45s var(--ease); }
-  .mf__row:hover .mf__title, .mf__row:focus-visible .mf__title { color: var(--teal-ink); }
-  .mf__row:hover .mf__mod svg { transform: translate(3px, -3px); }
+  .mf__mod svg { width: 16px; height: 16px; transition: transform .25s var(--ease); }
+  .mf__row:focus-visible .mf__title { color: var(--teal-ink); }
+  @media (hover: hover) and (pointer: fine) {
+    .mf__row:hover .mf__title { color: var(--teal-ink); }
+    .mf__row:hover .mf__mod svg { transform: translate(3px, -3px); }
+  }
   @media (max-width: 860px) {
     .mf__row { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; }
     .mf__mod { justify-content: flex-start; margin-top: 6px; }

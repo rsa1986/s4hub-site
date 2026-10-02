@@ -26,6 +26,7 @@ npm run preview  # serve o dist/
 - `src/scripts/motion.js`: todas as animações, organizadas por seção
 - `src/styles/global.css`: tokens (cores, fontes), botões e utilitários
 - `public/img/`: logos (variações para fundo escuro e claro, com fundo transparente)
+- `.impeccable/critique/`: relatórios da crítica da skill Impeccable (local, fora do git). O mais recente: `2026-10-02T18-47-20Z__src-pages-index-astro.md` (nota 22/32). Use para comparar quando rodar `/impeccable critique` de novo
 - `src/assets/logo-h-dark.png`: cópia do logo usada no header e no rodapé via `<Image>` do Astro, que gera WebP no tamanho exibido (troque aqui se o logo mudar)
 
 ## Identidade
@@ -58,7 +59,8 @@ Revisado com a skill ui-ux-pro-max. Manter:
 
 - Contraste: texto ≥ 4,5:1; contornos, bordas e linhas de campo ≥ 3:1. Foco do teclado é navy nas seções claras e verde nas escuras (`.dark`, header)
 - Alvos de toque ≥ 44px no celular; textos ≥ 14px (descrições 15px+)
-- Formulário: obrigatórios marcados no rótulo, erro escrito abaixo de cada campo (`aria-invalid`), foco no primeiro campo errado, botão travado com "Enviando..." durante o envio
+- Formulário: obrigatórios primeiro e marcados no rótulo; erro escrito abaixo de cada campo (`aria-invalid`, rótulo e linha em coral); foco no primeiro campo errado; botão travado com "Enviando..."; limite de 15s; `maxlength` igual ao `contato.php`; rascunho salvo na aba (sessionStorage); sucesso troca o formulário por um painel com o hub inteiro aceso; falha mantém os dados e o botão vira "Tentar de novo"
+- Celular: botão "Diagnóstico gratuito" compacto no header; menu abre com fundo escurecido (tocar fecha)
 - Menu mobile fecha com Esc e troca o rótulo para "Fechar menu"; painéis fechados do FAQ ficam `hidden`
 - Marquees pausam com o mouse em cima ou com foco; link "Pular para o conteúdo" é o primeiro Tab
 
@@ -66,29 +68,46 @@ Revisado com a skill ui-ux-pro-max. Manter:
 
 Só três momentos animados por rolagem; o resto aparece pronto.
 
-- Hero: linhas do título sobem; o "hub" em SVG tem órbitas girando, pulsos verdes viajando do centro aos 5 módulos e anéis pulsando; parallax leve com o mouse. Cada módulo do hub é um link: o hover acende a ligação e mostra nome + tag, o clique leva ao módulo em Soluções
+- Hero: linhas do título sobem; o "hub" em SVG tem órbitas lentas, pulsos verdes viajando do centro aos 5 módulos e anéis espaçados (a cada ~7s); parallax leve com o mouse. Os módulos **não se mexem** (são links). Todas as animações do hub pausam quando o hero sai da tela. Cada módulo é um link: o hover acende a ligação e mostra nome + tag (no toque, uma legenda fixa embaixo do hub), o clique leva ao módulo em Soluções
 - Manifesto: as palavras "acendem" conforme a rolagem. Cada linha das frentes leva ao módulo correspondente (`modulo` em `frentes`)
 - Método: linha do tempo que se desenha
 - Também: marquee que acelera com a velocidade da rolagem; Soluções com rolagem horizontal fixa (pin) no desktop e empilhado no mobile (≤900px); FAQ com acordeão animado
-- `prefers-reduced-motion` desliga tudo e mostra o estado final (em Soluções, a faixa vira rolagem horizontal nativa)
+- `prefers-reduced-motion` desliga o movimento e mostra o estado final, mas mantém transições de cor e opacidade (em Soluções, a faixa vira rolagem horizontal nativa)
+- Ritmo (revisão Emil Kowalski, 02/10/2026): interface ≤ 300ms (hover 250ms, resposta a clique ~200ms, FAQ 300ms); nada nasce de `scale(0)`; hovers com movimento só em `@media (hover: hover) and (pointer: fine)`; botões têm `scale: 0.97` no clique; nunca animar `font-size`/layout
 
 ## Pendências
 
 - [ ] Logos dos clientes: colocar em `public/img/clientes/` e preencher `clientes` em `src/data/site.js` (`{ nome, logo }`). Cliente sem logo aparece com o nome escrito
-- [ ] E-mail de contato: `contato.email` em `site.js` e `DESTINO` em `public/contato.php`. O e-mail só aparece na seção Contato depois de definido
-- [ ] Ajuste fino de textos
-- [ ] Imagem de compartilhamento (og:image) 1200x630; hoje usa o logo quadrado
-- [ ] Testar o formulário no HostGator (o PHP só roda no servidor, não no `npm run dev`)
+- [x] E-mail que recebe o formulário: `DESTINO` em `public/contato.php` = rodrigo.a@s4hub.com.br
+- E-mail **não** aparece na página (decisão: evitar spam; o formulário é o canal único). Por isso `contato.email` em `site.js` fica com o placeholder
+- [ ] Ajuste fino de textos. Da crítica Impeccable (02/10/2026): Manifesto como problemas do leitor (hoje repete Soluções e não inclui o S4 Go), um elemento de prova (caso com número ou fundador), linha "para quem é" no hero, jargão (ICP, pitch, cadências), frase do rodapé, um único texto para os botões de diagnóstico e a decisão sobre o marquee (repete os módulos)
 
-## Checklist antes de fechar o site
+## Checklist para pôr o site no ar
 
-Fazer depois que o design estiver aprovado, antes do deploy:
+Fazer depois que o design estiver aprovado. Logos de clientes, e-mails e ajuste de textos ficam para o final.
 
-- [ ] **Segurança do formulário** (`/security-review`): revisar `public/contato.php` contra injeção de cabeçalho no `mail()`, spam e falta de limite de envios
+**Impede a publicação**
+
+- [ ] **Oferta: "diagnóstico gratuito" x produto S4 Go** (crítica Impeccable, P1): decidir se o S4 Go é o diagnóstico gratuito ou se a conversa grátis vem antes; depois, uma linha de garantia junto ao formulário (gratuito, sem compromisso, prazo de resposta). Decidir no final, com os textos
+- [ ] **Clientes com nomes de exemplo** ("Cliente 1…10"): ou entram nomes/logos reais, ou a seção é ocultada (`temClientes = false` em `site.js`) até o material chegar. Aguardando decisão
+- [ ] **Segurança do formulário** (`/security-review`): `contato.php` já remove quebras de linha, valida e-mail e tem honeypot; falta limite de envios e revisão formal
+- [ ] **Política de privacidade (LGPD)**: o formulário coleta nome, e-mail e telefone. Página de privacidade + link no rodapé + frase curta junto ao botão de enviar (texto padrão para a empresa revisar)
+
+**Recomendado antes de publicar**
+
 - [ ] **og:image** 1200x630 a partir do hub, nas cores do site (substitui `og-square.png` em `Base.astro`)
-- [x] **Desempenho e SEO** (Lighthouse no Edge, 01/10/2026): celular 98 / 96 / 100 / 100, desktop 100 / 96 / 100 / 100. Os 96 de acessibilidade vêm das palavras apagadas do Manifesto antes de acenderem (trade-off aceito). Repetir no domínio real depois do deploy
-- [ ] **Revisão de código** (`/code-review`): `motion.js` e componentes
+- [ ] **Redirecionamentos do WordPress antigo**: `.htaccess` levando URLs antigas (ex.: `/contato`, `/servicos`) para a página nova + página 404 no visual do site
+- [ ] **Analytics** (GA4 / Tag Manager / Meta Pixel): perguntar se o WordPress antigo tinha códigos, para não perder histórico. Com rastreamento, a LGPD exige também aviso de cookies. Aguardando resposta
+- [ ] **Revisão de código** (`/code-review`): `motion.js` e componentes (opcional)
 - [ ] **Prévia pública na Vercel** (opcional): link temporário para aprovação antes de mexer no HostGator (o formulário não funciona lá, só o visual)
+- [x] **Desempenho e SEO** (Lighthouse no Edge, 01/10/2026): celular 98 / 96 / 100 / 100, desktop 100 / 96 / 100 / 100. Os 96 de acessibilidade vêm das palavras apagadas do Manifesto antes de acenderem (trade-off aceito)
+
+**No dia da publicação** (passos em "Deploy" abaixo)
+
+- [ ] Commit das mudanças pendentes, `npm run build`, backup do WordPress
+- [ ] Enviar `dist/` para `public_html` (acesso ao cPanel é do Rodrigo)
+- [ ] Testar o formulário de verdade (envio para rodrigo.a@s4hub.com.br) e conferir https (cadeado). Se o HostGator exigir caixa real como remetente, ajustar `REMETENTE` em `contato.php`
+- [ ] Rodar o Lighthouse de novo no domínio real
 - [ ] Remover a cópia de comparação da v1: `git worktree remove ../s4hub-v1`
 
 ## Deploy (HostGator)

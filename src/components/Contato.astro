@@ -1,5 +1,6 @@
 ---
 import { contato, emailDefinido } from '../data/site.js';
+import MiniHub from './MiniHub.astro';
 ---
 <section id="contato" class="ct dark">
   <div class="wrap">
@@ -9,22 +10,33 @@ import { contato, emailDefinido } from '../data/site.js';
         <p class="ct__lead">Comece pelo diagnóstico gratuito. Conte um pouco sobre sua empresa e retornamos por e-mail para agendar a conversa.</p>
         {emailDefinido && <a class="ct__mail" href={`mailto:${contato.email}`}>{contato.email}</a>}
       </div>
-      <form class="ct__form" action="/contato.php" method="post" data-form novalidate>
-        <div class="ct__row">
-          <div class="field"><input id="nome" name="nome" type="text" required autocomplete="name" placeholder=" " /><label for="nome">Nome <span class="field__req">(obrigatório)</span></label><p class="field__err" id="nome-err" data-err></p></div>
-          <div class="field"><input id="empresa" name="empresa" type="text" autocomplete="organization" placeholder=" " /><label for="empresa">Empresa</label></div>
+      <div class="ct__side">
+        <!-- maxlength igual aos limites de public/contato.php: o servidor não corta nada em silêncio -->
+        <form class="ct__form" action="/contato.php" method="post" data-form novalidate>
+          <div class="ct__row">
+            <div class="field"><input id="nome" name="nome" type="text" required maxlength="120" autocomplete="name" placeholder=" " /><label for="nome">Nome <span class="field__req">(obrigatório)</span></label><p class="field__err" id="nome-err" data-err></p></div>
+            <div class="field"><input id="email" name="email" type="email" required maxlength="160" autocomplete="email" placeholder=" " /><label for="email">E-mail <span class="field__req">(obrigatório)</span></label><p class="field__err" id="email-err" data-err></p></div>
+          </div>
+          <div class="ct__row">
+            <div class="field"><input id="empresa" name="empresa" type="text" maxlength="120" autocomplete="organization" placeholder=" " /><label for="empresa">Empresa</label></div>
+            <div class="field"><input id="telefone" name="telefone" type="tel" maxlength="40" autocomplete="tel" placeholder=" " /><label for="telefone">Telefone</label></div>
+          </div>
+          <div class="field"><textarea id="mensagem" name="mensagem" rows="3" maxlength="4000" placeholder=" "></textarea><label for="mensagem">Qual é o principal desafio hoje?</label></div>
+          <div class="hp" aria-hidden="true"><label for="site">Site</label><input id="site" name="site" type="text" tabindex="-1" autocomplete="off" /></div>
+          <div class="ct__submit">
+            <button type="submit" class="btn" data-submit>Enviar e pedir diagnóstico</button>
+            <p class="ct__status" role="status" aria-live="polite" data-form-status></p>
+          </div>
+        </form>
+
+        <!-- Sucesso: o formulário dá lugar à confirmação, com o hub inteiro aceso (a assinatura fecha a jornada) -->
+        <div class="ct__done" data-form-done tabindex="-1" hidden>
+          <div class="ct__done-hub"><MiniHub ativo="todos" tom="dark" /></div>
+          <p class="ct__done-title">Recebemos sua mensagem.</p>
+          <p class="ct__done-text">Retornaremos por e-mail para agendar a conversa.</p>
+          <button type="button" class="btn btn--ghost" data-form-again>Enviar outra mensagem</button>
         </div>
-        <div class="ct__row">
-          <div class="field"><input id="email" name="email" type="email" required autocomplete="email" placeholder=" " /><label for="email">E-mail <span class="field__req">(obrigatório)</span></label><p class="field__err" id="email-err" data-err></p></div>
-          <div class="field"><input id="telefone" name="telefone" type="tel" autocomplete="tel" placeholder=" " /><label for="telefone">Telefone</label></div>
-        </div>
-        <div class="field"><textarea id="mensagem" name="mensagem" rows="3" placeholder=" "></textarea><label for="mensagem">Qual é o principal desafio hoje?</label></div>
-        <div class="hp" aria-hidden="true"><label for="site">Site</label><input id="site" name="site" type="text" tabindex="-1" autocomplete="off" /></div>
-        <div class="ct__submit">
-          <button type="submit" class="btn">Enviar e pedir diagnóstico</button>
-          <p class="ct__status" role="status" aria-live="polite" data-form-status></p>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </section>
@@ -37,25 +49,37 @@ import { contato, emailDefinido } from '../data/site.js';
   .ct__lead { color: var(--muted-on-dark); font-size: 16px; max-width: 360px; }
   .ct__mail { font-family: var(--f-display); font-size: 18px; font-weight: 600; color: var(--green); }
   .ct__form { display: flex; flex-direction: column; gap: 4px; }
+  .ct__form[hidden] { display: none; }
   .ct__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; }
-  .field { position: relative; padding-top: 18px; }
+  .field { position: relative; padding-top: 22px; }
   .field input, .field textarea {
     width: 100%; padding: 10px 0 10px; border: 0; border-bottom: 1.5px solid rgba(255, 255, 255, 0.45); background: transparent;
-    color: var(--white); font: inherit; font-size: 16px; border-radius: 0; resize: vertical; transition: border-color .3s;
+    color: var(--white); caret-color: var(--green); font: inherit; font-size: 16px; border-radius: 0; resize: vertical; transition: border-color .2s ease;
   }
   .field input:focus, .field textarea:focus { outline: none; border-color: var(--green); }
-  .field label { position: absolute; left: 0; top: 28px; color: var(--muted-on-dark); pointer-events: none; transition: transform .35s var(--ease), color .3s, font-size .35s var(--ease); transform-origin: left; }
+  /* o rótulo sobe e encolhe só com transform (sem animar font-size, que recalcula o layout a cada quadro) */
+  .field label { position: absolute; left: 0; top: 32px; color: var(--muted-on-dark); pointer-events: none; transform-origin: left top; transition: transform .2s var(--ease), color .2s ease; }
   .field input:focus + label, .field input:not(:placeholder-shown) + label,
-  .field textarea:focus + label, .field textarea:not(:placeholder-shown) + label { transform: translateY(-26px); font-size: 13px; color: var(--green); }
+  .field textarea:focus + label, .field textarea:not(:placeholder-shown) + label { transform: translateY(-30px) scale(0.8125); color: var(--green); }
   .field__req { opacity: 0.8; }
-  /* erro: linha vermelha + mensagem escrita logo abaixo do campo (a cor não é o único sinal) */
+  /* erro: linha, rótulo e mensagem em coral (a mensagem escrita garante que a cor não é o único sinal) */
   .field.is-error input, .field.is-error input:focus { border-color: #ff8a7a; }
-  .field__err { min-height: 0; padding-top: 6px; font-size: 14px; color: #ff8a7a; }
+  .field.is-error input + label, .field.is-error input:focus + label { color: #ff8a7a; }
+  .field__err { padding-top: 6px; font-size: 14px; color: #ff8a7a; }
   .field__err:empty { display: none; }
   .btn:disabled { opacity: 0.7; cursor: progress; }
   .hp { position: absolute; left: -9999px; }
   .ct__submit { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 24px; }
   .ct__status { font-size: 15px; color: var(--muted-on-dark); }
+  .ct__status.is-error { color: #ff8a7a; font-weight: 600; }
+
+  .ct__done { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding-top: 22px; outline: none; }
+  .ct__done[hidden] { display: none; }
+  .ct__done-hub { width: 96px; margin-bottom: 14px; }
+  .ct__done-title { font-family: var(--f-display); font-size: clamp(24px, 2.4vw, 32px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+  .ct__done-text { color: var(--muted-on-dark); font-size: 16px; max-width: 380px; }
+  .ct__done .btn { margin-top: 18px; }
+
   @media (max-width: 900px) { .ct__grid { grid-template-columns: 1fr; } }
   @media (max-width: 560px) { .ct__row { grid-template-columns: 1fr; } }
 </style>

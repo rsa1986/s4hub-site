@@ -1,7 +1,7 @@
 <?php
 // Recebe o formulário de contato e envia por e-mail (HostGator suporta mail()).
-// TODO: troque o destino abaixo pelo e-mail que vai receber os contatos.
-const DESTINO = 'contato@s4hub.com.br';
+// E-mail que recebe os contatos do formulário.
+const DESTINO = 'rodrigo.a@s4hub.com.br';
 const REMETENTE = 'site@s4hub.com.br'; // use um e-mail do próprio domínio para não cair em spam
 
 header('Content-Type: application/json; charset=utf-8');

@@ -61,6 +61,11 @@ const nodes = produtos.map((p, i) => ({ ...p, ...hubPos[i], curto: p.nome.replac
         ))}
       </svg>
       <p class="hub__caption" data-hub-caption aria-hidden="true"><strong></strong><span></span></p>
+      <!-- sem mouse não há legenda no hover: no toque, a legenda fica fixa embaixo do hub
+           (aria-hidden porque os links do hub já anunciam nome e descrição) -->
+      <dl class="hub__legend" aria-hidden="true">
+        {nodes.map((n) => <div><dt>{n.curto}</dt><dd>{n.tag}</dd></div>)}
+      </dl>
     </div>
   </div>
 </section>
@@ -75,7 +80,7 @@ const nodes = produtos.map((p, i) => ({ ...p, ...hubPos[i], curto: p.nome.replac
   .orbit { fill: none; stroke: rgba(255, 255, 255, 0.09); stroke-width: 1; stroke-dasharray: 2 8; transform-origin: 300px 300px; }
   .orbit--b { stroke: rgba(52, 175, 128, 0.22); stroke-dasharray: 1 14; }
   .orbit--c { stroke: rgba(255, 255, 255, 0.06); stroke-dasharray: none; }
-  .link { stroke: rgba(255, 255, 255, 0.16); stroke-width: 1.2; transition: stroke .35s, stroke-width .35s; }
+  .link { stroke: rgba(255, 255, 255, 0.16); stroke-width: 1.2; transition: stroke .2s ease; }
   .hub__link.is-on .link { stroke: var(--green); stroke-width: 2.4; }
   .pulse { stroke: var(--green); stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 14 400; stroke-dashoffset: 14; }
   .hub__ring { fill: none; stroke: var(--green); stroke-width: 1.5; transform-origin: 300px 300px; opacity: 0; }
@@ -84,21 +89,28 @@ const nodes = produtos.map((p, i) => ({ ...p, ...hubPos[i], curto: p.nome.replac
   .hub__node { transform-box: fill-box; transform-origin: center; }
   .node { cursor: pointer; outline: none; }
   .node__hit { fill: transparent; }
-  .node__bg { fill: var(--navy-700); stroke: rgba(255, 255, 255, 0.14); stroke-width: 1; transition: fill .35s, stroke .35s; }
-  .node__dot { fill: var(--teal); transition: fill .35s; }
+  .node__bg { fill: var(--navy-700); stroke: rgba(255, 255, 255, 0.14); stroke-width: 1; transition: fill .2s ease, stroke .2s ease; }
+  .node__dot { fill: var(--teal); transition: fill .2s ease; }
   .node__label { font-family: var(--f-display); font-weight: 600; font-size: 19px; fill: #fff; letter-spacing: -0.01em; }
   .node:hover .node__bg, .node:focus-visible .node__bg { fill: var(--green); stroke: var(--green); }
   .node:hover .node__dot, .node:focus-visible .node__dot { fill: var(--navy); }
   .node:focus-visible .node__bg { stroke: var(--white); stroke-width: 3; }
   .hub__caption {
     min-height: 44px; margin-top: 12px; display: flex; flex-direction: column; align-items: center; gap: 2px;
-    text-align: center; pointer-events: none; opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .45s var(--ease);
+    text-align: center; pointer-events: none; opacity: 0; transform: translateY(6px); transition: opacity .2s ease, transform .25s var(--ease);
   }
   .hub__caption.is-on { opacity: 1; transform: none; }
   .hub__caption strong { font-family: var(--f-display); font-size: 17px; letter-spacing: -0.02em; color: var(--green); }
   .hub__caption span { font-size: 14px; color: var(--muted-on-dark); }
 
-  @media (hover: none) { .hub__caption { display: none; } }
+  .hub__legend { display: none; margin: 8px 0 0; }
+  .hub__legend div { display: grid; grid-template-columns: 76px 1fr; gap: 12px; padding: 7px 0; border-top: 1px solid var(--navy-line); font-size: 14px; }
+  .hub__legend dt { font-family: var(--f-display); font-weight: 600; color: var(--white); }
+  .hub__legend dd { margin: 0; color: var(--muted-on-dark); }
+  @media (hover: none) {
+    .hub__caption { display: none; }
+    .hub__legend { display: block; }
+  }
   /* o hub encolhe inteiro no celular: rótulos maiores no SVG para continuarem legíveis (≥ 14px reais) */
   @media (max-width: 980px) { .node__label { font-size: 28px; } }
   @media (max-width: 980px) {

@@ -80,11 +80,13 @@ onScroll();
 
 const burger = $('[data-burger]');
 const menu = $('[data-mobile-menu]');
+const scrim = $('[data-scrim]');
 function closeMenu() {
   if (!burger) return;
   burger.setAttribute('aria-expanded', 'false');
   burger.setAttribute('aria-label', 'Abrir menu');
   menu.hidden = true;
+  if (scrim) scrim.hidden = true;
   header.classList.remove('menu-open', 'is-solid-force');
 }
 burger?.addEventListener('click', () => {
@@ -93,9 +95,11 @@ burger?.addEventListener('click', () => {
   burger.setAttribute('aria-expanded', 'true');
   burger.setAttribute('aria-label', 'Fechar menu');
   menu.hidden = false;
+  if (scrim) scrim.hidden = false;
   header.classList.add('menu-open', 'is-solid');
   $('a', menu)?.focus();
 });
+scrim?.addEventListener('click', closeMenu);
 // Esc fecha o menu e devolve o foco ao botão
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && burger?.getAttribute('aria-expanded') === 'true') {
@@ -115,7 +119,7 @@ $$('[data-acc]').forEach((item) => {
     if (!open) panel.hidden = false;
     if (reduced) { panel.style.height = open ? '0' : 'auto'; panel.hidden = open; return; }
     gsap.to(panel, {
-      height: open ? 0 : 'auto', duration: 0.6, ease: 'expo.out',
+      height: open ? 0 : 'auto', duration: 0.3, ease: 'power3.out',
       onComplete: () => { if (open) panel.hidden = true; ScrollTrigger.refresh(); },
     });
   });
@@ -144,32 +148,66 @@ const marcarCampo = (f) => {
 $$('[required]', form || document).forEach((f) => f.addEventListener('input', () => {
   if (f.getAttribute('aria-invalid') === 'true') marcarCampo(f);
 }));
+// Rascunho: o que a pessoa digitou sobrevive a um recarregamento da página (fica só nesta aba)
+const RASCUNHO = 's4hub-contato';
+const camposRascunho = form ? $$('input:not([name="site"]), textarea', form) : [];
+const salvarRascunho = () => {
+  try { sessionStorage.setItem(RASCUNHO, JSON.stringify(Object.fromEntries(camposRascunho.map((f) => [f.name, f.value])))); } catch {}
+};
+try {
+  const salvo = JSON.parse(sessionStorage.getItem(RASCUNHO) || 'null');
+  if (salvo) camposRascunho.forEach((f) => { if (salvo[f.name]) f.value = salvo[f.name]; });
+} catch {}
+camposRascunho.forEach((f) => f.addEventListener('input', salvarRascunho));
+
+const done = $('[data-form-done]');
+const TEXTO_ENVIAR = 'Enviar e pedir diagnóstico';
 form?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const status = $('[data-form-status]', form);
-  const btn = $('button[type="submit"]', form);
+  const btn = $('[data-submit]', form);
+  status.classList.remove('is-error');
   const invalidos = $$('[required]', form).filter((f) => !marcarCampo(f));
   if (invalidos.length) {
     status.textContent = 'Corrija os campos indicados para enviar.';
     invalidos[0].focus();
     return;
   }
-  const textoBtn = btn.textContent;
   btn.disabled = true;
   btn.textContent = 'Enviando...';
   status.textContent = '';
+  // sem resposta em 15s, desiste: "Enviando..." nunca fica travado para sempre
+  const ctrl = new AbortController();
+  const limite = setTimeout(() => ctrl.abort(), 15000);
   try {
-    const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+    const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' }, signal: ctrl.signal });
     const data = await res.json().catch(() => ({}));
     if (!res.ok || !data.ok) throw new Error(data.erro || 'falha');
+    // sucesso: o formulário dá lugar à confirmação (sem chance de envio duplicado)
     form.reset();
-    status.textContent = 'Recebemos sua mensagem. Retornaremos em breve.';
-  } catch {
-    status.textContent = 'Não foi possível enviar agora. Tente novamente em instantes.';
+    try { sessionStorage.removeItem(RASCUNHO); } catch {}
+    form.hidden = true;
+    done.hidden = false;
+    done.focus({ preventScroll: true });
+    if (lenis) lenis.scrollTo(done, { offset: -160 });
+    else done.scrollIntoView({ block: 'center' });
+    btn.textContent = TEXTO_ENVIAR;
+  } catch (err) {
+    // falha: os dados continuam no formulário e o botão vira "Tentar de novo"
+    status.classList.add('is-error');
+    status.textContent = err.name === 'AbortError'
+      ? 'O envio demorou demais. Confira sua conexão e tente de novo. Seus dados continuam aqui.'
+      : 'Não foi possível enviar agora. Seus dados continuam aqui. Tente de novo em instantes.';
+    btn.textContent = 'Tentar de novo';
   } finally {
+    clearTimeout(limite);
     btn.disabled = false;
-    btn.textContent = textoBtn;
   }
+});
+$('[data-form-again]')?.addEventListener('click', () => {
+  done.hidden = true;
+  form.hidden = false;
+  $('#nome', form).focus();
 });
 
 if (reduced) {
@@ -187,23 +225,28 @@ function initMotion() {
   const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
   tl.from(heroLines, { yPercent: 110, duration: 1.4, stagger: 0.09 }, 0.15)
     .from('[data-hero-fade]', { opacity: 0, y: 24, duration: 1.1, stagger: 0.1 }, 0.55)
-    .from('.hub__core, .hub__label', { scale: 0, svgOrigin: '300 300', duration: 1.2 }, 0.3)
+    .from('.hub__core, .hub__label', { scale: 0.6, opacity: 0, svgOrigin: '300 300', duration: 1.2 }, 0.3)
     .from('.hub .link', { attr: { x2: 300, y2: 300 }, duration: 1.4, stagger: 0.08 }, 0.5)
     .from(nodes, { opacity: 0, scale: 0.4, duration: 1.1, stagger: 0.08 }, 0.7)
     .from('.hub__orbits circle', { opacity: 0, scale: 0.7, svgOrigin: '300 300', duration: 1.6, stagger: 0.1 }, 0.2);
 
-  // hub vivo
-  gsap.to('.orbit', { rotation: 360, svgOrigin: '300 300', duration: 80, repeat: -1, ease: 'none' });
-  gsap.to('.orbit--b', { rotation: -360, svgOrigin: '300 300', duration: 120, repeat: -1, ease: 'none' });
+  // hub vivo: órbitas lentas, pulsos do centro aos módulos (explicam o hub) e anéis espaçados.
+  // Os módulos ficam parados: são links, e alvo de clique não pode se mexer.
+  const loops = [
+    gsap.to('.orbit', { rotation: 360, svgOrigin: '300 300', duration: 80, repeat: -1, ease: 'none' }),
+    gsap.to('.orbit--b', { rotation: -360, svgOrigin: '300 300', duration: 120, repeat: -1, ease: 'none' }),
+  ];
   $$('.hub .pulse').forEach((p, i) => {
     const len = p.getTotalLength ? p.getTotalLength() : 260;
-    gsap.fromTo(p, { strokeDashoffset: 14 }, { strokeDashoffset: -len, duration: 1.8, ease: 'power1.in', repeat: -1, repeatDelay: 1.2 + (i % 3) * 0.4, delay: 1.6 + i * 0.35 });
+    loops.push(gsap.fromTo(p, { strokeDashoffset: 14 }, { strokeDashoffset: -len, duration: 1.8, ease: 'none', repeat: -1, repeatDelay: 1.2 + (i % 3) * 0.4, delay: 1.6 + i * 0.35 }));
   });
   $$('.hub__ring').forEach((r, i) => {
-    gsap.fromTo(r, { scale: 1, opacity: 0.7, svgOrigin: '300 300' }, { scale: 2.6, svgOrigin: '300 300', opacity: 0, duration: 2.8, ease: 'power2.out', repeat: -1, delay: 1.2 + i * 1.4 });
+    loops.push(gsap.fromTo(r, { scale: 1, opacity: 0.7, svgOrigin: '300 300' }, { scale: 2.6, svgOrigin: '300 300', opacity: 0, duration: 2.8, ease: 'power2.out', repeat: -1, repeatDelay: 4, delay: 1.2 + i * 1.4 }));
   });
-  nodes.forEach((n, i) => {
-    gsap.to(n, { y: i % 2 ? 8 : -8, duration: 2.6 + i * 0.3, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: 2 });
+  // fora da tela o hub para de animar (sem processamento à toa enquanto a pessoa lê o resto)
+  ScrollTrigger.create({
+    trigger: '.hero', start: 'top bottom', end: 'bottom top',
+    onToggle: (st) => loops.forEach((t) => (st.isActive ? t.resume() : t.pause())),
   });
   const hub = $('[data-hub]');
   if (hub && finePointer) {
@@ -286,7 +329,7 @@ function initMotion() {
         steps.forEach((s, i) => s.classList.toggle('is-on', st.progress >= i / steps.length + 0.02));
       },
     });
-    gsap.from(steps, { opacity: 0, y: 30, duration: 1, stagger: 0.15, ease: 'expo.out', scrollTrigger: { trigger: tlEl, start: 'top 80%' } });
+    gsap.from(steps, { opacity: 0, y: 24, duration: 0.6, stagger: 0.06, ease: 'expo.out', scrollTrigger: { trigger: tlEl, start: 'top 80%' } });
   }
 
   /* ---------- Botões magnéticos ---------- */
