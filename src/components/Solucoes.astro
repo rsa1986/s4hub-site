@@ -70,7 +70,7 @@ import MiniHub from './MiniHub.astro';
 
   /* mobile/tablet: sem rolagem horizontal fixa, módulos empilhados */
   @media (max-width: 900px) {
-    .sol__pin { min-height: 0; padding: var(--section) 0; }
+    .sol__pin { min-height: 0; padding: var(--section) 0 var(--section-end); }
     .sol__head { display: none; }
     .sol__track { flex-direction: column; width: 100%; padding-inline: var(--gutter); }
     .sol__intro, .mod, .sol__end { width: 100%; }

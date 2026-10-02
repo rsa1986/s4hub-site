@@ -49,7 +49,9 @@ Regras da revisão de design (v2):
 - Títulos grandes (`.h-xl`, `.h-lg`) usam a Bricolage condensada (`--condensed`); os médios ficam na largura normal
 - Numeração só onde há sequência real (etapas do Método)
 - Fundos: só navy e paper. Linhas divisórias em blocos `.wrap` usam a classe `.rule-top`
-- Seta e botão magnético só no CTA principal do Hero
+- Hero com uma só ação forte: "Quero meu diagnóstico" é o único botão (magnético, sem seta "→"); "Ver as soluções" é link de texto. Nada de botão cheio + botão de contorno lado a lado
+- Quebra de linha: `text-wrap: balance` em títulos e `pretty` em textos (sem palavra sozinha na última linha). Respiro das seções: `--section` em cima e `--section-end`, um pouco maior, embaixo
+- FAQ é uma lista aberta (perguntas e respostas visíveis), sem acordeão: são poucas perguntas com respostas curtas. Se o FAQ crescer muito, reavaliar
 - Escala contida: títulos, hub e espaçamentos moderados (token `--section` para o respiro vertical das seções). Evitar voltar a fontes e blocos gigantes
 - Clientes aparece conforme `temClientes` em `site.js` (hoje `true`, com os nomes no lugar dos logos que faltam). O e-mail some enquanto for placeholder (`emailDefinido`)
 
@@ -61,7 +63,7 @@ Revisado com a skill ui-ux-pro-max. Manter:
 - Alvos de toque ≥ 44px no celular; textos ≥ 14px (descrições 15px+)
 - Formulário: obrigatórios primeiro e marcados no rótulo; erro escrito abaixo de cada campo (`aria-invalid`, rótulo e linha em coral); foco no primeiro campo errado; botão travado com "Enviando..."; limite de 15s; `maxlength` igual ao `contato.php`; rascunho salvo na aba (sessionStorage); sucesso troca o formulário por um painel com o hub inteiro aceso; falha mantém os dados e o botão vira "Tentar de novo"
 - Celular: botão "Diagnóstico gratuito" compacto no header; menu abre com fundo escurecido (tocar fecha)
-- Menu mobile fecha com Esc e troca o rótulo para "Fechar menu"; painéis fechados do FAQ ficam `hidden`
+- Menu mobile fecha com Esc e troca o rótulo para "Fechar menu"
 - Marquees pausam com o mouse em cima ou com foco; link "Pular para o conteúdo" é o primeiro Tab
 
 ## Motion
@@ -71,7 +73,7 @@ Só três momentos animados por rolagem; o resto aparece pronto.
 - Hero: linhas do título sobem; o "hub" em SVG tem órbitas lentas, pulsos verdes viajando do centro aos 5 módulos e anéis espaçados (a cada ~7s); parallax leve com o mouse. Os módulos **não se mexem** (são links). Todas as animações do hub pausam quando o hero sai da tela. Cada módulo é um link: o hover acende a ligação e mostra nome + tag (no toque, uma legenda fixa embaixo do hub), o clique leva ao módulo em Soluções
 - Manifesto: as palavras "acendem" conforme a rolagem. Cada linha das frentes leva ao módulo correspondente (`modulo` em `frentes`)
 - Método: linha do tempo que se desenha
-- Também: marquee que acelera com a velocidade da rolagem; Soluções com rolagem horizontal fixa (pin) no desktop e empilhado no mobile (≤900px); FAQ com acordeão animado
+- Também: marquee que acelera com a velocidade da rolagem; Soluções com rolagem horizontal fixa (pin) no desktop e empilhado no mobile (≤900px)
 - `prefers-reduced-motion` desliga o movimento e mostra o estado final, mas mantém transições de cor e opacidade (em Soluções, a faixa vira rolagem horizontal nativa)
 - Ritmo (revisão Emil Kowalski, 02/10/2026): interface ≤ 300ms (hover 250ms, resposta a clique ~200ms, FAQ 300ms); nada nasce de `scale(0)`; hovers com movimento só em `@media (hover: hover) and (pointer: fine)`; botões têm `scale: 0.97` no clique; nunca animar `font-size`/layout
 

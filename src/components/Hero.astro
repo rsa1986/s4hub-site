@@ -16,9 +16,8 @@ const nodes = produtos.map((p, i) => ({ ...p, ...hubPos[i], curto: p.nome.replac
       <div class="hero__ctas" data-hero-fade>
         <a href="#contato" class="btn" data-magnetic>
           Quero meu diagnóstico
-          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
         </a>
-        <a href="#solucoes" class="btn btn--ghost">Ver as soluções</a>
+        <a href="#solucoes" class="hero__link">Ver as soluções</a>
       </div>
     </div>
 
@@ -74,7 +73,10 @@ const nodes = produtos.map((p, i) => ({ ...p, ...hubPos[i], curto: p.nome.replac
   .hero { position: relative; min-height: min(100svh, 780px); display: flex; flex-direction: column; justify-content: center; padding: 100px 0 56px; overflow: hidden; }
   .hero__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; gap: 48px; }
   .hero__lead { margin-top: 24px; max-width: 440px; font-size: 17px; color: var(--muted-on-dark); }
-  .hero__ctas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+  .hero__ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 32px; }
+  /* ação secundária como link de texto: só o diagnóstico tem peso de botão */
+  .hero__link { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; font-size: 15px; color: var(--white); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; text-decoration-color: rgba(255, 255, 255, 0.45); transition: text-decoration-color .2s ease, color .2s ease; }
+  @media (hover: hover) and (pointer: fine) { .hero__link:hover { color: var(--green); text-decoration-color: var(--green); } }
   .hero__hub { position: relative; width: 100%; max-width: 420px; justify-self: center; }
   .hub { width: 100%; height: auto; overflow: visible; }
   .orbit { fill: none; stroke: rgba(255, 255, 255, 0.09); stroke-width: 1; stroke-dasharray: 2 8; transform-origin: 300px 300px; }

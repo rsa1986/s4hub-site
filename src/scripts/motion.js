@@ -108,23 +108,6 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* ---------- Acordeão (FAQ) ---------- */
-$$('[data-acc]').forEach((item) => {
-  const btn = $('[data-acc-btn]', item);
-  const panel = $('[data-acc-panel]', item);
-  // painel fechado fica `hidden`, para o leitor de tela não ler respostas fechadas
-  btn.addEventListener('click', () => {
-    const open = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', String(!open));
-    if (!open) panel.hidden = false;
-    if (reduced) { panel.style.height = open ? '0' : 'auto'; panel.hidden = open; return; }
-    gsap.to(panel, {
-      height: open ? 0 : 'auto', duration: 0.3, ease: 'power3.out',
-      onComplete: () => { if (open) panel.hidden = true; ScrollTrigger.refresh(); },
-    });
-  });
-});
-
 /* ---------- Formulário ---------- */
 const form = $('[data-form]');
 // Mensagem de erro de cada campo obrigatório (vazia = campo ok)

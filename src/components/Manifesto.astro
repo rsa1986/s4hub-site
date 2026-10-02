@@ -29,7 +29,7 @@ const nomeDo = Object.fromEntries(produtos.map((p) => [p.id, p.nome]));
 </section>
 
 <style>
-  .mf { padding: var(--section) 0; }
+  .mf { padding: var(--section) 0 var(--section-end); }
   .mf__text { max-width: 880px; font-family: var(--f-display); font-weight: 500; font-size: clamp(24px, 2.8vw, 40px); line-height: 1.18; letter-spacing: -0.025em; }
   .mf__text .w { color: rgba(11, 26, 46, 0.14); transition: color .2s; }
   .mf__text .w.on { color: var(--ink); }
