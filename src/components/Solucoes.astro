@@ -1,5 +1,6 @@
 ---
-import { produtos } from '../data/site.js';
+import { produtos, textos } from '../data/site.js';
+const t = textos.solucoes;
 import MiniHub from './MiniHub.astro';
 ---
 <section id="solucoes" class="sol dark" data-hscroll>
@@ -10,8 +11,8 @@ import MiniHub from './MiniHub.astro';
 
     <div class="sol__track" data-hscroll-track>
       <div class="sol__intro">
-        <h2 class="h-lg">Cinco módulos.<br />Um só hub.</h2>
-        <p>Comece pelo que sua empresa mais precisa agora. Os módulos se conectam conforme o negócio cresce.</p>
+        <h2 class="h-lg">{t.titulo.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}</h2>
+        <p>{t.texto}</p>
       </div>
 
       {produtos.map((p, i) => (
@@ -29,8 +30,8 @@ import MiniHub from './MiniHub.astro';
       ))}
 
       <div class="sol__end">
-        <p>Não sabe por onde começar?</p>
-        <a href="#contato" class="btn">Fazer o diagnóstico</a>
+        <p>{t.fim_pergunta}</p>
+        <a href="#contato" class="btn">{t.fim_botao}</a>
       </div>
     </div>
   </div>

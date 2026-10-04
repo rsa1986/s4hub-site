@@ -1,7 +1,8 @@
 ---
 import { Image } from 'astro:assets';
 import logo from '../assets/logo-h-dark.png';
-import { temClientes, temFaq } from '../data/site.js';
+import { temClientes, temFaq, textos } from '../data/site.js';
+const cta = textos.cabecalho;
 const links = [
   { href: '#solucoes', label: 'Soluções' },
   { href: '#metodo', label: 'Método' },
@@ -18,14 +19,14 @@ const links = [
     <nav class="hdr__nav" aria-label="Principal">
       {links.map((l) => <a href={l.href} class="hdr__link"><span>{l.label}</span></a>)}
     </nav>
-    <a href="#contato" class="btn hdr__cta"><span>Diagnóstico<span class="hdr__cta-extra"> gratuito</span></span></a>
+    <a href="#contato" class="btn hdr__cta"><span>{cta.botao}{cta.botao_complemento && <span class="hdr__cta-extra"> {cta.botao_complemento}</span>}</span></a>
     <button class="hdr__burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-mobile" data-burger>
       <span></span><span></span>
     </button>
   </div>
   <div class="hdr__mobile" id="menu-mobile" data-mobile-menu hidden>
     {links.map((l) => <a href={l.href}>{l.label}</a>)}
-    <a href="#contato" class="btn">Diagnóstico gratuito</a>
+    <a href="#contato" class="btn">{cta.botao} {cta.botao_complemento}</a>
   </div>
   <!-- fundo escurecido atrás do menu mobile; tocar nele fecha o menu -->
   <div class="hdr__scrim" data-scrim hidden></div>

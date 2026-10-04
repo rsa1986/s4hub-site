@@ -3,7 +3,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
-import { clientes, temClientes } from '../data/site.js';
+import { clientes, temClientes, textos } from '../data/site.js';
+const t = textos.clientes;
 
 // Logos: tudo resolvido no build.
 // - arquivo inexistente: avisa no terminal e mostra o nome do cliente (nada de imagem quebrada no site)
@@ -31,8 +32,8 @@ const itens = emFaixa ? [...lista, ...lista, ...lista] : lista;
 {temClientes && lista.length > 0 && (
   <section id="clientes" class="cl dark">
     <div class="wrap cl__head">
-      <h2 class="h-lg">Quem já cresce<br />com a S4 Hub.</h2>
-      <p class="cl__lead">Negócios de diferentes portes e segmentos que confiaram em nós para estruturar e acelerar suas vendas e seu marketing.</p>
+      <h2 class="h-lg">{t.titulo.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}</h2>
+      <p class="cl__lead">{t.texto}</p>
     </div>
 
     <div class={emFaixa ? 'cl__mq' : 'cl__mq cl__mq--parado'} data-marquee={emFaixa ? '' : undefined} data-speed="0.6" data-copies="3">
@@ -48,7 +49,7 @@ const itens = emFaixa ? [...lista, ...lista, ...lista] : lista;
     </div>
 
     <div class="wrap cl__foot">
-      <a href="#contato" class="btn btn--ghost">Quero ser o próximo case</a>
+      <a href="#contato" class="btn btn--ghost">{t.botao}</a>
     </div>
   </section>
 )}

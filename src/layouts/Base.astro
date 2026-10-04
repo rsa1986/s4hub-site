@@ -1,8 +1,9 @@
 ---
 import '../styles/global.css';
+import { textos } from '../data/site.js';
 const {
-  title = 'S4 Hub | Hub de soluções em Vendas e Marketing',
-  description = 'Diagnóstico inteligente, estruturação comercial, vendas terceirizadas e marketing de performance. Estratégia e execução para sua empresa vender mais.',
+  title = textos.seo.titulo,
+  description = textos.seo.descricao,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---

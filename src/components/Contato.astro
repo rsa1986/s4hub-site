@@ -1,13 +1,14 @@
 ---
-import { contato, emailDefinido } from '../data/site.js';
+import { contato, emailDefinido, textos } from '../data/site.js';
+const t = textos.contato;
 import MiniHub from './MiniHub.astro';
 ---
 <section id="contato" class="ct dark">
   <div class="wrap">
-    <h2 class="h-xl ct__title">Vamos destravar<br />o seu crescimento?</h2>
+    <h2 class="h-xl ct__title">{t.titulo.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}</h2>
     <div class="ct__grid">
       <div class="ct__info">
-        <p class="ct__lead">Comece pelo diagnóstico gratuito. Conte um pouco sobre sua empresa e retornamos por e-mail para agendar a conversa.</p>
+        <p class="ct__lead">{t.texto}</p>
         {emailDefinido && <a class="ct__mail" href={`mailto:${contato.email}`}>{contato.email}</a>}
       </div>
       <div class="ct__side">
@@ -24,7 +25,7 @@ import MiniHub from './MiniHub.astro';
           <div class="field"><textarea id="mensagem" name="mensagem" rows="3" maxlength="4000" placeholder=" "></textarea><label for="mensagem">Qual é o principal desafio hoje?</label></div>
           <div class="hp" aria-hidden="true"><label for="site">Site</label><input id="site" name="site" type="text" tabindex="-1" autocomplete="off" /></div>
           <div class="ct__submit">
-            <button type="submit" class="btn" data-submit>Enviar e pedir diagnóstico</button>
+            <button type="submit" class="btn" data-submit data-texto={t.botao}>{t.botao}</button>
             <p class="ct__status" role="status" aria-live="polite" data-form-status></p>
           </div>
         </form>
@@ -32,8 +33,8 @@ import MiniHub from './MiniHub.astro';
         <!-- Sucesso: o formulário dá lugar à confirmação, com o hub inteiro aceso (a assinatura fecha a jornada) -->
         <div class="ct__done" data-form-done tabindex="-1" hidden>
           <div class="ct__done-hub"><MiniHub ativo="todos" tom="dark" /></div>
-          <p class="ct__done-title">Recebemos sua mensagem.</p>
-          <p class="ct__done-text">Retornaremos por e-mail para agendar a conversa.</p>
+          <p class="ct__done-title">{t.sucesso_titulo}</p>
+          <p class="ct__done-text">{t.sucesso_texto}</p>
           <button type="button" class="btn btn--ghost" data-form-again>Enviar outra mensagem</button>
         </div>
       </div>

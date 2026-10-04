@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import logo from '../assets/logo-h-dark.png';
-import { temClientes, temFaq } from '../data/site.js';
+import { temClientes, temFaq, textos } from '../data/site.js';
 const ano = new Date().getFullYear();
 ---
 <footer class="ft dark">
@@ -16,11 +16,11 @@ const ano = new Date().getFullYear();
     </nav>
   </div>
   <div class="wrap rule-top ft__bottom">
-    <p>Seu hub de soluções em Vendas e Marketing.</p>
+    <p>{textos.rodape.frase}</p>
     <p class="ft__legal">
       <span>© {ano} S4 Hub</span>
-      <span>Paciullo Gestão Comercial Ltda</span>
-      <span>CNPJ 52.437.625/0001-19</span>
+      <span>{textos.rodape.empresa}</span>
+      <span>{textos.rodape.cnpj}</span>
     </p>
   </div>
 </footer>

@@ -1,0 +1,76 @@
+{
+  "seo": {
+    "titulo": "S4 Hub | Hub de soluções em Vendas e Marketing",
+    "descricao": "Diagnóstico inteligente, estruturação comercial, vendas terceirizadas e marketing de performance. Estratégia e execução para sua empresa vender mais."
+  },
+  "cabecalho": {
+    "botao": "Diagnóstico",
+    "botao_complemento": "gratuito"
+  },
+  "hero": {
+    "titulo": [
+      "Vendas e",
+      "marketing",
+      "no mesmo",
+      "time."
+    ],
+    "texto": "Diagnóstico inteligente, ferramentas certas e execução que gera resultado. Sem enrolação, com estratégia.",
+    "botao": "Quero meu diagnóstico",
+    "link": "Ver as soluções"
+  },
+  "faixa": [
+    "Diagnóstico",
+    "Estruturação comercial",
+    "Vendas terceirizadas",
+    "Tráfego pago",
+    "Redes sociais"
+  ],
+  "manifesto": {
+    "frase": "Na S4 Hub, unimos estratégia e execução para acelerar seus resultados nos dois pilares essenciais de qualquer negócio: vendas e marketing."
+  },
+  "solucoes": {
+    "titulo": [
+      "Cinco módulos.",
+      "Um só hub."
+    ],
+    "texto": "Comece pelo que sua empresa mais precisa agora. Os módulos se conectam conforme o negócio cresce.",
+    "fim_pergunta": "Não sabe por onde começar?",
+    "fim_botao": "Fazer o diagnóstico"
+  },
+  "metodo": {
+    "titulo": [
+      "Do diagnóstico",
+      "ao resultado."
+    ]
+  },
+  "clientes": {
+    "titulo": [
+      "Quem já cresce",
+      "com a S4 Hub."
+    ],
+    "texto": "Negócios de diferentes portes e segmentos que confiaram em nós para estruturar e acelerar suas vendas e seu marketing.",
+    "botao": "Quero ser o próximo case"
+  },
+  "parceiros": {
+    "titulo": "Muito além de vendas e marketing.",
+    "texto": "Atuamos como um **hub estratégico**: entendemos o momento da sua empresa e conectamos você às ferramentas e parceiros certos para outros desafios do negócio."
+  },
+  "faq": {
+    "titulo": "Perguntas que sempre aparecem."
+  },
+  "contato": {
+    "titulo": [
+      "Vamos destravar",
+      "o seu crescimento?"
+    ],
+    "texto": "Comece pelo diagnóstico gratuito. Conte um pouco sobre sua empresa e retornamos por e-mail para agendar a conversa.",
+    "botao": "Enviar e pedir diagnóstico",
+    "sucesso_titulo": "Recebemos sua mensagem.",
+    "sucesso_texto": "Retornaremos por e-mail para agendar a conversa."
+  },
+  "rodape": {
+    "frase": "Seu hub de soluções em Vendas e Marketing.",
+    "empresa": "Paciullo Gestão Comercial Ltda",
+    "cnpj": "CNPJ 52.437.625/0001-19"
+  }
+}

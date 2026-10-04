@@ -1,9 +1,9 @@
 ---
-import { etapas } from '../data/site.js';
+import { etapas, textos } from '../data/site.js';
 ---
 <section id="metodo" class="mt">
   <div class="wrap">
-    <h2 class="h-lg">Do diagnóstico<br />ao resultado.</h2>
+    <h2 class="h-lg">{textos.metodo.titulo.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}</h2>
     <!-- uma coluna por etapa: acrescentar ou tirar etapas em site.js não quebra a linha do tempo -->
     <div class="mt__steps" data-timeline style={`--etapas: ${etapas.length}`}>
       <div class="mt__rail" aria-hidden="true"><span data-timeline-fill></span></div>

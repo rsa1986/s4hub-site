@@ -1,5 +1,6 @@
 ---
-import { produtos } from '../data/site.js';
+import { produtos, textos } from '../data/site.js';
+const t = textos.hero;
 import { hubPos } from '../data/hub.js';
 // nome curto no hub; nomes longos quebram em duas linhas (no espaço mais perto do meio) para não vazar do desenho
 const emLinhas = (s) => {
@@ -17,17 +18,14 @@ const nodes = produtos.map((p, i) => {
   <div class="wrap hero__grid">
     <div class="hero__text">
       <h1 class="h-xl hero__title" data-split-hero>
-        <span class="line"><span>Vendas e</span></span>
-        <span class="line"><span>marketing</span></span>
-        <span class="line"><span>no mesmo</span></span>
-        <span class="line"><span>time.</span></span>
+        {t.titulo.map((linha) => <span class="line"><span>{linha}</span></span>)}
       </h1>
-      <p class="hero__lead" data-hero-fade>Diagnóstico inteligente, ferramentas certas e execução que gera resultado. Sem enrolação, com estratégia.</p>
+      <p class="hero__lead" data-hero-fade>{t.texto}</p>
       <div class="hero__ctas" data-hero-fade>
         <a href="#contato" class="btn" data-magnetic>
-          Quero meu diagnóstico
+          {t.botao}
         </a>
-        <a href="#solucoes" class="hero__link">Ver as soluções</a>
+        <a href="#solucoes" class="hero__link">{t.link}</a>
       </div>
     </div>
 

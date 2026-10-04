@@ -1,0 +1,223 @@
+# Painel de conteúdo do site (Pages CMS: https://app.pagescms.org).
+# Cada item de `content` é uma tela do painel e edita um arquivo em src/content/.
+# Ao salvar no painel, a alteração vira um commit no GitHub e a publicação automática gera e envia o site.
+
+media:
+  input: public/img/clientes
+  output: /img/clientes
+
+content:
+  # ---------- Textos fixos das seções ----------
+  - name: textos
+    label: Textos gerais
+    type: file
+    path: src/content/textos.json
+    format: json
+    fields:
+      - name: seo
+        label: Google e compartilhamento
+        type: object
+        fields:
+          - { name: titulo, label: Título da página (aba do navegador e Google), type: string, required: true }
+          - { name: descricao, label: Descrição (aparece no Google), type: text, required: true, description: "Ideal entre 120 e 160 caracteres." }
+      - name: cabecalho
+        label: Botão do topo
+        type: object
+        fields:
+          - { name: botao, label: Texto do botão, type: string, required: true, description: "Ex.: Diagnóstico" }
+          - { name: botao_complemento, label: Complemento, type: string, description: "Ex.: gratuito. Some em celulares muito estreitos." }
+      - name: hero
+        label: Topo da página (hero)
+        type: object
+        fields:
+          - { name: titulo, label: Título (uma linha por item), type: string, list: true, required: true, description: "Cada item é uma linha do título grande. Linhas curtas ficam melhores." }
+          - { name: texto, label: Texto de apoio, type: text, required: true }
+          - { name: botao, label: Botão principal, type: string, required: true }
+          - { name: link, label: Link secundário, type: string, required: true }
+      - name: faixa
+        label: Faixa em movimento (abaixo do topo)
+        type: string
+        list: true
+        description: "Palavras que passam na faixa. Deixe vazia para esconder a faixa."
+      - name: manifesto
+        label: Manifesto
+        type: object
+        fields:
+          - { name: frase, label: Frase que acende com a rolagem, type: text, required: true }
+      - name: solucoes
+        label: Soluções
+        type: object
+        fields:
+          - { name: titulo, label: Título (uma linha por item), type: string, list: true, required: true, description: "Atenção: se mudar a quantidade de módulos, revise o \"Cinco módulos\"." }
+          - { name: texto, label: Texto de apoio, type: text, required: true }
+          - { name: fim_pergunta, label: Pergunta no fim da faixa, type: string, required: true }
+          - { name: fim_botao, label: Botão no fim da faixa, type: string, required: true }
+      - name: metodo
+        label: Método
+        type: object
+        fields:
+          - { name: titulo, label: Título (uma linha por item), type: string, list: true, required: true }
+      - name: clientes
+        label: Clientes
+        type: object
+        fields:
+          - { name: titulo, label: Título (uma linha por item), type: string, list: true, required: true }
+          - { name: texto, label: Texto de apoio, type: text, required: true }
+          - { name: botao, label: Botão, type: string, required: true }
+      - name: parceiros
+        label: Parceiros
+        type: object
+        fields:
+          - { name: titulo, label: Título, type: string, required: true }
+          - { name: texto, label: Texto de apoio, type: text, required: true, description: "Para negrito, use asteriscos duplos: **hub estratégico**" }
+      - name: faq
+        label: Dúvidas
+        type: object
+        fields:
+          - { name: titulo, label: Título, type: string, required: true }
+      - name: contato
+        label: Contato
+        type: object
+        fields:
+          - { name: titulo, label: Título (uma linha por item), type: string, list: true, required: true }
+          - { name: texto, label: Texto de apoio, type: text, required: true }
+          - { name: botao, label: Botão de enviar, type: string, required: true }
+          - { name: sucesso_titulo, label: Mensagem de sucesso (título), type: string, required: true }
+          - { name: sucesso_texto, label: Mensagem de sucesso (texto), type: string, required: true }
+      - name: rodape
+        label: Rodapé
+        type: object
+        fields:
+          - { name: frase, label: Frase, type: string, required: true }
+          - { name: empresa, label: Razão social, type: string, required: true }
+          - { name: cnpj, label: CNPJ, type: string, required: true }
+
+  # ---------- Listas ----------
+  - name: clientes
+    label: Clientes (logos)
+    type: file
+    path: src/content/clientes.json
+    format: json
+    fields:
+      - name: itens
+        label: Clientes
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{nome}"
+        description: "Sem logo, o nome aparece escrito. Logos: horizontais, SVG ou PNG com fundo transparente (ficam em branco no site). Com menos de 6 clientes a faixa fica parada."
+        fields:
+          - { name: nome, label: Nome do cliente, type: string, required: true }
+          - name: logo
+            label: Logo
+            type: image
+            options:
+              extensions: [svg, png, webp]
+              rename: safe
+
+  - name: produtos
+    label: Módulos (Soluções e hub)
+    type: file
+    path: src/content/produtos.json
+    format: json
+    fields:
+      - name: itens
+        label: Módulos
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{nome}"
+        description: "O primeiro módulo fica no topo do hub e ganha o destaque verde. O hub se ajusta à quantidade."
+        fields:
+          - name: id
+            label: Identificador
+            type: string
+            required: true
+            pattern:
+              regex: "^[a-z0-9-]+$"
+              message: "Só letras minúsculas, números e hífen (ex.: vendas). É usado nos links: evite mudar."
+          - { name: nome, label: Nome, type: string, required: true, description: "Começando com \"S4 \". No hub aparece sem o \"S4\"; prefira até ~12 letras." }
+          - { name: tag, label: Subtítulo, type: string, required: true }
+          - { name: texto, label: Descrição, type: text, required: true }
+          - { name: destaque, label: Selo (opcional), type: string, description: "Ex.: Comece por aqui. Deixe vazio nos demais." }
+
+  - name: frentes
+    label: Frentes (Manifesto)
+    type: file
+    path: src/content/frentes.json
+    format: json
+    fields:
+      - name: itens
+        label: Frentes
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{titulo}"
+        fields:
+          - { name: titulo, label: Título, type: string, required: true }
+          - name: modulo
+            label: Módulo para onde leva
+            type: string
+            required: true
+            description: "O identificador de um módulo (ex.: impulso, vendas, trafego, social, go). Se não existir, o site não é publicado e nada quebra."
+            pattern:
+              regex: "^[a-z0-9-]+$"
+              message: "Use o identificador do módulo, em minúsculas (ex.: vendas)."
+          - { name: texto, label: Texto, type: text, required: true }
+
+  - name: etapas
+    label: Etapas (Método)
+    type: file
+    path: src/content/etapas.json
+    format: json
+    fields:
+      - name: itens
+        label: Etapas
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{titulo}"
+        description: "Cada etapa vira uma coluna na linha do tempo, na ordem da lista."
+        fields:
+          - { name: titulo, label: Título, type: string, required: true }
+          - { name: texto, label: Texto, type: text, required: true }
+
+  - name: parceiros
+    label: Parceiros
+    type: file
+    path: src/content/parceiros.json
+    format: json
+    fields:
+      - name: itens
+        label: Parceiros
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{titulo}"
+        fields:
+          - { name: pergunta, label: Pergunta (texto em destaque), type: string, required: true }
+          - { name: titulo, label: Área do parceiro, type: string, required: true }
+          - { name: texto, label: Texto, type: text, required: true }
+
+  - name: faq
+    label: Dúvidas (FAQ)
+    type: file
+    path: src/content/faq.json
+    format: json
+    fields:
+      - name: itens
+        label: Perguntas
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{pergunta}"
+        description: "Sem perguntas, a seção e o link \"Dúvidas\" do menu somem."
+        fields:
+          - { name: pergunta, label: Pergunta, type: string, required: true }
+          - { name: resposta, label: Resposta, type: text, required: true }

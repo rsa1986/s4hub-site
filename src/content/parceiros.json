@@ -1,0 +1,19 @@
+{
+  "itens": [
+    {
+      "titulo": "Tecnologia e cibersegurança",
+      "pergunta": "Precisa desenvolver um app ou reforçar sua segurança digital?",
+      "texto": "Temos parceiros confiáveis em desenvolvimento, infraestrutura e cibersegurança, prontos para acelerar sua operação com tecnologia."
+    },
+    {
+      "titulo": "Finanças e ERP",
+      "pergunta": "Quer organizar suas finanças ou entender melhor os números?",
+      "texto": "Conectamos você ao ERP ideal para o seu porte e modelo de negócio."
+    },
+    {
+      "titulo": "Contabilidade e fiscal",
+      "pergunta": "Dúvidas sobre contabilidade, fiscal ou tributário?",
+      "texto": "Já mapeamos os parceiros que entregam bem e com preço justo."
+    }
+  ]
+}

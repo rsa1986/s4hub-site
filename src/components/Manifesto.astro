@@ -1,11 +1,11 @@
 ---
-import { frentes, produtos } from '../data/site.js';
-const frase = 'Na S4 Hub, unimos estratégia e execução para acelerar seus resultados nos dois pilares essenciais de qualquer negócio: vendas e marketing.';
+import { frentes, produtos, textos } from '../data/site.js';
+const frase = textos.manifesto.frase;
 const palavras = frase.split(' ');
 const nomeDo = Object.fromEntries(produtos.map((p) => [p.id, p.nome]));
 // cada frente leva a um módulo: se o `modulo` não existir em `produtos`, o build para aqui em vez de publicar um link morto
 for (const f of frentes) {
-  if (!nomeDo[f.modulo]) throw new Error(`Manifesto: a frente "${f.titulo}" aponta para o módulo "${f.modulo}", que não existe em produtos (site.js).`);
+  if (!nomeDo[f.modulo]) throw new Error(`Manifesto: a frente "${f.titulo}" aponta para o módulo "${f.modulo}", que não existe em Módulos (painel / src/content/produtos.json). Corrija o identificador em Frentes ou em Módulos.`);
 }
 ---
 <section class="mf" id="sobre">

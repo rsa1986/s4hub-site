@@ -20,7 +20,10 @@ npm run preview  # serve o dist/
 
 ## Estrutura
 
-- `src/data/site.js`: **todo o conteúdo** (produtos, frentes, etapas, clientes, parceiros, FAQ, e-mail). Edite os textos aqui.
+- `src/content/*.json`: **todo o conteúdo**, editado pelo painel (ver "Como editar o site"): `textos.json` (textos fixos de cada seção, SEO, rodapé), `produtos`, `frentes`, `etapas`, `clientes`, `parceiros`, `faq`
+- `src/data/site.js`: ponte entre o conteúdo e os componentes. Lê os JSON, ignora itens vazios e calcula as regras (`temClientes`, `temFaq`, `emailDefinido`). Não guarda texto
+- `.pages.yml`: configuração do painel (Pages CMS): uma tela por arquivo de conteúdo, com rótulos e validações em português
+- `public/img/clientes/`: logos dos clientes enviados pelo painel
 - `src/components/`: uma seção por arquivo, na ordem da página: Header, Hero, Marquee, Manifesto, Solucoes, Metodo, Clientes, Parceiros, Faq, Contato, Footer. `MiniHub.astro` é a versão reduzida do hub, usada em Soluções
 - `src/data/hub.js`: posições dos módulos no hub, calculadas pelo número de produtos (o 1º no topo, os demais distribuídos no círculo); compartilhadas pelo Hero e pelos mini-hubs. Nomes longos quebram em duas linhas no hub, mas o ideal é nome curto (até ~12 letras)
 - `src/scripts/motion.js`: todas as animações, organizadas por seção
@@ -81,9 +84,9 @@ Só três momentos animados por rolagem; o resto aparece pronto.
 
 ## Pendências
 
-- [ ] Logos dos clientes: colocar em `public/img/clientes/` e preencher `clientes` em `src/data/site.js` (`{ nome, logo }`). Cliente sem logo aparece com o nome escrito
+- [ ] Logos dos clientes: pelo painel, tela "Clientes (logos)" (ou em `public/img/clientes/` + `src/content/clientes.json`). Cliente sem logo aparece com o nome escrito
 - [x] E-mail que recebe o formulário: `DESTINO` em `public/contato.php` = rodrigo.a@s4hub.com.br
-- E-mail **não** aparece na página (decisão: evitar spam; o formulário é o canal único). Por isso `contato.email` em `site.js` fica com o placeholder
+- E-mail **não** aparece na página (decisão: evitar spam; o formulário é o canal único). Por isso `contato.email` em `src/data/site.js` fica com o placeholder (não está no painel de propósito)
 - [ ] Ajuste fino de textos. Da crítica Impeccable (02/10/2026): Manifesto como problemas do leitor (hoje repete Soluções e não inclui o S4 Go), um elemento de prova (caso com número ou fundador), linha "para quem é" no hero, jargão (ICP, pitch, cadências), frase do rodapé, um único texto para os botões de diagnóstico e a decisão sobre o marquee (repete os módulos)
 
 ## Checklist para pôr o site no ar
@@ -121,3 +124,12 @@ Fazer depois que o design estiver aprovado. Logos de clientes, e-mails e ajuste 
 2. Faça backup e remova o WordPress de `public_html` (ou mova para uma subpasta)
 3. Envie o **conteúdo** de `dist/` para `public_html` (Gerenciador de Arquivos do cPanel ou FTP)
 4. O DNS já aponta para o HostGator (ns900/ns901.hostgator.com.br)
+
+## Como editar o site (painel)
+
+Painel: **Pages CMS** (https://app.pagescms.org), entrando com o GitHub do Rodrigo. Cada tela edita um arquivo de `src/content/`; salvar no painel cria um commit no GitHub, e a publicação automática gera o site e envia ao HostGator.
+
+- Telas: Textos gerais, Clientes (logos), Módulos, Frentes, Etapas, Parceiros, Dúvidas (FAQ)
+- Rede de segurança: se uma alteração quebrar o build (ex.: frente apontando para um módulo inexistente), o site **não é publicado** e o que está no ar continua igual
+- Fica fora do painel, de propósito: layout, cores, animações, rótulos do formulário e o e-mail de destino (`public/contato.php`)
+- Implantação em etapas: [x] 1. conteúdo em `src/content/` + `.pages.yml` (04/10/2026) · [ ] 2. repositório privado no GitHub · [ ] 3. publicação automática (GitHub Actions + FTP do HostGator; segredos cadastrados pelo Rodrigo; ligar só quando o site for ao ar) · [ ] 4. ativar o Pages CMS no repositório

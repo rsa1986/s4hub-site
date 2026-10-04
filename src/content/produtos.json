@@ -1,0 +1,39 @@
+{
+  "itens": [
+    {
+      "id": "go",
+      "nome": "S4 Go",
+      "tag": "Diagnóstico e Plano de Ação",
+      "texto": "Um diagnóstico rápido e estratégico para entender o momento do seu negócio e os próximos passos ideais.",
+      "destaque": "Comece por aqui"
+    },
+    {
+      "id": "impulso",
+      "nome": "S4 Impulso",
+      "tag": "Estruturação Comercial",
+      "texto": "Organizamos seu processo de vendas do zero, com ICP, pitch, CRM e automações.",
+      "destaque": ""
+    },
+    {
+      "id": "vendas",
+      "nome": "S4 Vendas",
+      "tag": "Terceirização Comercial",
+      "texto": "Assumimos a gestão da sua operação de vendas, da prospecção ao fechamento, com foco total em performance e resultados reais.",
+      "destaque": ""
+    },
+    {
+      "id": "trafego",
+      "nome": "S4 Tráfego",
+      "tag": "Marketing de Performance",
+      "texto": "Campanhas em Google, Meta e LinkedIn Ads para atrair leads e gerar resultado.",
+      "destaque": ""
+    },
+    {
+      "id": "social",
+      "nome": "S4 Social",
+      "tag": "Redes Sociais com Constância",
+      "texto": "Presença digital alinhada com sua estratégia, com conteúdo e frequência bem definidos.",
+      "destaque": ""
+    }
+  ]
+}

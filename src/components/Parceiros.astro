@@ -1,11 +1,14 @@
 ---
-import { parceiros } from '../data/site.js';
+import { parceiros, textos } from '../data/site.js';
+const t = textos.parceiros;
+// **texto** no painel vira negrito (trechos ímpares entre os asteriscos); o resto é texto puro, sem HTML
+const trechos = t.texto.split('**');
 ---
 <section class="pc">
   <div class="wrap rule-top pc__grid">
     <div class="pc__side">
-      <h2 class="h-md">Muito além de vendas e marketing.</h2>
-      <p class="pc__lead">Atuamos como um <strong>hub estratégico</strong>: entendemos o momento da sua empresa e conectamos você às ferramentas e parceiros certos para outros desafios do negócio.</p>
+      <h2 class="h-md">{t.titulo}</h2>
+      <p class="pc__lead">{trechos.map((s, i) => (i % 2 ? <strong>{s}</strong> : s))}</p>
     </div>
     <ul class="pc__list">
       {parceiros.map((p) => (

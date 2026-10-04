@@ -159,7 +159,6 @@ camposRascunho.forEach((f, i) => {
 });
 
 const done = $('[data-form-done]');
-const TEXTO_ENVIAR = 'Enviar e pedir diagnóstico';
 form?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const status = $('[data-form-status]', form);
@@ -189,7 +188,7 @@ form?.addEventListener('submit', async (e) => {
     done.focus({ preventScroll: true });
     if (lenis) lenis.scrollTo(done, { offset: -160 });
     else done.scrollIntoView({ block: 'center' });
-    btn.textContent = TEXTO_ENVIAR;
+    btn.textContent = btn.dataset.texto; // texto original do botão (vem do painel)
   } catch (err) {
     // falha: os dados continuam no formulário e o botão vira "Tentar de novo"
     status.classList.add('is-error');

@@ -11,13 +11,14 @@ import Parceiros from '../components/Parceiros.astro';
 import Faq from '../components/Faq.astro';
 import Contato from '../components/Contato.astro';
 import Footer from '../components/Footer.astro';
+import { textos } from '../data/site.js';
 ---
 <Base>
   <a class="skip" href="#conteudo">Pular para o conteúdo</a>
   <Header />
   <main id="conteudo" tabindex="-1">
     <Hero />
-    <Marquee tone="navy" items={['Diagnóstico', 'Estruturação comercial', 'Vendas terceirizadas', 'Tráfego pago', 'Redes sociais']} />
+    {textos.faixa.length > 0 && <Marquee tone="navy" items={textos.faixa} />}
     <Manifesto />
     <Solucoes />
     <Metodo />

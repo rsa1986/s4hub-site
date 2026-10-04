@@ -1,18 +1,18 @@
 ---
-import { faq, temFaq } from '../data/site.js';
+import { faq, temFaq, textos } from '../data/site.js';
 ---
 <!-- Poucas perguntas com respostas curtas: tudo aberto, sem acordeão (nada para clicar só para ler uma linha) -->
 {temFaq && (
 <section id="duvidas" class="fq">
   <div class="wrap rule-top fq__grid">
     <div class="fq__side">
-      <h2 class="h-md">Perguntas que sempre aparecem.</h2>
+      <h2 class="h-md">{textos.faq.titulo}</h2>
     </div>
     <dl class="fq__list">
       {faq.map((f) => (
         <div class="fq__item">
-          <dt>{f.p}</dt>
-          <dd>{f.r}</dd>
+          <dt>{f.pergunta}</dt>
+          <dd>{f.resposta}</dd>
         </div>
       ))}
     </dl>
