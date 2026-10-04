@@ -104,7 +104,8 @@ Fazer depois que o design estiver aprovado. Logos de clientes, e-mails e ajuste 
 - [ ] **Analytics** (GA4 / Tag Manager / Meta Pixel): perguntar se o WordPress antigo tinha códigos, para não perder histórico. Com rastreamento, a LGPD exige também aviso de cookies. Aguardando resposta
 - [ ] **Revisão de código** (`/code-review`): `motion.js` e componentes (opcional)
 - [ ] **Prévia pública na Vercel** (opcional): link temporário para aprovação antes de mexer no HostGator (o formulário não funciona lá, só o visual)
-- [x] **Desempenho e SEO** (Lighthouse no Edge, 01/10/2026): celular 98 / 96 / 100 / 100, desktop 100 / 96 / 100 / 100. Os 96 de acessibilidade vêm das palavras apagadas do Manifesto antes de acenderem (trade-off aceito)
+- [x] **Desempenho e SEO** (Lighthouse no Edge, 04/10/2026, v5): celular 98 / 97 / 100 / 100, desktop 100 / 97 / 100 / 100. O único ponto em acessibilidade são as palavras apagadas do Manifesto antes de acenderem (trade-off aceito)
+- [x] **Testes finais de regressão** (04/10/2026, v5): 38/38 no navegador (erros, links, rolagem lateral em 6 larguras, toque, teclado, menu, formulário completo, hub, movimento reduzido, sem JS), dados extremos 9/9, detector Impeccable limpo. Roteiro em `final.mjs` (pasta temporária da sessão; pedir para recriar se necessário)
 
 **No dia da publicação** (passos em "Deploy" abaixo)
 
