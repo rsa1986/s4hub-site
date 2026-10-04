@@ -4,7 +4,8 @@ import { etapas } from '../data/site.js';
 <section id="metodo" class="mt">
   <div class="wrap">
     <h2 class="h-lg">Do diagnóstico<br />ao resultado.</h2>
-    <div class="mt__steps" data-timeline>
+    <!-- uma coluna por etapa: acrescentar ou tirar etapas em site.js não quebra a linha do tempo -->
+    <div class="mt__steps" data-timeline style={`--etapas: ${etapas.length}`}>
       <div class="mt__rail" aria-hidden="true"><span data-timeline-fill></span></div>
       <ol class="mt__list">
       {etapas.map((e, i) => (
@@ -23,7 +24,7 @@ import { etapas } from '../data/site.js';
 <style>
   .mt { padding: var(--section) 0 var(--section-end); }
   .mt__steps { position: relative; margin-top: clamp(40px, 5vw, 64px); padding-top: 40px; }
-  .mt__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+  .mt__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(var(--etapas, 3), minmax(0, 1fr)); gap: 32px; }
   .mt__rail { position: absolute; left: 0; right: 0; top: 7px; height: 2px; background: rgba(11, 26, 46, 0.1); }
   .mt__rail span { position: absolute; inset: 0; background: var(--teal); transform-origin: left; transform: scaleX(0); }
   .mt__step { position: relative; display: flex; flex-direction: column; gap: 8px; }

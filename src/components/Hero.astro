@@ -1,7 +1,17 @@
 ---
 import { produtos } from '../data/site.js';
 import { hubPos } from '../data/hub.js';
-const nodes = produtos.map((p, i) => ({ ...p, ...hubPos[i], curto: p.nome.replace('S4 ', '') }));
+// nome curto no hub; nomes longos quebram em duas linhas (no espaço mais perto do meio) para não vazar do desenho
+const emLinhas = (s) => {
+  if (s.length <= 10 || !s.includes(' ')) return [s];
+  const meio = s.length / 2;
+  const corte = [...s].reduce((melhor, c, i) => (c === ' ' && Math.abs(i - meio) < Math.abs(melhor - meio) ? i : melhor), -1);
+  return [s.slice(0, corte), s.slice(corte + 1)];
+};
+const nodes = produtos.map((p, i) => {
+  const curto = p.nome.replace('S4 ', '');
+  return { ...p, ...hubPos[i], curto, linhas: emLinhas(curto) };
+});
 ---
 <section id="topo" class="hero dark">
   <div class="wrap hero__grid">
@@ -54,7 +64,9 @@ const nodes = produtos.map((p, i) => ({ ...p, ...hubPos[i], curto: p.nome.replac
               <circle cx={n.x} cy={n.y} r="48" class="node__hit" />
               <circle cx={n.x} cy={n.y} r="34" class="node__bg" />
               <circle cx={n.x} cy={n.y} r="6" class="node__dot" />
-              <text x={n.x} y={n.y + 58} text-anchor="middle" class="node__label">{n.curto}</text>
+              <text x={n.x} y={n.y + 58} text-anchor="middle" class="node__label">
+                {n.linhas.map((l, k) => <tspan x={n.x} dy={k ? "1.1em" : 0}>{l}</tspan>)}
+              </text>
             </a>
           </g>
         ))}
@@ -94,8 +106,13 @@ const nodes = produtos.map((p, i) => ({ ...p, ...hubPos[i], curto: p.nome.replac
   .node__bg { fill: var(--navy-700); stroke: rgba(255, 255, 255, 0.14); stroke-width: 1; transition: fill .2s ease, stroke .2s ease; }
   .node__dot { fill: var(--teal); transition: fill .2s ease; }
   .node__label { font-family: var(--f-display); font-weight: 600; font-size: 19px; fill: #fff; letter-spacing: -0.01em; }
-  .node:hover .node__bg, .node:focus-visible .node__bg { fill: var(--green); stroke: var(--green); }
-  .node:hover .node__dot, .node:focus-visible .node__dot { fill: var(--navy); }
+  /* foco do teclado e toque (:active) acendem o módulo; o hover fica só para mouse, senão "gruda" depois do toque */
+  .node:focus-visible .node__bg, .node:active .node__bg { fill: var(--green); stroke: var(--green); }
+  .node:focus-visible .node__dot, .node:active .node__dot { fill: var(--navy); }
+  @media (hover: hover) and (pointer: fine) {
+    .node:hover .node__bg { fill: var(--green); stroke: var(--green); }
+    .node:hover .node__dot { fill: var(--navy); }
+  }
   .node:focus-visible .node__bg { stroke: var(--white); stroke-width: 3; }
   .hub__caption {
     min-height: 44px; margin-top: 12px; display: flex; flex-direction: column; align-items: center; gap: 2px;

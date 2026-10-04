@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import logo from '../assets/logo-h-dark.png';
-import { temClientes } from '../data/site.js';
+import { temClientes, temFaq } from '../data/site.js';
 const ano = new Date().getFullYear();
 ---
 <footer class="ft dark">
@@ -11,7 +11,7 @@ const ano = new Date().getFullYear();
       <a href="#solucoes">Soluções</a>
       <a href="#metodo">Método</a>
       {temClientes && <a href="#clientes">Clientes</a>}
-      <a href="#duvidas">Dúvidas</a>
+      {temFaq && <a href="#duvidas">Dúvidas</a>}
       <a href="#contato">Contato</a>
     </nav>
   </div>
@@ -31,7 +31,7 @@ const ano = new Date().getFullYear();
   .ft__logo { height: 36px; width: auto; }
   .ft__nav { display: flex; flex-wrap: wrap; gap: 4px 24px; font-size: 14px; font-weight: 600; color: var(--muted-on-dark); }
   .ft__nav a { display: inline-block; padding: 11px 0; transition: color .2s ease; }
-  .ft__nav a:hover { color: var(--green); }
+  @media (hover: hover) and (pointer: fine) { .ft__nav a:hover { color: var(--green); } }
   .ft__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 32px; padding-top: 24px; font-size: 14px; color: var(--muted-on-dark); align-items: flex-end; }
   .ft__legal { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
   @media (max-width: 640px) { .ft__legal { align-items: flex-start; text-align: left; } }

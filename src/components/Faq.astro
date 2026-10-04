@@ -1,7 +1,8 @@
 ---
-import { faq } from '../data/site.js';
+import { faq, temFaq } from '../data/site.js';
 ---
 <!-- Poucas perguntas com respostas curtas: tudo aberto, sem acordeão (nada para clicar só para ler uma linha) -->
+{temFaq && (
 <section id="duvidas" class="fq">
   <div class="wrap rule-top fq__grid">
     <div class="fq__side">
@@ -17,6 +18,7 @@ import { faq } from '../data/site.js';
     </dl>
   </div>
 </section>
+)}
 
 <style>
   .fq { padding: 0 0 var(--section-end); }

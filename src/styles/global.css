@@ -30,7 +30,14 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+/* celular: sem a mancha cinza/azul do navegador ao tocar (cada controle tem a própria resposta ao toque) */
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+/* controles: clique imediato (sem esperar o toque duplo) e sem selecionar o rótulo ao segurar o dedo.
+   Texto de conteúdo continua selecionável. */
+a, button, [role="button"] { touch-action: manipulation; }
+.btn, button, .hdr__link, .hdr__mobile a, .hero__link, .mf__row, .node { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+/* travado enquanto o menu do celular está aberto (a página atrás não rola) */
+html.menu-lock { overflow: hidden; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 body {

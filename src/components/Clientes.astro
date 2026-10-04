@@ -1,20 +1,46 @@
 ---
 // Aparece quando `temClientes` (site.js) for true. Cliente sem logo aparece com o nome escrito.
+import fs from 'node:fs';
+import path from 'node:path';
+import sharp from 'sharp';
 import { clientes, temClientes } from '../data/site.js';
+
+// Logos: tudo resolvido no build.
+// - arquivo inexistente: avisa no terminal e mostra o nome do cliente (nada de imagem quebrada no site)
+// - tamanho: área visual parecida para qualquer proporção (um logo largo não vira um risco, um quadrado não fica gigante)
+const AREA = 40 * 120;            // área de referência em px²
+const MAX_L = 200, MAX_A = 48;    // limites de largura e altura
+const lista = await Promise.all(clientes.map(async (c) => {
+  if (!c.logo) return { ...c, logo: null };
+  const arquivo = path.join(process.cwd(), 'public', c.logo);
+  if (!fs.existsSync(arquivo)) {
+    console.warn(`[clientes] logo não encontrado para "${c.nome}": public${c.logo}. Mostrando o nome no lugar.`);
+    return { ...c, logo: null };
+  }
+  const { width = 3, height = 1 } = await sharp(arquivo).metadata().catch(() => ({}));
+  const r = width / height;
+  let l = Math.sqrt(AREA * r), a = Math.sqrt(AREA / r);
+  const k = Math.min(1, MAX_L / l, MAX_A / a);
+  return { ...c, w: Math.round(l * k), h: Math.round(a * k) };
+}));
+
+// Com poucos clientes a faixa em movimento repete os mesmos nomes e deixa buracos: abaixo de 6, linha parada.
+const emFaixa = lista.length >= 6;
+const itens = emFaixa ? [...lista, ...lista, ...lista] : lista;
 ---
-{temClientes && (
+{temClientes && lista.length > 0 && (
   <section id="clientes" class="cl dark">
     <div class="wrap cl__head">
       <h2 class="h-lg">Quem já cresce<br />com a S4 Hub.</h2>
       <p class="cl__lead">Negócios de diferentes portes e segmentos que confiaram em nós para estruturar e acelerar suas vendas e seu marketing.</p>
     </div>
 
-    <div class="cl__mq" data-marquee data-speed="0.6" data-copies="3">
+    <div class={emFaixa ? 'cl__mq' : 'cl__mq cl__mq--parado'} data-marquee={emFaixa ? '' : undefined} data-speed="0.6" data-copies="3">
       <ul class="mq__track">
-        {[...clientes, ...clientes, ...clientes].map((c, k) => (
-          <li class="cl__item" aria-hidden={k >= clientes.length ? 'true' : undefined}>
+        {itens.map((c, k) => (
+          <li class="cl__item" aria-hidden={k >= lista.length ? 'true' : undefined}>
             {c.logo
-              ? <img src={c.logo} alt={k < clientes.length ? c.nome : ''} loading="lazy" class="cl__logo" />
+              ? <img src={c.logo} alt={k < lista.length ? c.nome : ''} width={c.w} height={c.h} loading="lazy" class="cl__logo" />
               : <span class="cl__nome">{c.nome}</span>}
           </li>
         ))}
@@ -33,8 +59,12 @@ import { clientes, temClientes } from '../data/site.js';
   .cl__lead { max-width: 380px; color: var(--muted-on-dark); }
   .cl__mq { overflow: hidden; white-space: nowrap; margin-top: clamp(40px, 5vw, 64px); padding-block: 24px; border-block: 1px solid var(--navy-line); }
   .cl__mq .mq__track { display: inline-flex; align-items: center; gap: clamp(40px, 5vw, 72px); margin: 0; padding: 0 clamp(40px, 5vw, 72px) 0 0; list-style: none; will-change: transform; }
-  .cl__item { flex: 0 0 auto; display: flex; align-items: center; height: 40px; }
-  .cl__logo { height: 36px; width: auto; max-width: 150px; object-fit: contain; filter: grayscale(1) brightness(2.2); opacity: .75; }
+  /* poucos clientes: linha parada, centralizada, que quebra em mais linhas se precisar */
+  .cl__mq--parado { white-space: normal; }
+  .cl__mq--parado .mq__track { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px clamp(40px, 5vw, 72px); padding: 0 var(--gutter); will-change: auto; }
+  .cl__item { flex: 0 0 auto; display: flex; align-items: center; min-height: 48px; }
+  /* todos os logos em silhueta branca: uniforme e legível sobre o navy, qualquer que seja a cor original */
+  .cl__logo { max-width: 200px; max-height: 48px; object-fit: contain; filter: brightness(0) invert(1); opacity: .72; }
   .cl__nome { font-family: var(--f-display); font-weight: 600; font-size: 20px; letter-spacing: -0.02em; color: var(--muted-on-dark); }
   .cl__foot { margin-top: 40px; }
 </style>

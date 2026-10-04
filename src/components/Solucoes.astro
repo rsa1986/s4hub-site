@@ -50,6 +50,12 @@ import MiniHub from './MiniHub.astro';
   .mod { width: min(300px, 82vw); min-height: 380px; display: flex; flex-direction: column; justify-content: space-between; gap: 32px; padding: 4px 32px; border-left: 1px solid var(--navy-line); }
   .mod__hub { width: 88px; }
   .mod__name { font-size: clamp(28px, 2.6vw, 38px); font-stretch: var(--condensed); font-weight: 700; letter-spacing: -0.015em; }
+  /* duas linhas reservadas e texto pela base: nomes de uma ou duas linhas terminam na mesma altura em todas as colunas */
+  /* conteúdo alinhado pelo topo, a uma distância fixa do mini-hub: nome, tag e texto começam na mesma altura em todas as colunas,
+     e o nome reserva duas linhas (texto pela base), então nomes de 1 ou 2 linhas terminam juntos */
+  .mod:not(.mod--entrada) { justify-content: flex-start; }
+  .mod:not(.mod--entrada) .mod__body { margin-top: 120px; }
+  .mod:not(.mod--entrada) .mod__name { min-height: 2em; display: flex; align-items: flex-end; }
   .mod__tag { margin-top: 8px; font-weight: 700; font-size: 14px; color: var(--green); }
   /* altura fixa de 4 linhas para os nomes dos módulos ficarem na mesma altura */
   .mod__text { margin-top: 10px; min-height: calc(1.55em * 4); color: var(--muted-on-dark); font-size: 15px; line-height: 1.55; max-width: 260px; }
@@ -78,6 +84,8 @@ import MiniHub from './MiniHub.astro';
     .mod { min-height: 0; flex-direction: row; align-items: flex-start; gap: 20px; padding: 28px 0; border-left: 0; border-top: 1px solid var(--navy-line); }
     .mod__hub { flex: 0 0 56px; width: 56px; margin-top: 4px; }
     .mod__text { min-height: 0; max-width: none; }
+    .mod:not(.mod--entrada) .mod__name { min-height: 0; }
+    .mod:not(.mod--entrada) .mod__body { margin-top: 0; }
     .mod--entrada { flex-direction: column; margin: 0 0 8px; padding: 24px; border-radius: 18px; }
     .mod--entrada .mod__hub { width: 88px; flex-basis: auto; }
     .mod--entrada + .mod { border-top: 0; }

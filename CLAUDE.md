@@ -22,7 +22,7 @@ npm run preview  # serve o dist/
 
 - `src/data/site.js`: **todo o conteúdo** (produtos, frentes, etapas, clientes, parceiros, FAQ, e-mail). Edite os textos aqui.
 - `src/components/`: uma seção por arquivo, na ordem da página: Header, Hero, Marquee, Manifesto, Solucoes, Metodo, Clientes, Parceiros, Faq, Contato, Footer. `MiniHub.astro` é a versão reduzida do hub, usada em Soluções
-- `src/data/hub.js`: posições dos 5 módulos no hub (compartilhadas pelo Hero e pelos mini-hubs)
+- `src/data/hub.js`: posições dos módulos no hub, calculadas pelo número de produtos (o 1º no topo, os demais distribuídos no círculo); compartilhadas pelo Hero e pelos mini-hubs. Nomes longos quebram em duas linhas no hub, mas o ideal é nome curto (até ~12 letras)
 - `src/scripts/motion.js`: todas as animações, organizadas por seção
 - `src/styles/global.css`: tokens (cores, fontes), botões e utilitários
 - `public/img/`: logos (variações para fundo escuro e claro, com fundo transparente)
@@ -53,7 +53,8 @@ Regras da revisão de design (v2):
 - Quebra de linha: `text-wrap: balance` em títulos e `pretty` em textos (sem palavra sozinha na última linha). Respiro das seções: `--section` em cima e `--section-end`, um pouco maior, embaixo
 - FAQ é uma lista aberta (perguntas e respostas visíveis), sem acordeão: são poucas perguntas com respostas curtas. Se o FAQ crescer muito, reavaliar
 - Escala contida: títulos, hub e espaçamentos moderados (token `--section` para o respiro vertical das seções). Evitar voltar a fontes e blocos gigantes
-- Clientes aparece conforme `temClientes` em `site.js` (hoje `true`, com os nomes no lugar dos logos que faltam). O e-mail some enquanto for placeholder (`emailDefinido`)
+- Seções que dependem de conteúdo se ajustam sozinhas: Clientes e FAQ (e seus links no menu) somem se a lista estiver vazia (`temClientes`, `temFaq`); com menos de 6 clientes a faixa fica parada; o Método tem uma coluna por etapa; uma frente cujo `modulo` não existe em `produtos` **para o build** com mensagem clara. O e-mail some enquanto for placeholder (`emailDefinido`)
+- Logos de clientes: em silhueta branca e com área visual equilibrada (calculada no build pela proporção). Arquivo inexistente vira o nome do cliente (com aviso no terminal). Pedir logos **horizontais, SVG ou PNG com fundo transparente** (com fundo, viram um bloco branco)
 
 ## Usabilidade e acessibilidade
 
@@ -62,7 +63,8 @@ Revisado com a skill ui-ux-pro-max. Manter:
 - Contraste: texto ≥ 4,5:1; contornos, bordas e linhas de campo ≥ 3:1. Foco do teclado é navy nas seções claras e verde nas escuras (`.dark`, header)
 - Alvos de toque ≥ 44px no celular; textos ≥ 14px (descrições 15px+)
 - Formulário: obrigatórios primeiro e marcados no rótulo; erro escrito abaixo de cada campo (`aria-invalid`, rótulo e linha em coral); foco no primeiro campo errado; botão travado com "Enviando..."; limite de 15s; `maxlength` igual ao `contato.php`; rascunho salvo na aba (sessionStorage); sucesso troca o formulário por um painel com o hub inteiro aceso; falha mantém os dados e o botão vira "Tentar de novo"
-- Celular: botão "Diagnóstico gratuito" compacto no header; menu abre com fundo escurecido (tocar fecha)
+- Celular: botão "Diagnóstico gratuito" compacto no header (só "Diagnóstico" abaixo de 360px); menu abre com fundo escurecido (tocar fecha) e trava a rolagem da página
+- Toque (revisão mobile-native, 04/10/2026): sem a mancha de toque do navegador; `touch-action: manipulation` em links e botões; rótulos de controles não são selecionáveis ao segurar o dedo; todo `:hover` (inclusive módulos do hub e rodapé) só com mouse, com `:active` para o toque; no formulário, a tecla "Próximo" pula para o campo seguinte
 - Menu mobile fecha com Esc e troca o rótulo para "Fechar menu"
 - Marquees pausam com o mouse em cima ou com foco; link "Pular para o conteúdo" é o primeiro Tab
 

@@ -77,9 +77,9 @@ export const etapas = [
 
 // Clientes: troque `nome` e adicione `logo: '/img/clientes/arquivo.svg'` quando tiver os arquivos.
 export const clientes = Array.from({ length: 10 }, (_, i) => ({ nome: `Cliente ${i + 1}`, logo: null }));
-// A seção Clientes (e o link dela no menu) aparece sempre que isto for true.
+// A seção Clientes (e o link dela no menu) aparece quando houver ao menos um cliente.
 // Clientes sem `logo` aparecem com o nome escrito no lugar.
-export const temClientes = true;
+export const temClientes = clientes.length > 0;
 
 export const parceiros = [
   {
@@ -105,3 +105,5 @@ export const faq = [
   { p: 'A S4 Hub pode estruturar meu time de vendas?', r: 'Sim. Estruturamos seu comercial do zero e, se quiser, operamos como seu time de vendas terceirizado.' },
   { p: 'Como posso começar a trabalhar com a S4 Hub?', r: 'Comece pelo diagnóstico gratuito. Em poucos minutos entendemos o seu momento e indicamos o plano ideal para o seu crescimento.' },
 ];
+// O FAQ (e o link "Dúvidas" no menu) só aparece se houver perguntas.
+export const temFaq = faq.length > 0;

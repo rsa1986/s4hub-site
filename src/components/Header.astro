@@ -1,12 +1,12 @@
 ---
 import { Image } from 'astro:assets';
 import logo from '../assets/logo-h-dark.png';
-import { temClientes } from '../data/site.js';
+import { temClientes, temFaq } from '../data/site.js';
 const links = [
   { href: '#solucoes', label: 'Soluções' },
   { href: '#metodo', label: 'Método' },
   ...(temClientes ? [{ href: '#clientes', label: 'Clientes' }] : []),
-  { href: '#duvidas', label: 'Dúvidas' },
+  ...(temFaq ? [{ href: '#duvidas', label: 'Dúvidas' }] : []),
 ];
 ---
 <header class="hdr" data-header>
@@ -18,7 +18,7 @@ const links = [
     <nav class="hdr__nav" aria-label="Principal">
       {links.map((l) => <a href={l.href} class="hdr__link"><span>{l.label}</span></a>)}
     </nav>
-    <a href="#contato" class="btn hdr__cta">Diagnóstico gratuito</a>
+    <a href="#contato" class="btn hdr__cta" aria-label="Diagnóstico gratuito">Diagnóstico<span class="hdr__cta-extra" aria-hidden="true">gratuito</span></a>
     <button class="hdr__burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-mobile" data-burger>
       <span></span><span></span>
     </button>
@@ -48,7 +48,8 @@ const links = [
     .hdr__link:hover { color: var(--white); }
     .hdr__link:hover::after { transform: scaleX(1); transform-origin: left; }
   }
-  .hdr__cta { min-height: 38px; padding: 0 18px; font-size: 14px; }
+  .hdr__cta { min-height: 38px; padding: 0 18px; font-size: 14px; white-space: nowrap; gap: 0; }
+  .hdr__cta-extra { margin-left: 0.3em; }
   .hdr__burger { display: none; width: 46px; height: 46px; margin-left: auto; border: 0; background: transparent; cursor: pointer; position: relative; }
   .hdr__burger span { position: absolute; left: 11px; right: 11px; height: 2px; background: var(--white); transition: transform .2s var(--ease); }
   .hdr__burger span:first-child { top: 18px; }
@@ -69,5 +70,9 @@ const links = [
     .hdr.menu-open .hdr__cta { visibility: hidden; } /* o menu aberto já tem o botão */
     .hdr__in { height: 60px; gap: 10px; }
     .hdr__logo img { height: 28px; }
+  }
+  /* telas muito estreitas: o botão do header fica só "Diagnóstico", numa linha */
+  @media (max-width: 360px) {
+    .hdr__cta-extra { display: none; }
   }
 </style>

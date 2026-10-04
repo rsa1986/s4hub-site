@@ -87,6 +87,8 @@ function closeMenu() {
   burger.setAttribute('aria-label', 'Abrir menu');
   menu.hidden = true;
   if (scrim) scrim.hidden = true;
+  document.documentElement.classList.remove('menu-lock');
+  lenis?.start();
   header.classList.remove('menu-open', 'is-solid-force');
 }
 burger?.addEventListener('click', () => {
@@ -96,6 +98,9 @@ burger?.addEventListener('click', () => {
   burger.setAttribute('aria-label', 'Fechar menu');
   menu.hidden = false;
   if (scrim) scrim.hidden = false;
+  // a página atrás do menu não rola
+  document.documentElement.classList.add('menu-lock');
+  lenis?.stop();
   header.classList.add('menu-open', 'is-solid');
   $('a', menu)?.focus();
 });
@@ -142,6 +147,16 @@ try {
   if (salvo) camposRascunho.forEach((f) => { if (salvo[f.name]) f.value = salvo[f.name]; });
 } catch {}
 camposRascunho.forEach((f) => f.addEventListener('input', salvarRascunho));
+
+// tecla "Próximo" do teclado (Enter num campo de uma linha): vai para o campo seguinte em vez de enviar
+camposRascunho.forEach((f, i) => {
+  if (f.tagName !== 'INPUT') return;
+  f.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    camposRascunho[i + 1]?.focus();
+  });
+});
 
 const done = $('[data-form-done]');
 const TEXTO_ENVIAR = 'Enviar e pedir diagnóstico';

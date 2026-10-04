@@ -3,6 +3,10 @@ import { frentes, produtos } from '../data/site.js';
 const frase = 'Na S4 Hub, unimos estratégia e execução para acelerar seus resultados nos dois pilares essenciais de qualquer negócio: vendas e marketing.';
 const palavras = frase.split(' ');
 const nomeDo = Object.fromEntries(produtos.map((p) => [p.id, p.nome]));
+// cada frente leva a um módulo: se o `modulo` não existir em `produtos`, o build para aqui em vez de publicar um link morto
+for (const f of frentes) {
+  if (!nomeDo[f.modulo]) throw new Error(`Manifesto: a frente "${f.titulo}" aponta para o módulo "${f.modulo}", que não existe em produtos (site.js).`);
+}
 ---
 <section class="mf" id="sobre">
   <div class="wrap">
@@ -35,7 +39,7 @@ const nomeDo = Object.fromEntries(produtos.map((p) => [p.id, p.nome]));
   .mf__text .w.on { color: var(--ink); }
   .mf__list { list-style: none; margin: clamp(48px, 6vw, 80px) 0 0; padding: 0; border-top: 1px solid var(--paper-line); }
   .mf__list li { border-bottom: 1px solid var(--paper-line); }
-  .mf__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) 130px; gap: 32px; align-items: baseline; padding: 22px 0; }
+  .mf__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(130px, auto); gap: 32px; align-items: baseline; padding: 22px 0; }
   .mf__title { font-size: clamp(18px, 1.6vw, 22px); letter-spacing: -0.02em; line-height: 1.2; transition: color .2s ease; }
   .mf__desc { color: var(--muted); font-size: 15px; }
   .mf__mod { display: inline-flex; align-items: center; justify-content: flex-end; gap: 8px; font-weight: 700; font-size: 14px; color: var(--teal-ink); white-space: nowrap; }
