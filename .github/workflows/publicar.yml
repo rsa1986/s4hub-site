@@ -1,0 +1,73 @@
+# Publicação automática do site.
+# A cada alteração na branch main (inclusive as feitas pelo painel Pages CMS):
+#   1. instala, gera o site (npm run build) e para se algo estiver quebrado;
+#   2. SÓ ENVIA ao HostGator se a variável do repositório PUBLICAR for "sim".
+#      Até o site ir ao ar, deixe PUBLICAR desligada: a automação só confere que o build passa,
+#      sem tocar no WordPress atual.
+#
+# Configuração (GitHub → Settings → Secrets and variables → Actions):
+#   Secrets:   FTP_SERVIDOR, FTP_USUARIO, FTP_SENHA   (dados do FTP no cPanel do HostGator)
+#   Variables: PUBLICAR = sim  (liga o envio)
+#              FTP_PASTA       (opcional; padrão /public_html/)
+#              FTP_PROTOCOLO   (opcional; ftps ou ftp; padrão ftps)
+
+name: Publicar site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # botão "Run workflow" para publicar manualmente
+
+permissions:
+  contents: read
+
+# nunca dois envios ao mesmo tempo: um novo commit espera o anterior terminar
+# (não cancela, para nunca interromper um envio pela metade)
+concurrency:
+  group: publicar
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Preparar o Node (mesma versão do computador do projeto)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Gerar o site
+        # para aqui se o conteúdo quebrar o build (ex.: frente apontando para módulo inexistente)
+        run: npm run build
+
+      - name: Conferir o resultado
+        run: |
+          test -f dist/index.html
+          test -f dist/contato.php
+          echo "Build ok: $(du -sh dist | cut -f1) em dist/"
+
+      - name: Enviar ao HostGator (FTP)
+        if: ${{ vars.PUBLICAR == 'sim' }}
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVIDOR }}
+          username: ${{ secrets.FTP_USUARIO }}
+          password: ${{ secrets.FTP_SENHA }}
+          protocol: ${{ vars.FTP_PROTOCOLO || 'ftps' }}
+          local-dir: ./dist/
+          server-dir: ${{ vars.FTP_PASTA || '/public_html/' }}
+          # envia só o que mudou (guarda um registro no servidor) e nunca apaga a pasta inteira
+          dangerous-clean-slate: false
+
+      - name: Envio desligado
+        if: ${{ vars.PUBLICAR != 'sim' }}
+        run: |
+          echo "PUBLICAR não está como 'sim': site gerado e conferido, mas NÃO enviado ao HostGator."

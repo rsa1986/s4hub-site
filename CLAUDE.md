@@ -132,4 +132,6 @@ Painel: **Pages CMS** (https://app.pagescms.org), entrando com o GitHub do Rodri
 - Telas: Textos gerais, Clientes (logos), Módulos, Frentes, Etapas, Parceiros, Dúvidas (FAQ)
 - Rede de segurança: se uma alteração quebrar o build (ex.: frente apontando para um módulo inexistente), o site **não é publicado** e o que está no ar continua igual
 - Fica fora do painel, de propósito: layout, cores, animações, rótulos do formulário e o e-mail de destino (`public/contato.php`)
-- Implantação em etapas: [x] 1. conteúdo em `src/content/` + `.pages.yml` (04/10/2026) · [ ] 2. repositório privado no GitHub · [ ] 3. publicação automática (GitHub Actions + FTP do HostGator; segredos cadastrados pelo Rodrigo; ligar só quando o site for ao ar) · [ ] 4. ativar o Pages CMS no repositório
+- Repositório: https://github.com/rsa1986/s4hub-site (privado)
+- Publicação automática: `.github/workflows/publicar.yml`. A cada push na `main` gera o site e confere; **só envia por FTP se a variável `PUBLICAR` = `sim`** (ligar no dia do go-live). Segredos `FTP_SERVIDOR`, `FTP_USUARIO`, `FTP_SENHA`; variáveis opcionais `FTP_PASTA` (padrão `/public_html/`) e `FTP_PROTOCOLO` (padrão `ftps`). Envios em fila, nunca simultâneos; build quebrado não publica
+- Implantação em etapas: [x] 1. conteúdo em `src/content/` + `.pages.yml` (04/10/2026) · [x] 2. repositório privado no GitHub · [x] 3. automação criada (envio desligado; falta cadastrar os segredos de FTP e ligar `PUBLICAR` no go-live) · [ ] 4. ativar o Pages CMS no repositório
