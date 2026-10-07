@@ -141,3 +141,16 @@ Painel: **Pages CMS** (https://app.pagescms.org), entrando com o GitHub do Rodri
 - Implantação em etapas: [x] 1. conteúdo em `src/content/` + `.pages.yml` (04/10/2026) · [x] 2. repositório privado no GitHub · [x] 3. automação criada (envio desligado; falta cadastrar os segredos de FTP e ligar `PUBLICAR` no go-live) · [x] 4. Pages CMS ativado e testado: o "Save" no painel virou commit no GitHub e o site gerou certo (04/10/2026)
 - Actions conferido (06/10/2026): roda a cada push e a cada "Save" do painel, ~15s, termina em "site gerado e conferido, mas NÃO enviado" enquanto `PUBLICAR` estiver desligada. Ações nas versões atuais (checkout v7, setup-node v7, FTP-Deploy-Action v4.4.0)
 - GitHub CLI instalado e logado (`C:/Program Files/GitHub CLI/gh.exe`): permite ver execuções (`gh run list -R rsa1986/s4hub-site`) e cadastrar segredos com `gh secret set` (a senha é digitada pelo Rodrigo no terminal)
+
+## Go-live: onde paramos (06/10/2026)
+
+Decisões do Rodrigo: **publicar já**, com os textos como estão; **sem analytics** por enquanto; **logos depois** pelo painel (a lista de clientes foi esvaziada: a seção e o link do menu voltam sozinhos ao adicionar o primeiro cliente); a política de privacidade vai com o e-mail rodrigo.a@s4hub.com.br (recomendado criar `privacidade@s4hub.com.br` e trocar pelo painel).
+
+Lado técnico pronto: automação verde (build + 28 verificações de servidor), envio desligado (`PUBLICAR` não definida).
+
+Próximos passos, nesta ordem:
+1. **Rodrigo:** criar no cPanel uma conta FTP só para a automação, com diretório `public_html` (aí definir a variável `FTP_PASTA` = `/`; com a conta principal do cPanel o padrão `/public_html/` já serve) e cadastrar os segredos em um PowerShell novo: `gh secret set FTP_SERVIDOR -R rsa1986/s4hub-site` (idem `FTP_USUARIO`, `FTP_SENHA`)
+2. **Rodrigo:** no Gerenciador de Arquivos (com arquivos ocultos visíveis), compactar e baixar todo o `public_html` (backup) e mover tudo, menos `wp-antigo`, `.well-known` e `cgi-bin`, para `public_html/wp-antigo/`. Avisar na hora (site fica 1–2 min fora do ar)
+3. **Claude:** `gh variable set PUBLICAR -b sim -R rsa1986/s4hub-site` (+ `FTP_PASTA` se for o caso), `gh workflow run publicar.yml -R rsa1986/s4hub-site`, acompanhar; conferir o site no ar (páginas, https, redirecionamentos, 404, og:image, Lighthouse no domínio real). Se o FTPS falhar, testar `FTP_PROTOCOLO` = `ftp`
+4. **Rodrigo:** enviar uma mensagem real pelo formulário e confirmar que chegou em rodrigo.a@s4hub.com.br
+5. Depois: tag de versão (estava em aberto mover a v6 ou criar v7), apagar `wp-antigo` após alguns dias, remover a cópia `../s4hub-v1`
