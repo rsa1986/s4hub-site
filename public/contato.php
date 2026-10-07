@@ -24,7 +24,8 @@ function responder($ok, $status = 200, $erro = '') {
   exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') responder(false, 405);
+// quem abre este endereço direto no navegador volta para o formulário
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: /#contato', true, 303); exit; }
 
 // 1. Origem: só aceita envios feitos a partir do próprio site (quando o navegador informa a origem)
 $origem = $_SERVER['HTTP_ORIGIN'] ?? ($_SERVER['HTTP_REFERER'] ?? '');

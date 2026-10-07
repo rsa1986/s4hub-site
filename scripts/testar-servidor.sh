@@ -64,7 +64,7 @@ cabecalho "$URL/" x-content-type-options | grep -q nosniff && ok "cabeçalhos de
 echo "== Formulário (contato.php)"
 J=(-H "Accept: application/json" -H "Origin: https://s4hub.com.br")
 campos=(--data-urlencode "nome=Maria Teste" --data-urlencode "email=maria@example.com" --data-urlencode "decorrido=5000")
-[ "$(status $URL/contato.php)" = 405 ] && ok "GET recusado (405)" || erro "GET não recusado"
+curl -s -D - -o /dev/null "${H[@]}" $URL/contato.php | tr -d '\r' | grep -qi "^location: /#contato$" && ok "abrir contato.php direto volta ao formulário" || erro "GET em contato.php não volta ao formulário"
 [ "$(status -X POST -H "Accept: application/json" -H "Origin: https://site-estranho.example" "${campos[@]}" $URL/contato.php)" = 403 ] && ok "origem de outro site recusada (403)" || erro "origem estranha aceita"
 r="$(curl -s "${H[@]}" "${J[@]}" "${campos[@]}" --data-urlencode "site=spam" $URL/contato.php)"
 [ "$r" = '{"ok":true}' ] && ok "isca (honeypot): robô recebe ok falso" || erro "honeypot: resposta $r"
