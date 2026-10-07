@@ -3,16 +3,18 @@ import { Image } from 'astro:assets';
 import logo from '../assets/logo-h-dark.png';
 import { temClientes, temFaq, textos } from '../data/site.js';
 const ano = new Date().getFullYear();
+// fora da home (ex.: /privacidade) os links de seção apontam para a home
+const { base = '' } = Astro.props;
 ---
 <footer class="ft dark">
   <div class="wrap ft__top">
     <Image src={logo} alt="S4 Hub" height={36} densities={[1, 2]} format="webp" class="ft__logo" />
     <nav class="ft__nav" aria-label="Rodapé">
-      <a href="#solucoes">Soluções</a>
-      <a href="#metodo">Método</a>
-      {temClientes && <a href="#clientes">Clientes</a>}
-      {temFaq && <a href="#duvidas">Dúvidas</a>}
-      <a href="#contato">Contato</a>
+      <a href={`${base}#solucoes`}>Soluções</a>
+      <a href={`${base}#metodo`}>Método</a>
+      {temClientes && <a href={`${base}#clientes`}>Clientes</a>}
+      {temFaq && <a href={`${base}#duvidas`}>Dúvidas</a>}
+      <a href={`${base}#contato`}>Contato</a>
     </nav>
   </div>
   <div class="wrap rule-top ft__bottom">
@@ -21,6 +23,7 @@ const ano = new Date().getFullYear();
       <span>© {ano} S4 Hub</span>
       <span>{textos.rodape.empresa}</span>
       <span>{textos.rodape.cnpj}</span>
+      <a href="/privacidade" class="ft__priv">Política de privacidade</a>
     </p>
   </div>
 </footer>
@@ -34,5 +37,7 @@ const ano = new Date().getFullYear();
   @media (hover: hover) and (pointer: fine) { .ft__nav a:hover { color: var(--green); } }
   .ft__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 32px; padding-top: 24px; font-size: 14px; color: var(--muted-on-dark); align-items: flex-end; }
   .ft__legal { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
+  .ft__priv { display: inline-block; padding: 11px 0; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255, 255, 255, 0.35); }
+  @media (hover: hover) and (pointer: fine) { .ft__priv:hover { color: var(--green); } }
   @media (max-width: 640px) { .ft__legal { align-items: flex-start; text-align: left; } }
 </style>

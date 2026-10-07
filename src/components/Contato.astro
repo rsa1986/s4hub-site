@@ -28,6 +28,7 @@ import MiniHub from './MiniHub.astro';
             <button type="submit" class="btn" data-submit data-texto={t.botao}>{t.botao}</button>
             <p class="ct__status" role="status" aria-live="polite" data-form-status></p>
           </div>
+          <p class="ct__aviso">{t.aviso} <a href="/privacidade">Política de privacidade</a>.</p>
         </form>
 
         <!-- Sucesso: o formulário dá lugar à confirmação, com o hub inteiro aceso (a assinatura fecha a jornada) -->
@@ -72,6 +73,9 @@ import MiniHub from './MiniHub.astro';
   .hp { position: absolute; left: -9999px; }
   .ct__submit { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 24px; }
   .ct__status { font-size: 15px; color: var(--muted-on-dark); }
+  .ct__aviso { margin-top: 16px; font-size: 14px; color: var(--muted-on-dark); }
+  .ct__aviso a { display: inline-block; padding: 11px 0; color: var(--white); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255, 255, 255, 0.45); }
+  @media (hover: hover) and (pointer: fine) { .ct__aviso a:hover { color: var(--green); } }
   .ct__status.is-error { color: #ff8a7a; font-weight: 600; }
 
   .ct__done { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding-top: 22px; outline: none; }

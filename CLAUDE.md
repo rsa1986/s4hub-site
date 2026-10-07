@@ -98,11 +98,11 @@ Fazer depois que o design estiver aprovado. Logos de clientes, e-mails e ajuste 
 - [ ] **Oferta: "diagnóstico gratuito" x produto S4 Go** (crítica Impeccable, P1): decidir se o S4 Go é o diagnóstico gratuito ou se a conversa grátis vem antes; depois, uma linha de garantia junto ao formulário (gratuito, sem compromisso, prazo de resposta). Decidir no final, com os textos
 - [ ] **Clientes com nomes de exemplo** ("Cliente 1…10"): ou entram nomes/logos reais, ou a seção é ocultada (`temClientes = false` em `site.js`) até o material chegar. Aguardando decisão
 - [ ] **Segurança do formulário** (`/security-review`): `contato.php` já remove quebras de linha, valida e-mail e tem honeypot; falta limite de envios e revisão formal
-- [ ] **Política de privacidade (LGPD)**: o formulário coleta nome, e-mail e telefone. Página de privacidade + link no rodapé + frase curta junto ao botão de enviar (texto padrão para a empresa revisar)
+- [x] **Política de privacidade (LGPD)** (06/10/2026): página `/privacidade` (texto em `src/content/privacidade.md`, editável no painel), link no rodapé e aviso abaixo do botão de enviar. **Falta revisão de quem responde juridicamente pela empresa.** O e-mail de contato aparece nessa página (a LGPD exige um canal para o titular)
 
 **Recomendado antes de publicar**
 
-- [ ] **og:image** 1200x630 a partir do hub, nas cores do site (substitui `og-square.png` em `Base.astro`)
+- [x] **og:image** (06/10/2026): `public/img/og.png`, 1200x630, logo sobre o navy; tags com dimensões, texto alternativo e cartão grande para o X
 - [ ] **Redirecionamentos do WordPress antigo**: `.htaccess` levando URLs antigas (ex.: `/contato`, `/servicos`) para a página nova + página 404 no visual do site
 - [ ] **Analytics** (GA4 / Tag Manager / Meta Pixel): perguntar se o WordPress antigo tinha códigos, para não perder histórico. Com rastreamento, a LGPD exige também aviso de cookies. Aguardando resposta
 - [ ] **Revisão de código** (`/code-review`): `motion.js` e componentes (opcional)
@@ -129,7 +129,7 @@ Fazer depois que o design estiver aprovado. Logos de clientes, e-mails e ajuste 
 
 Painel: **Pages CMS** (https://app.pagescms.org), entrando com o GitHub do Rodrigo. Cada tela edita um arquivo de `src/content/`; salvar no painel cria um commit no GitHub, e a publicação automática gera o site e envia ao HostGator.
 
-- Telas: Textos gerais, Clientes (logos), Módulos, Frentes, Etapas, Parceiros, Dúvidas (FAQ)
+- Telas: Textos gerais, Clientes (logos), Módulos, Frentes, Etapas, Parceiros, Dúvidas (FAQ), Política de privacidade
 - Rede de segurança: se uma alteração quebrar o build (ex.: frente apontando para um módulo inexistente), o site **não é publicado** e o que está no ar continua igual
 - Fica fora do painel, de propósito: layout, cores, animações, rótulos do formulário e o e-mail de destino (`public/contato.php`)
 - Repositório: https://github.com/rsa1986/s4hub-site (privado)

@@ -65,6 +65,7 @@
     ],
     "texto": "Comece pelo diagnóstico gratuito. Conte um pouco sobre sua empresa e retornamos por e-mail para agendar a conversa.",
     "botao": "Enviar e pedir diagnóstico",
+    "aviso": "Usamos seus dados apenas para responder ao seu contato.",
     "sucesso_titulo": "Recebemos sua mensagem.",
     "sucesso_texto": "Retornaremos por e-mail para agendar a conversa."
   },

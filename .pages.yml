@@ -82,6 +82,7 @@ content:
           - { name: titulo, label: Título (uma linha por item), type: string, list: true, required: true }
           - { name: texto, label: Texto de apoio, type: text, required: true }
           - { name: botao, label: Botão de enviar, type: string, required: true }
+          - { name: aviso, label: Aviso de privacidade (abaixo do botão), type: string, required: true, description: "O link \"Política de privacidade\" é colocado automaticamente depois deste texto." }
           - { name: sucesso_titulo, label: Mensagem de sucesso (título), type: string, required: true }
           - { name: sucesso_texto, label: Mensagem de sucesso (texto), type: string, required: true }
       - name: rodape
@@ -221,3 +222,17 @@ content:
         fields:
           - { name: pergunta, label: Pergunta, type: string, required: true }
           - { name: resposta, label: Resposta, type: text, required: true }
+
+  # ---------- Página de privacidade ----------
+  - name: privacidade
+    label: Política de privacidade
+    type: file
+    path: src/content/privacidade.md
+    format: yaml-frontmatter
+    fields:
+      - { name: titulo, label: Título da página, type: string, required: true }
+      - { name: atualizado, label: Data da última atualização, type: string, required: true, description: "Ex.: 06/10/2026. Atualize sempre que mudar o texto." }
+      - name: body
+        label: Texto da política
+        type: rich-text
+        description: "Revisado por quem responde juridicamente pela empresa. Use títulos (H2) para separar as partes."
