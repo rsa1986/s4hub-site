@@ -30,6 +30,9 @@ npm run preview  # serve o dist/
 - `src/styles/global.css`: tokens (cores, fontes), botões e utilitários
 - `public/img/`: logos (variações para fundo escuro e claro, com fundo transparente)
 - `.impeccable/critique/`: relatórios da crítica da skill Impeccable (local, fora do git). O mais recente: `2026-10-02T18-47-20Z__src-pages-index-astro.md` (nota 22/32). Use para comparar quando rodar `/impeccable critique` de novo
+- `public/.htaccess`: https e sem www, redirecionamentos do WordPress antigo, 404, bloqueio de arquivos ocultos e de `/wp-antigo/`, cache e cabeçalhos de segurança. `.gitattributes` mantém `.sh`/`.htaccess` com quebra de linha Unix
+- `scripts/testar-servidor.sh`: roda na automação; sobe Apache + PHP com o `dist/` e confere páginas, redirecionamentos, bloqueios, cabeçalhos e as proteções do formulário. Se falhar, não publica
+- `src/pages/`: `index` (home), `privacidade`, `404`, `mensagem-enviada`, `mensagem-nao-enviada`. As internas usam `src/components/PaginaSimples.astro` (topo simples + rodapé, sem as animações da home)
 - `src/assets/logo-h-dark.png`: cópia do logo usada no header e no rodapé via `<Image>` do Astro, que gera WebP no tamanho exibido (troque aqui se o logo mudar)
 
 ## Identidade
@@ -97,13 +100,13 @@ Fazer depois que o design estiver aprovado. Logos de clientes, e-mails e ajuste 
 
 - [ ] **Oferta: "diagnóstico gratuito" x produto S4 Go** (crítica Impeccable, P1): decidir se o S4 Go é o diagnóstico gratuito ou se a conversa grátis vem antes; depois, uma linha de garantia junto ao formulário (gratuito, sem compromisso, prazo de resposta). Decidir no final, com os textos
 - [ ] **Clientes com nomes de exemplo** ("Cliente 1…10"): ou entram nomes/logos reais, ou a seção é ocultada (`temClientes = false` em `site.js`) até o material chegar. Aguardando decisão
-- [ ] **Segurança do formulário** (`/security-review`): `contato.php` já remove quebras de linha, valida e-mail e tem honeypot; falta limite de envios e revisão formal
+- [x] **Segurança do formulário** (06/10/2026): `contato.php` com honeypot, tempo mínimo de 3s (campo `decorrido`), só aceita envios do próprio domínio, limite de 5 envios/hora por origem (IP guardado só como hash, fora da pasta pública), campos sem caracteres de controle, cabeçalhos completos e `-f` do domínio. Sem JavaScript: `/mensagem-enviada/` e `/mensagem-nao-enviada/`. Testado a cada push por `scripts/testar-servidor.sh`
 - [x] **Política de privacidade (LGPD)** (06/10/2026): página `/privacidade` (texto em `src/content/privacidade.md`, editável no painel), link no rodapé e aviso abaixo do botão de enviar. **Falta revisão de quem responde juridicamente pela empresa.** O e-mail de contato aparece nessa página (a LGPD exige um canal para o titular)
 
 **Recomendado antes de publicar**
 
 - [x] **og:image** (06/10/2026): `public/img/og.png`, 1200x630, logo sobre o navy; tags com dimensões, texto alternativo e cartão grande para o X
-- [ ] **Redirecionamentos do WordPress antigo**: `.htaccess` levando URLs antigas (ex.: `/contato`, `/servicos`) para a página nova + página 404 no visual do site
+- [x] **Redirecionamentos e 404** (06/10/2026): o WordPress antigo só tinha páginas padrão (`/hello-world/`, `/category/…`, `/author/…`, feeds, sitemaps do Yoast), todas redirecionadas em `public/.htaccess`; página `/404` no visual do site; `robots.txt` e `sitemap.xml` novos
 - [ ] **Analytics** (GA4 / Tag Manager / Meta Pixel): perguntar se o WordPress antigo tinha códigos, para não perder histórico. Com rastreamento, a LGPD exige também aviso de cookies. Aguardando resposta
 - [ ] **Revisão de código** (`/code-review`): `motion.js` e componentes (opcional)
 - [ ] **Prévia pública na Vercel** (opcional): link temporário para aprovação antes de mexer no HostGator (o formulário não funciona lá, só o visual)
@@ -121,7 +124,7 @@ Fazer depois que o design estiver aprovado. Logos de clientes, e-mails e ajuste 
 ## Deploy (HostGator)
 
 1. `npm run build`
-2. Faça backup e remova o WordPress de `public_html` (ou mova para uma subpasta)
+2. Faça backup do WordPress e mova tudo de `public_html` para a subpasta `public_html/wp-antigo/` (o `.htaccess` novo bloqueia o acesso a ela pela web). Depois de alguns dias com o site novo funcionando, baixe e apague essa pasta
 3. Envie o **conteúdo** de `dist/` para `public_html` (Gerenciador de Arquivos do cPanel ou FTP)
 4. O DNS já aponta para o HostGator (ns900/ns901.hostgator.com.br)
 
