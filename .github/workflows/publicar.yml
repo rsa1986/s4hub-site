@@ -33,10 +33,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Baixar o código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Preparar o Node (mesma versão do computador do projeto)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
@@ -56,7 +56,7 @@ jobs:
 
       - name: Enviar ao HostGator (FTP)
         if: ${{ vars.PUBLICAR == 'sim' }}
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_SERVIDOR }}
           username: ${{ secrets.FTP_USUARIO }}
