@@ -54,6 +54,10 @@ jobs:
           test -f dist/contato.php
           echo "Build ok: $(du -sh dist | cut -f1) em dist/"
 
+      - name: Testar no servidor (Apache + PHP, como no HostGator)
+        # páginas, 404, redirecionamentos, bloqueios, cabeçalhos e as proteções do formulário
+        run: bash scripts/testar-servidor.sh
+
       - name: Enviar ao HostGator (FTP)
         if: ${{ vars.PUBLICAR == 'sim' }}
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0

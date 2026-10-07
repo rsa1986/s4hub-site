@@ -1,0 +1,18 @@
+---
+// Resposta do formulário sem JavaScript quando o envio não foi aceito
+// (campo obrigatório vazio, muitos envios seguidos ou falha no envio do e-mail).
+import PaginaSimples from '../../components/PaginaSimples.astro';
+---
+<PaginaSimples title="Mensagem não enviada | S4 Hub" description="Não foi possível enviar a mensagem pelo formulário." noindex>
+  <div class="resp">
+    <h1 class="h-lg">Não conseguimos enviar sua mensagem.</h1>
+    <p>Confira se o nome e o e-mail foram preenchidos e tente de novo em alguns minutos. Se o problema continuar, ative o JavaScript do navegador ou use outro navegador.</p>
+    <a href="/#contato" class="btn btn--navy">Voltar ao formulário</a>
+  </div>
+</PaginaSimples>
+
+<style>
+  .resp { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .resp p { color: var(--muted); max-width: 56ch; }
+  .resp .btn { margin-top: 12px; }
+</style>

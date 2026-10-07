@@ -1,6 +1,7 @@
 ---
 // Versão reduzida do hub do Hero: mostra onde um módulo fica dentro do todo.
-// `ativo` é o índice do módulo aceso (ou 'todos', usado no sucesso do formulário); `tom` = 'dark' (sobre navy) ou 'light' (sobre verde).
+// `ativo` é o índice do módulo aceso (ou 'todos', usado no sucesso do formulário);
+// `tom` = 'dark' (sobre navy), 'light' (sobre verde) ou 'paper' (sobre o fundo claro).
 import { hubPos, hubCentro as c } from '../data/hub.js';
 const { ativo = 0, tom = 'dark' } = Astro.props;
 const aceso = (i) => ativo === 'todos' || i === ativo;
@@ -32,4 +33,10 @@ const aceso = (i) => ativo === 'todos' || i === ativo;
   .mh--light .mh__core { fill: rgba(0, 33, 78, 0.28); }
   .mh--light .mh__node { fill: var(--green); stroke: rgba(0, 33, 78, 0.3); }
   .mh--light .mh__node.is-on { fill: var(--navy); stroke: var(--navy); }
+
+  .mh--paper .mh__link { stroke: rgba(0, 33, 78, 0.18); }
+  .mh--paper .mh__link.is-on { stroke: var(--teal); }
+  .mh--paper .mh__core { fill: var(--navy); }
+  .mh--paper .mh__node { fill: var(--paper); stroke: rgba(0, 33, 78, 0.35); }
+  .mh--paper .mh__node.is-on { fill: var(--green); stroke: var(--teal-ink); }
 </style>

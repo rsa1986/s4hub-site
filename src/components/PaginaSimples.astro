@@ -1,0 +1,38 @@
+---
+// Moldura das páginas internas (privacidade, 404, respostas do formulário sem JavaScript):
+// topo simples com logo + "Voltar ao site", conteúdo e o mesmo rodapé da home. Sem as animações da home.
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Footer from './Footer.astro';
+import logo from '../assets/logo-h-dark.png';
+const { title, description, noindex = false } = Astro.props;
+---
+<Base title={title} description={description} motion={false} noindex={noindex}>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+  <header class="ps-hdr dark">
+    <div class="wrap ps-hdr__in">
+      <a href="/" class="ps-hdr__logo" aria-label="S4 Hub, voltar ao site">
+        <Image src={logo} alt="S4 Hub" height={30} densities={[1, 2]} format="webp" loading="eager" />
+      </a>
+      <a href="/" class="ps-hdr__voltar">Voltar ao site</a>
+    </div>
+  </header>
+
+  <main id="conteudo" tabindex="-1" class="ps">
+    <div class="wrap ps__in">
+      <slot />
+    </div>
+  </main>
+
+  <Footer base="/" />
+</Base>
+
+<style>
+  .ps-hdr__in { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 68px; }
+  .ps-hdr__logo { display: flex; align-items: center; min-height: 44px; }
+  .ps-hdr__logo img { height: 30px; width: auto; }
+  .ps-hdr__voltar { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; font-weight: 600; color: var(--white); text-decoration: underline; text-underline-offset: 6px; text-decoration-color: rgba(255, 255, 255, 0.45); }
+  @media (hover: hover) and (pointer: fine) { .ps-hdr__voltar:hover { color: var(--green); text-decoration-color: var(--green); } }
+  .ps { padding: clamp(48px, 7vw, 96px) 0 var(--section-end); }
+  .ps__in { max-width: 760px; }
+</style>

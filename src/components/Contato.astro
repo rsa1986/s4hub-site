@@ -23,7 +23,7 @@ import MiniHub from './MiniHub.astro';
             <div class="field"><input id="telefone" name="telefone" type="tel" maxlength="40" autocomplete="tel" enterkeyhint="next" placeholder=" " /><label for="telefone">Telefone</label></div>
           </div>
           <div class="field"><textarea id="mensagem" name="mensagem" rows="3" maxlength="4000" placeholder=" "></textarea><label for="mensagem">Qual é o principal desafio hoje?</label></div>
-          <div class="hp" aria-hidden="true"><label for="site">Site</label><input id="site" name="site" type="text" tabindex="-1" autocomplete="off" /></div>
+          <div class="hp" aria-hidden="true"><label for="site">Site</label><input id="site" name="site" type="text" tabindex="-1" autocomplete="off" /><input type="hidden" name="decorrido" value="0" /></div>
           <div class="ct__submit">
             <button type="submit" class="btn" data-submit data-texto={t.botao}>{t.botao}</button>
             <p class="ct__status" role="status" aria-live="polite" data-form-status></p>

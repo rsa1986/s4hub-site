@@ -1,0 +1,23 @@
+---
+// Resposta do formulário quando o navegador está sem JavaScript (contato.php redireciona para cá).
+// Com JavaScript, a confirmação aparece no próprio formulário.
+import PaginaSimples from '../../components/PaginaSimples.astro';
+import MiniHub from '../../components/MiniHub.astro';
+import { textos } from '../../data/site.js';
+const t = textos.contato;
+---
+<PaginaSimples title={`${t.sucesso_titulo} | S4 Hub`} description={t.sucesso_texto} noindex>
+  <div class="resp">
+    <div class="resp__hub"><MiniHub ativo="todos" tom="paper" /></div>
+    <h1 class="h-lg">{t.sucesso_titulo}</h1>
+    <p>{t.sucesso_texto}</p>
+    <a href="/" class="btn btn--navy">Voltar ao site</a>
+  </div>
+</PaginaSimples>
+
+<style>
+  .resp { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .resp__hub { width: 96px; margin-bottom: 8px; }
+  .resp p { color: var(--muted); max-width: 52ch; }
+  .resp .btn { margin-top: 12px; }
+</style>

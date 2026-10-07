@@ -138,7 +138,7 @@ $$('[required]', form || document).forEach((f) => f.addEventListener('input', ()
 }));
 // Rascunho: o que a pessoa digitou sobrevive a um recarregamento da página (fica só nesta aba)
 const RASCUNHO = 's4hub-contato';
-const camposRascunho = form ? $$('input:not([name="site"]), textarea', form) : [];
+const camposRascunho = form ? $$('input:not([name="site"]):not([type="hidden"]), textarea', form) : [];
 const salvarRascunho = () => {
   try { sessionStorage.setItem(RASCUNHO, JSON.stringify(Object.fromEntries(camposRascunho.map((f) => [f.name, f.value])))); } catch {}
 };
@@ -176,9 +176,12 @@ form?.addEventListener('submit', async (e) => {
   // sem resposta em 15s, desiste: "Enviando..." nunca fica travado para sempre
   const ctrl = new AbortController();
   const limite = setTimeout(() => ctrl.abort(), 15000);
+  // tempo desde que a página abriu: o servidor descarta envios rápidos demais (robôs)
+  form.elements.decorrido.value = Math.round(performance.now());
   try {
     const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' }, signal: ctrl.signal });
     const data = await res.json().catch(() => ({}));
+    if (res.status === 429) throw Object.assign(new Error('limite'), { name: 'Limite' });
     if (!res.ok || !data.ok) throw new Error(data.erro || 'falha');
     // sucesso: o formulário dá lugar à confirmação (sem chance de envio duplicado)
     form.reset();
@@ -194,7 +197,9 @@ form?.addEventListener('submit', async (e) => {
     status.classList.add('is-error');
     status.textContent = err.name === 'AbortError'
       ? 'O envio demorou demais. Confira sua conexão e tente de novo. Seus dados continuam aqui.'
-      : 'Não foi possível enviar agora. Seus dados continuam aqui. Tente de novo em instantes.';
+      : err.name === 'Limite'
+        ? 'Recebemos vários envios seguidos daqui. Aguarde alguns minutos e tente de novo. Seus dados continuam aqui.'
+        : 'Não foi possível enviar agora. Seus dados continuam aqui. Tente de novo em instantes.';
     btn.textContent = 'Tentar de novo';
   } finally {
     clearTimeout(limite);
