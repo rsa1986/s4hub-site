@@ -36,9 +36,12 @@ ErrorDocument 404 /404.html
 
 # qualquer pasta wp-antigo (cópia do WordPress, backups): negada antes de qualquer regra de reescrita.
 # Um .htaccess dentro dela (o do WordPress tem RewriteEngine On) NÃO consegue anular este bloqueio.
-<If "%{REQUEST_URI} =~ m#^/wp-antigo(/|$)#">
-  Require all denied
-</If>
+# (sem <If>: no Apache do HostGator um <If> aqui fazia sumir os cabeçalhos de segurança)
+SetEnvIf Request_URI "^/wp-antigo(/|$)" wp_antigo
+<RequireAll>
+  Require all granted
+  Require not env wp_antigo
+</RequireAll>
 
 # compressão
 <IfModule mod_deflate.c>
