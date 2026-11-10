@@ -7,6 +7,7 @@
 #
 # Configuração (GitHub → Settings → Secrets and variables → Actions):
 #   Secrets:   FTP_SERVIDOR, FTP_USUARIO, FTP_SENHA   (dados do FTP no cPanel do HostGator)
+#              SMTP_USUARIO, SMTP_SENHA   (caixa da Titan que envia o formulário; ver contato.php)
 #   Variables: PUBLICAR = sim  (liga o envio)
 #              FTP_PASTA       (opcional; padrão /public_html/)
 #              FTP_PROTOCOLO   (opcional; ftps ou ftp; padrão ftps)
@@ -57,6 +58,22 @@ jobs:
       - name: Testar no servidor (Apache + PHP, como no HostGator)
         # páginas, 404, redirecionamentos, bloqueios, cabeçalhos e as proteções do formulário
         run: bash scripts/testar-servidor.sh
+
+      - name: Configurar o envio de e-mail do formulário (SMTP da Titan)
+        # gera dist/smtp-config.php a partir dos segredos (bloqueado pela web no .htaccess).
+        # Sem os segredos, o arquivo não é criado e o contato.php usa o mail() do servidor.
+        if: ${{ vars.PUBLICAR == 'sim' }}
+        env:
+          SMTP_USUARIO: ${{ secrets.SMTP_USUARIO }}
+          SMTP_SENHA: ${{ secrets.SMTP_SENHA }}
+        run: |
+          if [ -n "$SMTP_USUARIO" ] && [ -n "$SMTP_SENHA" ]; then
+            php -r 'echo "<?php\n// gerado pela automação; não editar\nreturn " . var_export(["servidor" => "smtp.titan.email", "porta" => 465, "usuario" => getenv("SMTP_USUARIO"), "senha" => getenv("SMTP_SENHA")], true) . ";\n";' > dist/smtp-config.php
+            php -l dist/smtp-config.php
+            echo "SMTP configurado para $SMTP_USUARIO"
+          else
+            echo "Segredos SMTP_USUARIO/SMTP_SENHA não cadastrados: o formulário usa o mail() do servidor."
+          fi
 
       - name: Enviar ao HostGator (FTP)
         if: ${{ vars.PUBLICAR == 'sim' }}

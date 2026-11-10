@@ -69,16 +69,81 @@ $mensagem = mb_substr(str_replace("\0", '', trim((string)($_POST['mensagem'] ?? 
 if (!$nome || !$email) responder(false, 422, 'Nome e e-mail são obrigatórios.');
 if (!dentro_do_limite()) responder(false, 429, 'Muitos envios seguidos. Aguarde alguns minutos.');
 
-// 5. E-mail em texto puro, com cabeçalhos completos e remetente técnico do domínio (ajuda a não cair em spam)
+// 5. Envio. O e-mail do domínio é da Titan: o mail() do HostGator não entrega lá.
+//    Por isso envia pelo SMTP da Titan, com a caixa e a senha de smtp-config.php, que a automação
+//    gera na publicação a partir dos segredos do GitHub (SMTP_USUARIO, SMTP_SENHA). Fora do git.
+//    Sem esse arquivo (ex.: no teste automático), usa o mail() do servidor.
 $assunto = '=?UTF-8?B?' . base64_encode("Novo contato pelo site: $nome") . '?=';
 $corpo = "Nome: $nome\nEmpresa: $empresa\nE-mail: $email\nTelefone: $telefone\n\nDesafio:\n$mensagem\n";
-$headers = [
-  'From: S4 Hub Site <' . REMETENTE . '>',
-  'Reply-To: ' . $email,
-  'MIME-Version: 1.0',
-  'Content-Type: text/plain; charset=UTF-8',
-  'Content-Transfer-Encoding: 8bit',
-];
-$ok = @mail(DESTINO, $assunto, $corpo, implode("\r\n", $headers), '-f' . REMETENTE);
-if (!$ok) error_log('[contato.php] mail() falhou ao enviar o formulário');
+$smtp = is_file(__DIR__ . '/smtp-config.php') ? (include __DIR__ . '/smtp-config.php') : null;
+
+if (is_array($smtp) && !empty($smtp['usuario']) && !empty($smtp['senha'])) {
+  $ok = enviar_smtp($smtp, DESTINO, $email, $assunto, $corpo);
+} else {
+  $headers = [
+    'From: S4 Hub Site <' . REMETENTE . '>',
+    'Reply-To: ' . $email,
+    'MIME-Version: 1.0',
+    'Content-Type: text/plain; charset=UTF-8',
+    'Content-Transfer-Encoding: 8bit',
+  ];
+  $ok = @mail(DESTINO, $assunto, $corpo, implode("\r\n", $headers), '-f' . REMETENTE);
+  if (!$ok) error_log('[contato.php] mail() falhou ao enviar o formulário');
+}
 responder((bool)$ok, $ok ? 200 : 500);
+
+// Cliente SMTP mínimo (SSL na porta 465, AUTH LOGIN). Registra no log do PHP o passo que falhar.
+function enviar_smtp($cfg, $para, $responder_para, $assunto, $corpo) {
+  $servidor = $cfg['servidor'] ?? 'smtp.titan.email';
+  $porta = (int)($cfg['porta'] ?? 465);
+  $de = $cfg['usuario'];
+  $s = @stream_socket_client("ssl://$servidor:$porta", $errno, $errstr, 8);
+  if (!$s) { error_log("[contato.php] SMTP: sem conexão com $servidor:$porta ($errstr)"); return false; }
+  stream_set_timeout($s, 8);
+
+  $ler = function () use ($s) {
+    $resp = '';
+    while (($linha = fgets($s, 1024)) !== false) {
+      $resp .= $linha;
+      if (strlen($linha) < 4 || $linha[3] === ' ') break;   // última linha da resposta
+    }
+    return $resp;
+  };
+  $passo = function ($cmd, $espera, $rotulo) use ($s, $ler) {
+    if ($cmd !== null) fwrite($s, $cmd . "\r\n");
+    $r = $ler();
+    if ((int)substr($r, 0, 3) !== $espera) {
+      error_log("[contato.php] SMTP falhou em $rotulo: " . trim($r));
+      return false;
+    }
+    return true;
+  };
+
+  $dominio = substr(strrchr($de, '@'), 1) ?: 's4hub.com.br';
+  $mensagem = implode("\r\n", [
+    'Date: ' . date('r'),
+    'Message-ID: <' . bin2hex(random_bytes(12)) . '@' . $dominio . '>',
+    'From: S4 Hub Site <' . $de . '>',
+    'To: <' . $para . '>',
+    'Reply-To: ' . $responder_para,
+    'Subject: ' . $assunto,
+    'MIME-Version: 1.0',
+    'Content-Type: text/plain; charset=UTF-8',
+    'Content-Transfer-Encoding: base64',
+    '',
+    rtrim(chunk_split(base64_encode($corpo), 76, "\r\n")),
+  ]);
+
+  $ok = $passo(null, 220, 'saudação')
+    && $passo('EHLO ' . $dominio, 250, 'EHLO')
+    && $passo('AUTH LOGIN', 334, 'AUTH')
+    && $passo(base64_encode($de), 334, 'usuário')
+    && $passo(base64_encode($cfg['senha']), 235, 'senha')
+    && $passo("MAIL FROM:<$de>", 250, 'MAIL FROM')
+    && $passo("RCPT TO:<$para>", 250, 'RCPT TO')
+    && $passo('DATA', 354, 'DATA')
+    && $passo($mensagem . "\r\n.", 250, 'envio');
+  @fwrite($s, "QUIT\r\n");
+  fclose($s);
+  return $ok;
+}

@@ -76,6 +76,7 @@ for caminho in /wp-antigo/wp-config.php /wp-antigo/backup.zip /wp-antigo/qualque
 done
 [ "$(status $URL/.ftp-deploy-sync-state.json)" = 403 ] && ok "arquivo oculto bloqueado" || erro "arquivo oculto acessível"
 [ "$(status $URL/.htaccess)" = 403 ] && ok ".htaccess bloqueado" || erro ".htaccess acessível"
+[ "$(status $URL/smtp-config.php)" = 403 ] && ok "smtp-config.php (senha do e-mail) bloqueado" || erro "smtp-config.php acessível"
 
 echo "== Cache e segurança"
 js="$(cd "$DIST" && ls _astro/*.js | head -1)"

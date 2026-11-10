@@ -29,8 +29,8 @@ ErrorDocument 404 /404.html
   RewriteRule ^(sitemap_index|wp-sitemap|post-sitemap|page-sitemap|category-sitemap|author-sitemap)\.xml$ https://s4hub.com.br/sitemap.xml [L,R=301]
 </IfModule>
 
-# arquivos ocultos (ex.: registro da publicação automática) não são servidos
-<FilesMatch "^\.">
+# arquivos ocultos (ex.: registro da publicação automática) e a senha do e-mail não são servidos
+<FilesMatch "^(\.|smtp-config\.php$)">
   Require all denied
 </FilesMatch>
 

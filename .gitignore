@@ -6,3 +6,6 @@ dist/
 
 # Impeccable: relatórios de crítica e arquivos de trabalho locais (consultar em .impeccable/critique/)
 .impeccable/
+
+# senha do e-mail do formulário (gerada só na automação)
+public/smtp-config.php
