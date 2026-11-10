@@ -138,7 +138,9 @@ function enviar_smtp($cfg, $para, $responder_para, $assunto, $corpo) {
     && $passo('EHLO ' . $dominio, 250, 'EHLO')
     && $passo('AUTH LOGIN', 334, 'AUTH')
     && $passo(base64_encode($de), 334, 'usuário')
-    && $passo(base64_encode($cfg['senha']), 235, 'senha')
+    && ($passo(base64_encode($cfg['senha']), 235, 'senha')
+        // diagnóstico sem expor a senha: qual usuário foi usado e o tamanho da senha
+        || !error_log('[contato.php] SMTP recusou: usuario="' . $de . '" senha com ' . strlen($cfg['senha']) . ' caracteres'))
     && $passo("MAIL FROM:<$de>", 250, 'MAIL FROM')
     && $passo("RCPT TO:<$para>", 250, 'RCPT TO')
     && $passo('DATA', 354, 'DATA')
