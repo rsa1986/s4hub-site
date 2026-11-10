@@ -7,7 +7,8 @@
 #
 # Configuração (GitHub → Settings → Secrets and variables → Actions):
 #   Secrets:   FTP_SERVIDOR, FTP_USUARIO, FTP_SENHA   (dados do FTP no cPanel do HostGator)
-#              SMTP_USUARIO, SMTP_SENHA   (caixa da Titan que envia o formulário; ver contato.php)
+#              RESEND_API_KEY   (envio do formulário pelo Resend; conta criada com o e-mail de DESTINO)
+#              SMTP_USUARIO, SMTP_SENHA   (alternativa: caixa da Titan; ver contato.php)
 #   Variables: PUBLICAR = sim  (liga o envio)
 #              FTP_PASTA       (opcional; padrão /public_html/)
 #              FTP_PROTOCOLO   (opcional; ftps ou ftp; padrão ftps)
@@ -63,16 +64,18 @@ jobs:
         # gera dist/smtp-config.php a partir dos segredos (bloqueado pela web no .htaccess).
         # Sem os segredos, o arquivo não é criado e o contato.php usa o mail() do servidor.
         if: ${{ vars.PUBLICAR == 'sim' }}
+        # ordem no contato.php: Resend (RESEND_API_KEY) > SMTP da Titan (SMTP_USUARIO/SMTP_SENHA) > mail()
         env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           SMTP_USUARIO: ${{ secrets.SMTP_USUARIO }}
           SMTP_SENHA: ${{ secrets.SMTP_SENHA }}
         run: |
-          if [ -n "$SMTP_USUARIO" ] && [ -n "$SMTP_SENHA" ]; then
-            php -r 'echo "<?php\n// gerado pela automação; não editar\nreturn " . var_export(["servidor" => "smtp.titan.email", "porta" => 465, "usuario" => getenv("SMTP_USUARIO"), "senha" => getenv("SMTP_SENHA")], true) . ";\n";' > dist/smtp-config.php
+          if [ -n "$RESEND_API_KEY" ] || { [ -n "$SMTP_USUARIO" ] && [ -n "$SMTP_SENHA" ]; }; then
+            php -r '$c = ["servidor" => "smtp.titan.email", "porta" => 465, "usuario" => getenv("SMTP_USUARIO") ?: "", "senha" => getenv("SMTP_SENHA") ?: "", "resend_chave" => getenv("RESEND_API_KEY") ?: ""]; echo "<?php\n// gerado pela automação; não editar\nreturn " . var_export($c, true) . ";\n";' > dist/smtp-config.php
             php -l dist/smtp-config.php
-            echo "SMTP configurado para $SMTP_USUARIO"
+            if [ -n "$RESEND_API_KEY" ]; then echo "Formulário envia pelo Resend"; else echo "Formulário envia pelo SMTP da Titan"; fi
           else
-            echo "Segredos SMTP_USUARIO/SMTP_SENHA não cadastrados: o formulário usa o mail() do servidor."
+            echo "Sem segredos de e-mail: o formulário usa o mail() do servidor."
           fi
 
       - name: Enviar ao HostGator (FTP)

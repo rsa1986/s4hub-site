@@ -77,7 +77,9 @@ $assunto = '=?UTF-8?B?' . base64_encode("Novo contato pelo site: $nome") . '?=';
 $corpo = "Nome: $nome\nEmpresa: $empresa\nE-mail: $email\nTelefone: $telefone\n\nDesafio:\n$mensagem\n";
 $smtp = is_file(__DIR__ . '/smtp-config.php') ? (include __DIR__ . '/smtp-config.php') : null;
 
-if (is_array($smtp) && !empty($smtp['usuario']) && !empty($smtp['senha'])) {
+if (is_array($smtp) && !empty($smtp['resend_chave'])) {
+  $ok = enviar_resend($smtp, DESTINO, $email, "Novo contato pelo site: $nome", $corpo);
+} elseif (is_array($smtp) && !empty($smtp['usuario']) && !empty($smtp['senha'])) {
   $ok = enviar_smtp($smtp, DESTINO, $email, $assunto, $corpo);
 } else {
   $headers = [
@@ -91,6 +93,42 @@ if (is_array($smtp) && !empty($smtp['usuario']) && !empty($smtp['senha'])) {
   if (!$ok) error_log('[contato.php] mail() falhou ao enviar o formulário');
 }
 responder((bool)$ok, $ok ? 200 : 500);
+
+// Resend (API HTTPS). Sem domínio verificado no Resend, envia de onboarding@resend.dev e só para o
+// e-mail dono da conta Resend (por isso a conta é a do DESTINO). Com domínio verificado, defina
+// 'resend_de' (ex.: 'S4 Hub Site <site@s4hub.com.br>') no smtp-config.php pela automação.
+function enviar_resend($cfg, $para, $responder_para, $assunto, $corpo) {
+  $dados = json_encode([
+    'from' => $cfg['resend_de'] ?? 'S4 Hub Site <onboarding@resend.dev>',
+    'to' => [$para],
+    'reply_to' => $responder_para,
+    'subject' => $assunto,
+    'text' => $corpo,
+  ], JSON_UNESCAPED_UNICODE);
+  $cabecalhos = ['Authorization: Bearer ' . $cfg['resend_chave'], 'Content-Type: application/json'];
+
+  if (function_exists('curl_init')) {
+    $c = curl_init('https://api.resend.com/emails');
+    curl_setopt_array($c, [
+      CURLOPT_POST => true, CURLOPT_POSTFIELDS => $dados, CURLOPT_HTTPHEADER => $cabecalhos,
+      CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 10, CURLOPT_CONNECTTIMEOUT => 6,
+    ]);
+    $resp = curl_exec($c);
+    $status = (int)curl_getinfo($c, CURLINFO_HTTP_CODE);
+    if ($resp === false) $resp = 'curl: ' . curl_error($c);
+    curl_close($c);
+  } else {
+    $ctx = stream_context_create(['http' => [
+      'method' => 'POST', 'header' => implode("\r\n", $cabecalhos), 'content' => $dados,
+      'timeout' => 10, 'ignore_errors' => true,
+    ]]);
+    $resp = @file_get_contents('https://api.resend.com/emails', false, $ctx);
+    $status = isset($http_response_header[0]) && preg_match('/\s(\d{3})\s/', $http_response_header[0], $m) ? (int)$m[1] : 0;
+  }
+  if ($status >= 200 && $status < 300) return true;
+  error_log("[contato.php] Resend falhou (HTTP $status): " . substr((string)$resp, 0, 300));
+  return false;
+}
 
 // Cliente SMTP mínimo (SSL na porta 465, AUTH LOGIN). Registra no log do PHP o passo que falhar.
 function enviar_smtp($cfg, $para, $responder_para, $assunto, $corpo) {
