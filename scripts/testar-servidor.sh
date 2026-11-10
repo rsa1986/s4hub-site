@@ -25,7 +25,26 @@ sudo tee /etc/apache2/sites-available/000-default.conf >/dev/null <<EOF
 EOF
 # o Apache precisa conseguir atravessar as pastas até o dist
 p="$DIST"; while [ "$p" != "/" ]; do sudo chmod o+x "$p"; p="$(dirname "$p")"; done
+# os arquivos simulados abaixo NUNCA podem ir para o servidor: apagados ao sair, mesmo se o teste falhar
+trap 'sudo rm -rf "$DIST/wp-antigo" "$DIST/.ftp-deploy-sync-state.json"' EXIT
 echo "{}" > "$DIST/.ftp-deploy-sync-state.json"   # simula o registro da publicação automática
+# simula o WordPress guardado em wp-antigo, com o .htaccess dele (que anula as regras de reescrita do site)
+mkdir -p "$DIST/wp-antigo"
+printf '<?php echo "WORDPRESS";\n' > "$DIST/wp-antigo/index.php"
+printf '<?php echo "SEGREDO";\n' > "$DIST/wp-antigo/wp-config.php"
+echo "zip" > "$DIST/wp-antigo/backup.zip"
+cat > "$DIST/wp-antigo/.htaccess" <<'WP'
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /wp-antigo/
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /wp-antigo/index.php [L]
+</IfModule>
+# END WordPress
+WP
 sudo apachectl configtest
 sudo systemctl restart apache2
 
@@ -52,6 +71,9 @@ done
 
 echo "== Bloqueios"
 [ "$(status $URL/wp-antigo/)" = 403 ] && ok "/wp-antigo/ bloqueado" || erro "/wp-antigo/ acessível"
+for caminho in /wp-antigo/wp-config.php /wp-antigo/backup.zip /wp-antigo/qualquer-pagina /wp-antigo/.htaccess; do
+  [ "$(status $URL$caminho)" = 403 ] && ok "$caminho bloqueado (mesmo com o .htaccess do WordPress)" || erro "$caminho acessível"
+done
 [ "$(status $URL/.ftp-deploy-sync-state.json)" = 403 ] && ok "arquivo oculto bloqueado" || erro "arquivo oculto acessível"
 [ "$(status $URL/.htaccess)" = 403 ] && ok ".htaccess bloqueado" || erro ".htaccess acessível"
 

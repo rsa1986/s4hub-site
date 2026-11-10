@@ -17,6 +17,7 @@ ErrorDocument 404 /404.html
   RewriteRule ^ https://s4hub.com.br%{REQUEST_URI} [L,R=301]
 
   # cópia do WordPress antigo guardada no servidor: inacessível pela web
+  # (reforçado abaixo com Require, porque o .htaccess do WordPress dentro da pasta anula esta regra)
   RewriteRule ^wp-antigo(/|$) - [F,L]
 
   # endereços do WordPress antigo que estavam no Google (sem conteúdo próprio): vão para a home
@@ -32,6 +33,12 @@ ErrorDocument 404 /404.html
 <FilesMatch "^\.">
   Require all denied
 </FilesMatch>
+
+# qualquer pasta wp-antigo (cópia do WordPress, backups): negada antes de qualquer regra de reescrita.
+# Um .htaccess dentro dela (o do WordPress tem RewriteEngine On) NÃO consegue anular este bloqueio.
+<If "%{REQUEST_URI} =~ m#^/wp-antigo(/|$)#">
+  Require all denied
+</If>
 
 # compressão
 <IfModule mod_deflate.c>

@@ -70,6 +70,12 @@ jobs:
           server-dir: ${{ vars.FTP_PASTA || '/public_html/' }}
           # envia só o que mudou (guarda um registro no servidor) e nunca apaga a pasta inteira
           dangerous-clean-slate: false
+          # segunda trava: a pasta simulada do teste nunca é enviada
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            wp-antigo/**
 
       - name: Envio desligado
         if: ${{ vars.PUBLICAR != 'sim' }}
