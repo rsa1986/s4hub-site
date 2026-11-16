@@ -115,14 +115,40 @@ document.addEventListener('keydown', (e) => {
 
 /* ---------- Formulário ---------- */
 const form = $('[data-form]');
-// Mensagem de erro de cada campo obrigatório (vazia = campo ok)
+// Telefone brasileiro: DDD válido + celular (9 + 8 dígitos) ou fixo (8 dígitos, começando de 2 a 5).
+// Aceita +55 e o 0 de longa distância. Mesmas regras de telefone_br() em public/contato.php
+const DDDS = new Set('11 12 13 14 15 16 17 18 19 21 22 24 27 28 31 32 33 34 35 37 38 41 42 43 44 45 46 47 48 49 51 53 54 55 61 62 63 64 65 66 67 68 69 71 73 74 75 77 79 81 82 83 84 85 86 87 88 89 91 92 93 94 95 96 97 98 99'.split(' '));
+const digitosTel = (v) => {
+  let d = v.replace(/\D/g, '');
+  if (d.length > 11 && d.startsWith('55')) d = d.slice(2);
+  return d.replace(/^0+/, '').slice(0, 11);
+};
+const formatarTel = (d) => {
+  if (!d) return '';
+  if (d.length <= 2) return `(${d}`;
+  const n = d.slice(2);
+  const corte = d.length === 11 ? 5 : 4;
+  return `(${d.slice(0, 2)}) ${n.length > corte ? `${n.slice(0, corte)}-${n.slice(corte)}` : n}`;
+};
+const erroTel = (v) => {
+  const d = digitosTel(v);
+  if (!d) return '';
+  if (d.length < 10) return 'Telefone incompleto. Use DDD + número, ex.: (11) 91234-5678.';
+  if (!DDDS.has(d.slice(0, 2))) return 'Confira o DDD. Ele não existe.';
+  if (d.length === 11 && d[2] !== '9') return 'Confira o número. Celular com DDD tem 11 dígitos e começa com 9.';
+  if (d.length === 10 && !/[2-5]/.test(d[2])) return 'Confira o número. Celular precisa do 9 na frente; fixo começa de 2 a 5.';
+  return '';
+};
+// Mensagem de erro de cada campo validado (vazia = campo ok)
 const erroDe = (f) => {
   const v = f.value.trim();
   if (f.name === 'nome' && !v) return 'Informe seu nome.';
   if (f.name === 'email' && !v) return 'Informe seu e-mail.';
   if (f.name === 'email' && !/^\S+@\S+\.\S+$/.test(v)) return 'Confira o e-mail. Ele precisa ter o formato nome@empresa.com.br.';
+  if (f.name === 'telefone') return erroTel(v);
   return '';
 };
+const VALIDADOS = '[required], [data-validar]';
 const marcarCampo = (f) => {
   const msg = erroDe(f);
   const err = $('[data-err]', f.closest('.field'));
@@ -133,9 +159,33 @@ const marcarCampo = (f) => {
   return !msg;
 };
 // depois de um erro, o campo volta a ficar ok assim que a pessoa corrige
-$$('[required]', form || document).forEach((f) => f.addEventListener('input', () => {
+$$(VALIDADOS, form || document).forEach((f) => f.addEventListener('input', () => {
   if (f.getAttribute('aria-invalid') === 'true') marcarCampo(f);
 }));
+
+// Máscara do telefone: (11) 91234-5678 ou (11) 3123-4567, mantendo o cursor no mesmo dígito
+const tel = form && $('#telefone', form);
+if (tel) {
+  const aplicarMascara = () => {
+    const pos = tel.selectionStart ?? tel.value.length;
+    const antes = digitosTel(tel.value.slice(0, pos)).length;
+    const novo = formatarTel(digitosTel(tel.value));
+    if (novo === tel.value) return;
+    tel.value = novo;
+    let i = 0, vistos = 0;
+    while (i < novo.length && vistos < antes) { if (/\d/.test(novo[i])) vistos++; i++; }
+    if (document.activeElement === tel) tel.setSelectionRange(i, i);
+  };
+  // apagar logo depois de "(", ")", espaço ou "-" apaga o dígito anterior (senão a máscara devolveria o símbolo)
+  tel.addEventListener('keydown', (e) => {
+    if (e.key !== 'Backspace' || tel.selectionStart !== tel.selectionEnd) return;
+    let p = tel.selectionStart;
+    while (p > 0 && /\D/.test(tel.value[p - 1])) p--;
+    if (p !== tel.selectionStart) tel.setSelectionRange(p, p);
+  });
+  tel.addEventListener('input', aplicarMascara);
+  tel.addEventListener('blur', () => { if (tel.value) marcarCampo(tel); });
+}
 // Rascunho: o que a pessoa digitou sobrevive a um recarregamento da página (fica só nesta aba)
 const RASCUNHO = 's4hub-contato';
 const camposRascunho = form ? $$('input:not([name="site"]):not([type="hidden"]), textarea', form) : [];
@@ -144,7 +194,7 @@ const salvarRascunho = () => {
 };
 try {
   const salvo = JSON.parse(sessionStorage.getItem(RASCUNHO) || 'null');
-  if (salvo) camposRascunho.forEach((f) => { if (salvo[f.name]) f.value = salvo[f.name]; });
+  if (salvo) camposRascunho.forEach((f) => { if (salvo[f.name]) f.value = f === tel ? formatarTel(digitosTel(salvo[f.name])) : salvo[f.name]; });
 } catch {}
 camposRascunho.forEach((f) => f.addEventListener('input', salvarRascunho));
 
@@ -164,7 +214,7 @@ form?.addEventListener('submit', async (e) => {
   const status = $('[data-form-status]', form);
   const btn = $('[data-submit]', form);
   status.classList.remove('is-error');
-  const invalidos = $$('[required]', form).filter((f) => !marcarCampo(f));
+  const invalidos = $$(VALIDADOS, form).filter((f) => !marcarCampo(f));
   if (invalidos.length) {
     status.textContent = 'Corrija os campos indicados para enviar.';
     invalidos[0].focus();

@@ -94,6 +94,8 @@ r="$(curl -s "${H[@]}" "${J[@]}" "${campos[@]}" --data-urlencode "site=spam" $UR
 r="$(curl -s "${H[@]}" "${J[@]}" --data-urlencode "nome=Bot" --data-urlencode "email=bot@example.com" --data-urlencode "decorrido=200" $URL/contato.php)"
 [ "$r" = '{"ok":true}' ] && ok "envio rápido demais: robô recebe ok falso" || erro "tempo mínimo: resposta $r"
 [ "$(status "${J[@]}" --data-urlencode "nome=" --data-urlencode "email=x@example.com" --data-urlencode "decorrido=5000" $URL/contato.php)" = 422 ] && ok "nome vazio recusado (422)" || erro "nome vazio aceito"
+[ "$(status "${J[@]}" "${campos[@]}" --data-urlencode "telefone=123456" $URL/contato.php)" = 422 ] && ok "telefone fora do padrão recusado (422)" || erro "telefone inválido aceito"
+[ "$(status "${J[@]}" "${campos[@]}" --data-urlencode "telefone=(20) 91234-5678" $URL/contato.php)" = 422 ] && ok "DDD inexistente recusado (422)" || erro "DDD inexistente aceito"
 # envios válidos: aqui o e-mail falha de propósito (sem servidor de e-mail), o que conta é o limite
 for i in 1 2 3 4 5; do status "${J[@]}" "${campos[@]}" --data-urlencode "nome=Maria $(printf 'X\r\nBcc: invasor@example.com')" $URL/contato.php >/dev/null; done
 [ "$(status "${J[@]}" "${campos[@]}" $URL/contato.php)" = 429 ] && ok "6º envio na mesma hora recusado (429)" || erro "limite de envios não funcionou"

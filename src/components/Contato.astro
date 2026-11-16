@@ -20,7 +20,7 @@ import MiniHub from './MiniHub.astro';
           </div>
           <div class="ct__row">
             <div class="field"><input id="empresa" name="empresa" type="text" maxlength="120" autocomplete="organization" autocapitalize="words" enterkeyhint="next" placeholder=" " /><label for="empresa">Empresa</label></div>
-            <div class="field"><input id="telefone" name="telefone" type="tel" maxlength="40" autocomplete="tel" enterkeyhint="next" placeholder=" " /><label for="telefone">Telefone</label></div>
+            <div class="field"><input id="telefone" name="telefone" type="tel" inputmode="tel" maxlength="20" autocomplete="tel-national" enterkeyhint="next" placeholder=" " data-validar /><label for="telefone">Telefone com DDD</label><p class="field__err" id="telefone-err" data-err></p></div>
           </div>
           <div class="field"><textarea id="mensagem" name="mensagem" rows="3" maxlength="4000" placeholder=" "></textarea><label for="mensagem">Qual é o principal desafio hoje?</label></div>
           <div class="hp" aria-hidden="true"><label for="site">Site</label><input id="site" name="site" type="text" tabindex="-1" autocomplete="off" /><input type="hidden" name="decorrido" value="0" /></div>

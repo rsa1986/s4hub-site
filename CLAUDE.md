@@ -7,7 +7,7 @@ Site de página única da S4 Hub (consultoria de Vendas e Marketing). Substitui 
 - **Astro 7** (site estático) + **GSAP / ScrollTrigger** (animações) + **Lenis** (rolagem suave)
 - Fontes self-hosted via Fontsource: Bricolage Grotesque (títulos, arquivo `wdth.css`: eixos de peso e largura) e Manrope (texto)
 - CSS embutido no HTML no build (`inlineStylesheets: always`), para não bloquear a primeira pintura
-- Formulário: `public/contato.php`, que envia o e-mail com `mail()` do HostGator
+- Formulário: `public/contato.php`, que envia o e-mail pela API do Resend (ver "Go-live: situação")
 
 ## Comandos
 
@@ -68,7 +68,7 @@ Revisado com a skill ui-ux-pro-max. Manter:
 
 - Contraste: texto ≥ 4,5:1; contornos, bordas e linhas de campo ≥ 3:1. Foco do teclado é navy nas seções claras e verde nas escuras (`.dark`, header)
 - Alvos de toque ≥ 44px no celular; textos ≥ 14px (descrições 15px+)
-- Formulário: obrigatórios primeiro e marcados no rótulo; erro escrito abaixo de cada campo (`aria-invalid`, rótulo e linha em coral); foco no primeiro campo errado; botão travado com "Enviando..."; limite de 15s; `maxlength` igual ao `contato.php`; rascunho salvo na aba (sessionStorage); sucesso troca o formulário por um painel com o hub inteiro aceso; falha mantém os dados e o botão vira "Tentar de novo"
+- Formulário: obrigatórios primeiro e marcados no rótulo; erro escrito abaixo de cada campo (`aria-invalid`, rótulo e linha em coral); foco no primeiro campo errado; botão travado com "Enviando..."; limite de 15s; `maxlength` igual ao `contato.php`; telefone opcional, mas só no padrão brasileiro (DDD válido + celular com 9 ou fixo de 2 a 5, aceita +55 e 0), com máscara `(11) 91234-5678` e a mesma regra no `contato.php`, que grava o número já formatado; rascunho salvo na aba (sessionStorage); sucesso troca o formulário por um painel com o hub inteiro aceso; falha mantém os dados e o botão vira "Tentar de novo"
 - Celular: botão "Diagnóstico gratuito" compacto no header (só "Diagnóstico" abaixo de 360px); menu abre com fundo escurecido (tocar fecha) e trava a rolagem da página
 - Toque (revisão mobile-native, 04/10/2026): sem a mancha de toque do navegador; `touch-action: manipulation` em links e botões; rótulos de controles não são selecionáveis ao segurar o dedo; todo `:hover` (inclusive módulos do hub e rodapé) só com mouse, com `:active` para o toque; no formulário, a tecla "Próximo" pula para o campo seguinte
 - Menu mobile fecha com Esc e troca o rótulo para "Fechar menu"
@@ -115,9 +115,9 @@ Fazer depois que o design estiver aprovado. Logos de clientes, e-mails e ajuste 
 
 **No dia da publicação** (passos em "Deploy" abaixo)
 
-- [ ] Commit das mudanças pendentes, `npm run build`, backup do WordPress
-- [ ] Enviar `dist/` para `public_html` (acesso ao cPanel é do Rodrigo)
-- [ ] Testar o formulário de verdade (envio para rodrigo.a@s4hub.com.br) e conferir https (cadeado). Se o HostGator exigir caixa real como remetente, ajustar `REMETENTE` em `contato.php`
+- [x] Commit das mudanças pendentes, `npm run build`, backup do WordPress
+- [x] Enviar `dist/` para `public_html` (pela automação, 10/11/2026)
+- [x] Testar o formulário de verdade (16/11/2026, pelo Resend) e conferir https
 - [ ] Rodar o Lighthouse de novo no domínio real
 - [ ] Remover a cópia de comparação da v1: `git worktree remove ../s4hub-v1`
 
@@ -142,15 +142,15 @@ Painel: **Pages CMS** (https://app.pagescms.org), entrando com o GitHub do Rodri
 - Actions conferido (06/10/2026): roda a cada push e a cada "Save" do painel, ~15s, termina em "site gerado e conferido, mas NÃO enviado" enquanto `PUBLICAR` estiver desligada. Ações nas versões atuais (checkout v7, setup-node v7, FTP-Deploy-Action v4.4.0)
 - GitHub CLI instalado e logado (`C:/Program Files/GitHub CLI/gh.exe`): permite ver execuções (`gh run list -R rsa1986/s4hub-site`) e cadastrar segredos com `gh secret set` (a senha é digitada pelo Rodrigo no terminal)
 
-## Go-live: onde paramos (06/10/2026)
+## Go-live: situação (atualizado em 16/11/2026)
 
 Decisões do Rodrigo: **publicar já**, com os textos como estão; **sem analytics** por enquanto; **logos depois** pelo painel (a lista de clientes foi esvaziada: a seção e o link do menu voltam sozinhos ao adicionar o primeiro cliente); a política de privacidade vai com o e-mail rodrigo.a@s4hub.com.br (recomendado criar `privacidade@s4hub.com.br` e trocar pelo painel).
 
-Lado técnico pronto: automação verde (build + 28 verificações de servidor), envio desligado (`PUBLICAR` não definida).
+**Site no ar desde 10/11/2026.** `PUBLICAR` = `sim`, `FTP_PASTA` = `/` (conta FTP só da automação). WordPress antigo movido para `public_html/wp-antigo/` (bloqueado pela web).
 
-Próximos passos, nesta ordem:
-1. **Rodrigo:** criar no cPanel uma conta FTP só para a automação, com diretório `public_html` (aí definir a variável `FTP_PASTA` = `/`; com a conta principal do cPanel o padrão `/public_html/` já serve) e cadastrar os segredos em um PowerShell novo: `gh secret set FTP_SERVIDOR -R rsa1986/s4hub-site` (idem `FTP_USUARIO`, `FTP_SENHA`)
-2. **Rodrigo:** no Gerenciador de Arquivos (com arquivos ocultos visíveis), compactar e baixar todo o `public_html` (backup) e mover tudo, menos `wp-antigo`, `.well-known` e `cgi-bin`, para `public_html/wp-antigo/`. Avisar na hora (site fica 1–2 min fora do ar)
-3. **Claude:** `gh variable set PUBLICAR -b sim -R rsa1986/s4hub-site` (+ `FTP_PASTA` se for o caso), `gh workflow run publicar.yml -R rsa1986/s4hub-site`, acompanhar; conferir o site no ar (páginas, https, redirecionamentos, 404, og:image, Lighthouse no domínio real). Se o FTPS falhar, testar `FTP_PROTOCOLO` = `ftp`
-4. **Rodrigo:** enviar uma mensagem real pelo formulário e confirmar que chegou em rodrigo.a@s4hub.com.br
-5. Depois: tag de versão (estava em aberto mover a v6 ou criar v7), apagar `wp-antigo` após alguns dias, remover a cópia `../s4hub-v1`
+**Envio do formulário (16/11/2026):** pelo **Resend** (API HTTPS), testado com mensagem real que chegou em rodrigo.a@s4hub.com.br. Histórico: `mail()` do HostGator não entregava; o SMTP da Titan conecta mas recusa envio no plano atual da caixa. A automação gera `dist/smtp-config.php` (bloqueado pela web) com os segredos `RESEND_API_KEY` e `SMTP_USUARIO`/`SMTP_SENHA`; ordem no `contato.php`: Resend > SMTP > `mail()`. Trocar um segredo só vale depois de uma nova publicação (`gh workflow run publicar.yml -R rsa1986/s4hub-site`). Sem domínio verificado no Resend, o remetente é `onboarding@resend.dev` e só entrega para o e-mail dono da conta Resend (o `DESTINO`)
+
+Pendências:
+- [ ] Verificar o domínio s4hub.com.br no Resend (registros DNS no HostGator) e definir `resend_de` = `S4 Hub Site <site@s4hub.com.br>` na geração do `smtp-config.php`; só então dá para mudar o `DESTINO` para outra caixa
+- [ ] Rodar o Lighthouse no domínio real
+- [ ] Tag de versão (em aberto: mover a v6 ou criar v7), apagar `wp-antigo` após alguns dias, remover a cópia `../s4hub-v1`

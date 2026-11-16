@@ -63,8 +63,24 @@ function campo($k, $max) {
 $nome = campo('nome', 120);
 $empresa = campo('empresa', 120);
 $email = filter_var(campo('email', 160), FILTER_VALIDATE_EMAIL);
-$telefone = campo('telefone', 40);
+$telefone = campo('telefone', 20);
 $mensagem = mb_substr(str_replace("\0", '', trim((string)($_POST['mensagem'] ?? ''))), 0, 4000);
+
+// Telefone (opcional): padrão brasileiro, DDD + número. Mesmas regras de telefoneBR() em src/scripts/motion.js
+function telefone_br($v) {
+  $d = preg_replace('/\D+/', '', $v);
+  if (strlen($d) > 11 && substr($d, 0, 2) === '55') $d = substr($d, 2); // +55
+  $d = ltrim($d, '0');                                                  // 0 de longa distância
+  $ddds = '11|12|13|14|15|16|17|18|19|21|22|24|27|28|31|32|33|34|35|37|38|41|42|43|44|45|46|47|48|49|'
+        . '51|53|54|55|61|62|63|64|65|66|67|68|69|71|73|74|75|77|79|81|82|83|84|85|86|87|88|89|91|92|93|94|95|96|97|98|99';
+  if (preg_match("/^($ddds)(9\d{4})(\d{4})$/", $d, $m)) return "($m[1]) $m[2]-$m[3]";     // celular
+  if (preg_match("/^($ddds)([2-5]\d{3})(\d{4})$/", $d, $m)) return "($m[1]) $m[2]-$m[3]"; // fixo
+  return null;
+}
+if ($telefone !== '') {
+  $telefone = telefone_br($telefone);
+  if ($telefone === null) responder(false, 422, 'Telefone inválido. Use DDD + número.');
+}
 
 if (!$nome || !$email) responder(false, 422, 'Nome e e-mail são obrigatórios.');
 if (!dentro_do_limite()) responder(false, 429, 'Muitos envios seguidos. Aguarde alguns minutos.');
