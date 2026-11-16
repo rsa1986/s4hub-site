@@ -1,0 +1,54 @@
+LOGOS DE CLIENTES
+=================
+
+Coloque aqui as logomarcas dos clientes que a S4 Hub já atendeu.
+Esta pasta não vai para o site: é só a "caixa de entrada". Depois o Claude
+confere cada arquivo, ajusta e coloca no site (pasta public/img/clientes/).
+
+
+COMO DEVEM SER AS LOGOS
+-----------------------
+
+1. Formato do arquivo
+   - Melhor: SVG (vetor, fica nítido em qualquer tela)
+   - Bom: PNG com FUNDO TRANSPARENTE
+   - Evitar: JPG, ou PNG com fundo branco/colorido. No site toda logo vira
+     uma silhueta branca sobre o azul-marinho; se a imagem tiver fundo,
+     ela aparece como um retângulo branco.
+
+2. Tamanho
+   - SVG: qualquer tamanho.
+   - PNG: pelo menos 400 px de largura (ou 120 px de altura, no caso de
+     logos mais quadradas). No site elas aparecem com até 200 x 48 px, mas
+     o dobro garante nitidez em celulares e telas retina.
+   - Até ~500 KB por arquivo.
+
+3. Versão da logo
+   - De preferência a versão HORIZONTAL (símbolo ao lado do nome).
+   - Cor não importa: todas viram branco no site, para ficarem iguais.
+     Mas se houver uma versão de "uma cor só" (monocromática), melhor.
+   - Sem margens grandes em volta (recortada rente ao desenho).
+
+4. Nome do arquivo
+   - Use o nome do cliente, do jeito que deve aparecer no site
+     (ex.: "Padaria Bom Pão.png"). Esse nome também vira o texto
+     alternativo da imagem (acessibilidade e Google).
+
+5. Autorização
+   - Só coloque clientes que autorizaram (ou não se opõem) a aparecer
+     como cliente no site.
+
+
+SE NÃO TIVER A LOGO
+-------------------
+Dá para colocar o cliente só com o nome: crie um arquivo de texto aqui
+com os nomes, um por linha (ex.: "clientes-sem-logo.txt"). No site o
+nome aparece escrito no lugar da logo.
+
+
+DEPOIS
+------
+Com as logos aqui, peça ao Claude para "publicar as logos de clientes".
+A seção "Clientes" já existe no site e volta a aparecer sozinha assim que
+houver pelo menos um cliente. Com menos de 6, as logos ficam paradas em
+linha; com 6 ou mais, viram uma faixa que se move.

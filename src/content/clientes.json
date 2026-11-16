@@ -1,3 +1,24 @@
 {
-  "itens": []
+  "itens": [
+    {
+      "nome": "360 Business Intelligence",
+      "logo": "/img/clientes/360-business-intelligence.png"
+    },
+    {
+      "nome": "GPU IT Solutions",
+      "logo": "/img/clientes/gpu-it-solutions.png"
+    },
+    {
+      "nome": "CAEX Esportes & Cultura",
+      "logo": "/img/clientes/caex.png"
+    },
+    {
+      "nome": "Val Canis",
+      "logo": "/img/clientes/val-canis.png"
+    },
+    {
+      "nome": "Dentaus Saúde Bucal",
+      "logo": "/img/clientes/dentaus.svg"
+    }
+  ]
 }

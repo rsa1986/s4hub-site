@@ -87,7 +87,7 @@ Só três momentos animados por rolagem; o resto aparece pronto.
 
 ## Pendências
 
-- [ ] Logos dos clientes: pelo painel, tela "Clientes (logos)" (ou em `public/img/clientes/` + `src/content/clientes.json`). Cliente sem logo aparece com o nome escrito
+- [ ] Logos dos clientes: o Rodrigo deixa os arquivos brutos em `logos-clientes/` (caixa de entrada fora do site, regras no `LEIA-ME.txt`); o Claude confere fundo transparente/proporção, recorta e otimiza, copia para `public/img/clientes/` e preenche `src/content/clientes.json`. Também dá pelo painel, tela "Clientes (logos)". Cliente sem logo aparece com o nome escrito
 - [x] E-mail que recebe o formulário: `DESTINO` em `public/contato.php` = rodrigo.a@s4hub.com.br
 - E-mail **não** aparece na página (decisão: evitar spam; o formulário é o canal único). Por isso `contato.email` em `src/data/site.js` fica com o placeholder (não está no painel de propósito)
 - [ ] Ajuste fino de textos. Da crítica Impeccable (02/10/2026): Manifesto como problemas do leitor (hoje repete Soluções e não inclui o S4 Go), um elemento de prova (caso com número ou fundador), linha "para quem é" no hero, jargão (ICP, pitch, cadências), frase do rodapé, um único texto para os botões de diagnóstico e a decisão sobre o marquee (repete os módulos)
